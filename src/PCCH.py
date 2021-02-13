@@ -84,22 +84,4 @@ def a_start(debut, goal, x_max, y_max, wall):
     Etat.sety_max(y_max)
     return Etat(debut,0,None, goal, debut).evaluer()
 
-def affichage_console(map,path,label):
-    
-    for x in range(len(map)):
-        for y in range(len(map[x])):
-            if not( label.get(map[x][y]).get('canPass') or 
-                   label.get(map[x][y]).get('name') == 'point depart' or 
-                   label.get(map[x][y]).get('name') == 'point arriver' ):
-                print('|',end='')
-            else:
-                b=True
-                for i,j in path:
-                    if i==x and j==y:
-                        print('*',end='')
-                        b=False
-                if b:
-                    print(' ',end='')
-                
-        print()
 
