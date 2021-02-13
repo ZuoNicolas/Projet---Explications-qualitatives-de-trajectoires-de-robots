@@ -1,5 +1,11 @@
 import xml.etree.ElementTree as ET
+import pandas as pd
 
+
+def read_map_csv(filename):
+    """ Str -> ndarray(int, int)
+    Prend un fichier le lis puis renvoie notre carte sous une liste de matrice avec un dictionnaire de chaque id = terrain ou mur"""
+    return pd.read_csv(filename, sep=',').values
 
 def read_desc_xml(filename):
     """ Str -> dict
