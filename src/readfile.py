@@ -5,7 +5,7 @@ import pandas as pd
 def read_map_csv(filename):
     """ Str -> ndarray(int, int)
     Prend un fichier le lis puis renvoie notre carte sous une liste de matrice avec un dictionnaire de chaque id = terrain ou mur"""
-    return pd.read_csv(filename, sep=',').values
+    return pd.read_csv(filename, sep=',', header=None).values
 
 def read_desc_xml(filename):
     """ Str -> dict
@@ -14,11 +14,16 @@ def read_desc_xml(filename):
     root = ET.parse(filename).getroot()
     lterrain = root.findall('terraintypes/terrain')
     for terrain in lterrain:
-        tile = terrain.get('tile')
+        tile = int(terrain.get('tile'))
         tmpdict = dict()
         tmpdict["name"]  = terrain.get('name')
         for property in terrain.findall("properties/property"):
-            tmpdict[property.get('name')]  = property.get('value')
+            if property.get('value') == 'true':
+                tmpdict[property.get('name')]  = True
+            elif property.get('value') == 'false':
+                tmpdict[property.get('name')]  = False
+            else:
+                tmpdict[property.get('name')]  = property.get('value')
         dict_res[tile] = tmpdict  
    
     tiles=root.findall('tile')
@@ -27,7 +32,13 @@ def read_desc_xml(filename):
         tmpdict = dict()
         tmpdict["name"]  = lterrain[i].get('name')
         for property in lterrain[i].findall("properties/property"):
-            tmpdict[property.get('name')]  = property.get('value')
-        dict_res[tile.get('id')]=tmpdict
+            if property.get('value') == 'true':
+                tmpdict[property.get('name')]  = True
+            elif property.get('value') == 'false':
+                tmpdict[property.get('name')]  = False
+            else:
+                tmpdict[property.get('name')]  = property.get('value')
+            
+        dict_res[int(tile.get('id'))]=tmpdict
     return dict_res
-print(read_desc_xml("exemple.tsx"))
+

@@ -54,6 +54,7 @@ class Etat:
 
         def evaluer(self):
             Etat.visite[self.pos]=self.parent
+            #print(Etat.visite,self.goal,Etat.x_max,Etat.y_max,'|||')
             """if self.pos in goalStates:
                 return self.chemin(self.pos, [])"""
             if self.pos == self.goal:
@@ -76,18 +77,20 @@ class Etat:
             return []
 
 
-def a_start(debut, goal, y_max, x_max, wall):
+def a_start(debut, goal, x_max, y_max, wall):
     Etat.reset()
     Etat.setwall(wall)
     Etat.setx_max(x_max)
     Etat.sety_max(y_max)
     return Etat(debut,0,None, goal, debut).evaluer()
 
-def affichage_console(map,path):
+def affichage_console(map,path,label):
     
     for x in range(len(map)):
         for y in range(len(map[x])):
-            if map[x][y] == 1:
+            if not( label.get(map[x][y]).get('canPass') or 
+                   label.get(map[x][y]).get('name') == 'point depart' or 
+                   label.get(map[x][y]).get('name') == 'point arriver' ):
                 print('|',end='')
             else:
                 b=True
