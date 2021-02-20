@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <tileset version="1.4" tiledversion="1.4.3" name="exemple" tilewidth="16" tileheight="16" spacing="1" margin="1" tilecount="1320" columns="60">
- <image source="Downloads/tutoville2_modif.png" width="1021" height="375"/>
+ <image source="descripteur.png" width="1021" height="375"/>
  <terraintypes>
   <terrain name="terrain" tile="1032">
    <properties>

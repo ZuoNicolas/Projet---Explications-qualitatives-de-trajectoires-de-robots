@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <tileset version="1.4" tiledversion="1.4.3" name="tutoville2_modif" tilewidth="16" tileheight="16" spacing="1" margin="1" tilecount="1320" columns="60">
- <image source="tutoville2_modif.png" width="1021" height="375"/>
+ <image source="descripteur.png" width="1021" height="375"/>
  <terraintypes>
   <terrain name="terre" tile="185">
    <properties>
@@ -10,6 +10,7 @@
   <terrain name="eau" tile="673">
    <properties>
     <property name="canPass" type="bool" value="true"/>
+    <property name="vision_area" type="int" value="2"/>
    </properties>
   </terrain>
   <terrain name="start" tile="60"/>
@@ -21,27 +22,43 @@
   </terrain>
   <terrain name="eau" tile="120">
    <properties>
+    <property name="danger_area" type="int" value="6"/>
     <property name="profond" type="bool" value="true"/>
    </properties>
   </terrain>
   <terrain name="rocher" tile="603">
    <properties>
-    <property name="canPass" type="bool" value="true"/>
+    <property name="canPass" type="bool" value="false"/>
+    <property name="vision_area" type="int" value="2"/>
    </properties>
   </terrain>
-  <terrain name="entrée_sortie" tile="932"/>
+  <terrain name="entrée_sortie" tile="932">
+   <properties>
+    <property name="vision_area" type="int" value="1"/>
+   </properties>
+  </terrain>
   <terrain name="rebort_mur" tile="949">
    <properties>
     <property name="canPass" type="bool" value="false"/>
+    <property name="vision_area" type="int" value="2"/>
    </properties>
   </terrain>
   <terrain name="arbre" tile="1081">
    <properties>
     <property name="canPass" type="bool" value="false"/>
+    <property name="vision_area" type="int" value="2"/>
+   </properties>
+  </terrain>
+  <terrain name="rocher" tile="621">
+   <properties>
+    <property name="canPass" type="bool" value="false"/>
+    <property name="danger_area" type="int" value="5"/>
+    <property name="vision_area" type="int" value="4"/>
    </properties>
   </terrain>
  </terraintypes>
  <tile id="60" terrain="2,2,2,2"/>
+ <tile id="61" terrain=",0,,"/>
  <tile id="63" terrain="0,0,0,0"/>
  <tile id="64" terrain="0,0,0,0"/>
  <tile id="70" terrain="0,0,0,0"/>
@@ -320,8 +337,8 @@
  <tile id="557" terrain="6,6,6,6"/>
  <tile id="558" terrain="0,0,0,0"/>
  <tile id="559" terrain="0,0,0,0"/>
- <tile id="560" terrain="6,6,6,6"/>
- <tile id="561" terrain="6,6,6,6"/>
+ <tile id="560" terrain="10,10,10,10"/>
+ <tile id="561" terrain="10,10,10,10"/>
  <tile id="562" terrain="1,1,1,1"/>
  <tile id="563" terrain="1,1,1,1"/>
  <tile id="564" terrain="1,1,1,1"/>
@@ -374,8 +391,8 @@
  <tile id="617" terrain="6,6,6,6"/>
  <tile id="618" terrain="0,0,0,0"/>
  <tile id="619" terrain="0,0,0,0"/>
- <tile id="620" terrain="6,6,6,6"/>
- <tile id="621" terrain="6,6,6,6"/>
+ <tile id="620" terrain="10,10,10,10"/>
+ <tile id="621" terrain="10,10,10,10"/>
  <tile id="622" terrain="1,1,1,1"/>
  <tile id="623" terrain="1,1,1,1"/>
  <tile id="624" terrain="1,1,1,1"/>
