@@ -100,7 +100,7 @@ def blue_path(map,label):
         
 def main():
     
-    map = readfile.read_map_csv('../ressource/map.csv')
+    map = readfile.read_map_csv('../ressource/map1.csv')
     label = readfile.read_desc_xml('../ressource/descripteur.tsx')
 
     start, end = get_start_end(map, label)
