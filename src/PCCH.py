@@ -83,4 +83,3 @@ def a_start(debut, goal, x_max, y_max, wall):
     Etat.setx_max(x_max)
     Etat.sety_max(y_max)
     return Etat(debut,0,None, goal, debut).evaluer()
-

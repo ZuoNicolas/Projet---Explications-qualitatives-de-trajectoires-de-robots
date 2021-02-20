@@ -118,16 +118,4 @@ if __name__ == '__main__':
     map = readfile.read_map_csv('../ressource/map.csv')
     label = readfile.read_desc_xml('../ressource/descripteur.tsx')
     
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+

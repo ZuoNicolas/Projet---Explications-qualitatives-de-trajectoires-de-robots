@@ -11,7 +11,7 @@ pygame.init()
 screen = pygame.display.set_mode((WIDTH,HEIGHT))
 pygame.display.set_caption(TITLE);
 rectScreen = screen.get_rect()
-tm = pytmx.load_pygame('map1.tmx', pixelalpha=True)
+tm = pytmx.load_pygame('../ressource/map1.tmx', pixelalpha=True)
 layer = tm.get_layer_by_name('layer1')
 fond = pygame.Surface((WIDTH,HEIGHT))
 

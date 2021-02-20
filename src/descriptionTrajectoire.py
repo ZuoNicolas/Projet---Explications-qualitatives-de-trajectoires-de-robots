@@ -176,3 +176,4 @@ def msg_tourne(m):
     
 def msg_passage_a(m,o):
     return "/Je "+str(m)+" l'objet "+str(o)+" "
+
