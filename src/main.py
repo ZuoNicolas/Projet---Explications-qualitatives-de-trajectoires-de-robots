@@ -8,6 +8,7 @@ import numpy as np
 import PCCH
 import readfile
 import descriptionTrajectoire as dt
+from math import sqrt
 
 def get_start_end(map,label):
     for key in label.keys():
@@ -121,6 +122,29 @@ def blue_path(map,label):
     return path
         
 def main():
+    
+    
+    map = readfile.read_map_tmx('../ressource/zone_a_danger(rocher).tmx')
+    label = readfile.read_desc_xml('../ressource/descripteur.tsx')
+
+    start, end = get_start_end(map, label)
+    wall = get_wall(map, label)
+    weight = get_weight(map, label)
+    print(weight)
+
+    path = PCCH.a_start(start, end, len(map),len(map[0]),wall)
+    #path = blue_path(map, label)
+    print("Path PCCH :", path)
+    affichage_console(map, path, label)
+    
+    path = PCCH.a_start(start, end, len(map),len(map[0]), wall, weight)
+    #path = blue_path(map, label)
+    print("Path PCCH safe :", path)
+    affichage_console(map, path, label)
+    
+    dt.descriptiontTrajectoire(map,path,label)
+    
+    
     
     map = readfile.read_map_tmx('../ressource/map1.tmx')
     label = readfile.read_desc_xml('../ressource/descripteur.tsx')
