@@ -664,13 +664,13 @@
  <tile id="1018" terrain="8,8,8,8"/>
  <tile id="1023" terrain="9,9,9,9"/>
  <tile id="1025" terrain="0,0,0,0"/>
- <tile id="1026" terrain="0,0,0,0"/>
+ <tile id="1026" terrain="9,9,9,9"/>
  <tile id="1027" terrain="0,0,0,0"/>
  <tile id="1028" terrain="9,9,9,9"/>
  <tile id="1029" terrain="9,9,9,9"/>
  <tile id="1030" terrain="9,9,9,9"/>
  <tile id="1032" terrain="0,0,0,0"/>
- <tile id="1033" terrain="0,0,0,0"/>
+ <tile id="1033" terrain="9,9,9,9"/>
  <tile id="1034" terrain="0,0,0,0"/>
  <tile id="1035" terrain="9,9,9,9"/>
  <tile id="1036" terrain="9,9,9,9"/>
@@ -726,15 +726,15 @@
  <tile id="1201" terrain="12,12,12,12"/>
  <tile id="1202" terrain="12,12,12,12"/>
  <tile id="1203" terrain="12,12,12,12"/>
- <tile id="1205" terrain="0,0,0,0"/>
- <tile id="1206" terrain="0,0,0,0"/>
- <tile id="1207" terrain="0,0,0,0"/>
+ <tile id="1205" terrain="9,9,9,9"/>
+ <tile id="1206" terrain="9,9,9,9"/>
+ <tile id="1207" terrain="9,9,9,9"/>
  <tile id="1208" terrain="9,9,9,9"/>
  <tile id="1209" terrain="9,9,9,9"/>
  <tile id="1210" terrain="9,9,9,9"/>
- <tile id="1212" terrain="0,0,0,0"/>
- <tile id="1213" terrain="0,0,0,0"/>
- <tile id="1214" terrain="0,0,0,0"/>
+ <tile id="1212" terrain="9,9,9,9"/>
+ <tile id="1213" terrain="9,9,9,9"/>
+ <tile id="1214" terrain="9,9,9,9"/>
  <tile id="1215" terrain="9,9,9,9"/>
  <tile id="1216" terrain="9,9,9,9"/>
  <tile id="1217" terrain="9,9,9,9"/>
