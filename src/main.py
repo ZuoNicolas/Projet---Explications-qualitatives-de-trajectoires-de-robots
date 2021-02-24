@@ -100,10 +100,9 @@ def blue_path(map,label):
         
 def main():
     
-    map = readfile.read_map_csv('../ressource/map1.csv')
     map = readfile.read_map_tmx('../ressource/map1.tmx')
     label = readfile.read_desc_xml('../ressource/descripteur.tsx')
-
+    #print(label)
     start, end = get_start_end(map, label)
     wall = get_wall(map, label)
 
@@ -112,7 +111,8 @@ def main():
     print("Path PCCH :", path)
     affichage_console(map, path, label)
     
-    dt.descriptiontTrajectoire(map,path,label)
+    d1 = dt.DescriptionTrajectoire(map,path,label)
+    d1.descriptiontTrajectoireActif(4)
 
 if __name__ == '__main__':
     main()
