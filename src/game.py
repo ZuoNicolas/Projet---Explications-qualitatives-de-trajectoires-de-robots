@@ -2,6 +2,7 @@ import pygame
 import pytmx
 import xml.etree.ElementTree as ET
 import time
+import descriptionTrajectoire as DT
 
 class Game(object):
 
@@ -18,6 +19,7 @@ class Game(object):
         
         root = ET.parse(self.filename).getroot()
         self.size = self.weight, self.height = int(root.get("height")) * 16, int(root.get("width")) * 16 #a changer
+        print(self.size)
         #zone d'affichage
         self._display_surf = pygame.display.set_mode(self.size, pygame.HWSURFACE | pygame.DOUBLEBUF)
         self._running = True
@@ -37,19 +39,27 @@ class Game(object):
 
     def on_loop(self):
         self.iteration +=1
-
+        
     def on_render(self):
         for x, y, image in self.layer.tiles():
 	        self._display_surf.blit(image,(x*16,y*16))
         y, x = self.path[self.iteration]
         self._display_surf.blit(self.robot,(x*16,y*16))
+        self.draw_circle_alpha( self._display_surf, (255,0,0), ((x+0.5)*16,(y+0.5)*16), 3*16)
         for y, x in self.path:
             s = pygame.Surface((16,16))  # the size of your rect
             s.set_alpha(50)                # alpha level
             s.fill((0,0,255))           # this fills the entire surface
             self._display_surf.blit(s,(x*16,y*16))
         pygame.display.flip()
-    
+
+    def draw_circle_alpha(self, surface, color, center, radius):
+        target_rect = pygame.Rect(center, (0, 0)).inflate((radius * 2, radius * 2))
+        shape_surf = pygame.Surface(target_rect.size, pygame.SRCALPHA)
+        shape_surf.set_alpha(50)
+        pygame.draw.circle(shape_surf, color, (radius, radius), radius)
+        surface.blit(shape_surf, target_rect)
+        
     def on_cleanup(self):
         pygame.quit()
     
