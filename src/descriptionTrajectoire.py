@@ -141,7 +141,7 @@ class DescriptionTrajectoire():
                 if name != None : 
                      new_msg = self.msg_passage_a(self.calcul_position_objet( self.direction(self.path[i], self.path[i+1]) , (a,b), (x,y)), name)
                      
-                     if new_msg == msg :
+                     if name in msg :
                          continue
 
                      msg += new_msg

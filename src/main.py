@@ -125,12 +125,12 @@ def blue_path(map,label):
         
 def main():
     
-    file = '../ressource/map1.tmx'
+    file = '../ressource/exemple1.tmx'
     map = readfile.read_map_tmx(file)
     label = readfile.read_desc_xml('../ressource/descripteur.tsx')
     path = blue_path(map, label)
     print("Path Blue :", path)
-    g = game.Game(file, map, path, label)
+    g = game.Game(file, map, path, label, 2)
     g.on_execute()
     
     """
