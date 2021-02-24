@@ -3,16 +3,19 @@ import pytmx
 import xml.etree.ElementTree as ET
 import time
 import descriptionTrajectoire as DT
+import readfile
 
 class Game(object):
 
-    def __init__(self, filename, path):
+    def __init__(self, filename, map, path, label, radius=5):
         self._running = True
         self._display_surf = None
         self.filename = filename
 
         self.path = path
         self.iteration = 0
+        self.radius = radius
+        self.dt = DT.DescriptionTrajectoire(map,path,label)
         
     def on_init(self):
         pygame.init()
@@ -44,8 +47,11 @@ class Game(object):
         for x, y, image in self.layer.tiles():
 	        self._display_surf.blit(image,(x*16,y*16))
         y, x = self.path[self.iteration]
+        self.draw_circle_alpha( self._display_surf, (255,0,0), ((x+0.5)*16,(y+0.5)*16), self.radius*16)
+        msg = self.dt.descriptiontTrajectoireActif(self.radius, saw=False, iterator=self.iteration)
+        print(self.iteration,':',msg)
         self._display_surf.blit(self.robot,(x*16,y*16))
-        self.draw_circle_alpha( self._display_surf, (255,0,0), ((x+0.5)*16,(y+0.5)*16), 3*16)
+        
         for y, x in self.path:
             s = pygame.Surface((16,16))  # the size of your rect
             s.set_alpha(50)                # alpha level
@@ -71,7 +77,7 @@ class Game(object):
             self._running = False
  
         while( not self.done() ):
-            time.sleep(0.2)
+            time.sleep(0.5)
             for event in pygame.event.get():
                 self.on_event(event)
             self.on_loop()
@@ -79,5 +85,7 @@ class Game(object):
         self.on_cleanup()
 
 if __name__ == "__main__" :
-    theApp = Game('../ressource/zone_a_danger(rocher).tmx', [(11, 17), (12, 17), (12, 16), (12, 15), (12, 14), (13, 14), (13, 13), (13, 12), (14, 12), (14, 11), (15, 11), (15, 10), (16, 10), (17, 10), (18, 10), (19, 10), (20, 10), (21, 10), (22, 10), (23, 10), (24, 10), (25, 10), (26, 10), (27, 10), (28, 10), (28, 11), (29, 11), (29, 12), (30, 12), (30, 13), (31, 13), (31, 14), (31, 15), (31, 16), (31, 17), (30, 17)])
+    map = readfile.read_map_tmx('../ressource/zone_a_danger(rocher).tmx')
+    label = readfile.read_desc_xml('../ressource/descripteur.tsx')
+    theApp = Game('../ressource/zone_a_danger(rocher).tmx', map, [(11, 17), (12, 17), (12, 16), (12, 15), (12, 14), (13, 14), (13, 13), (13, 12), (14, 12), (14, 11), (15, 11), (15, 10), (16, 10), (17, 10), (18, 10), (19, 10), (20, 10), (21, 10), (22, 10), (23, 10), (24, 10), (25, 10), (26, 10), (27, 10), (28, 10), (28, 11), (29, 11), (29, 12), (30, 12), (30, 13), (31, 13), (31, 14), (31, 15), (31, 16), (31, 17), (30, 17)],label,)
     theApp.on_execute()

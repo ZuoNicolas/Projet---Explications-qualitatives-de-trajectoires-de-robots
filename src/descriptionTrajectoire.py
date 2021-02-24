@@ -96,20 +96,26 @@ class DescriptionTrajectoire():
         
         return desc
     
-    def descriptiontTrajectoireActif(self, agent_rayon, saw=True):
+    def descriptiontTrajectoireActif(self, agent_rayon, saw=True, iterator=True):
         
         x = 0
         y = 0
-        
-        for i in range(len(self.path)):
-            touch = input('Press enter to start/continue, q : for Quit\n')
+        if iterator == None:
+            t = len(self.path)
+        else :
+            t=1
+        for i in range(t):
+            if iterator == None :
+                touch = input('Press enter to start/continue, q : for Quit\n')
             
-            if touch == 'q' or touch =='Q':
-                break
+                if touch == 'q' or touch =='Q':
+                    break
+            else:
+                i = iterator
             
             msg=''
             if i == len(self.path)-1 :
-                print("\nArrivé à destination !")
+                msg = 'Arrivé à destination !'
                 break
             
             a,b = self.path[i]
@@ -137,7 +143,7 @@ class DescriptionTrajectoire():
                      
                      if new_msg == msg :
                          continue
-                     print((a,b), (x,y), name)
+
                      msg += new_msg
             
             if saw :
@@ -146,6 +152,11 @@ class DescriptionTrajectoire():
                     msg = 'Rien à signaler au alentour'
                     
                 print('\n'+msg)
+        
+        if iterator == None : 
+            print("\nArrivé à destination !")
+            
+        return msg
             
     def affichageActif(self,i,vision_area,map):
         print(i,":",vision_area)
