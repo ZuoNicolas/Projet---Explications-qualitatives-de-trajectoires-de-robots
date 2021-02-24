@@ -39,14 +39,12 @@ class Game(object):
  
     #action lier au event
     def on_lbutton_up(self, event):
-        print("left")
         self.forward = False
     def on_mbutton_up(self, event):
         pass
     def on_rbutton_up(self, event):
         pass
     def on_lbutton_down(self, event):
-        print("left down")
         self.forward = True
     def on_mbutton_down(self, event):
         pass
