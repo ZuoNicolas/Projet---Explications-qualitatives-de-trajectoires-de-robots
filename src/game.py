@@ -5,12 +5,12 @@ import time
 
 class Game(object):
 
-    def __init__(self, filename):
+    def __init__(self, filename, path):
         self._running = True
         self._display_surf = None
         self.filename = filename
 
-        self.path = [(11, 17), (12, 17), (12, 16), (12, 15), (12, 14), (13, 14), (13, 13), (13, 12), (14, 12), (14, 11), (15, 11), (15, 10), (16, 10), (17, 10), (18, 10), (19, 10), (20, 10), (21, 10), (22, 10), (23, 10), (24, 10), (25, 10), (26, 10), (27, 10), (28, 10), (28, 11), (29, 11), (29, 12), (30, 12), (30, 13), (31, 13), (31, 14), (31, 15), (31, 16), (31, 17), (30, 17)]
+        self.path = path
         self.iteration = 0
         
     def on_init(self):
@@ -42,7 +42,6 @@ class Game(object):
         for x, y, image in self.layer.tiles():
 	        self._display_surf.blit(image,(x*16,y*16))
         y, x = self.path[self.iteration]
-        print((x,y))
         self._display_surf.blit(self.robot,(x*16,y*16))
         pygame.display.flip()
     
@@ -65,5 +64,5 @@ class Game(object):
         self.on_cleanup()
 
 if __name__ == "__main__" :
-    theApp = Game('../ressource/zone_a_danger(rocher).tmx')
+    theApp = Game('../ressource/zone_a_danger(rocher).tmx', [(11, 17), (12, 17), (12, 16), (12, 15), (12, 14), (13, 14), (13, 13), (13, 12), (14, 12), (14, 11), (15, 11), (15, 10), (16, 10), (17, 10), (18, 10), (19, 10), (20, 10), (21, 10), (22, 10), (23, 10), (24, 10), (25, 10), (26, 10), (27, 10), (28, 10), (28, 11), (29, 11), (29, 12), (30, 12), (30, 13), (31, 13), (31, 14), (31, 15), (31, 16), (31, 17), (30, 17)])
     theApp.on_execute()
