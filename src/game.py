@@ -13,6 +13,7 @@ class Game(object):
 
         self.path = path
         self.iteration = 0
+        self.forward = False
         
     def on_init(self):
         pygame.init()
@@ -33,9 +34,40 @@ class Game(object):
         for x, y, image in self.layer.tiles():
 	        self.image_dict[(x, y)] = image
  
+    #action lier au event
+    def on_lbutton_up(self, event):
+        print("left")
+        self.forward = False
+    def on_mbutton_up(self, event):
+        pass
+    def on_rbutton_up(self, event):
+        pass
+    def on_lbutton_down(self, event):
+        print("left down")
+        self.forward = True
+    def on_mbutton_down(self, event):
+        pass
+    def on_rbutton_down(self, event):
+        pass
+    
+
     def on_event(self, event):
         if event.type == pygame.QUIT:
             self._running = False
+        elif event.type == pygame.MOUSEBUTTONUP:
+            if event.button == 1:
+                self.on_lbutton_up(event)
+            elif event.button == 2:
+                self.on_mbutton_up(event)
+            elif event.button == 3:
+                self.on_rbutton_up(event)
+        elif event.type == pygame.MOUSEBUTTONDOWN:
+            if event.button == 1:
+                self.on_lbutton_down(event)
+            elif event.button == 2:
+                self.on_mbutton_down(event)
+            elif event.button == 3:
+                self.on_rbutton_down(event)
 
     def on_loop(self):
         self.iteration +=1
@@ -44,8 +76,8 @@ class Game(object):
         for x, y, image in self.layer.tiles():
 	        self._display_surf.blit(image,(x*16,y*16))
         y, x = self.path[self.iteration]
-        self._display_surf.blit(self.robot,(x*16,y*16))
         self.draw_circle_alpha( self._display_surf, (255,0,0), ((x+0.5)*16,(y+0.5)*16), 3*16)
+        self._display_surf.blit(self.robot,(x*16,y*16))
         for y, x in self.path:
             s = pygame.Surface((16,16))  # the size of your rect
             s.set_alpha(50)                # alpha level
@@ -71,11 +103,12 @@ class Game(object):
             self._running = False
  
         while( not self.done() ):
-            time.sleep(0.2)
+            self.forward = False
             for event in pygame.event.get():
                 self.on_event(event)
-            self.on_loop()
-            self.on_render()
+            if self.forward:
+                self.on_loop()
+                self.on_render()
         self.on_cleanup()
 
 if __name__ == "__main__" :
