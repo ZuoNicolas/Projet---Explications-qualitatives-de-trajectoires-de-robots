@@ -115,7 +115,8 @@ def main():
 
 if __name__ == '__main__':
     main()
-    map = readfile.read_map_csv('../ressource/map.csv')
+    map = readfile.read_map_tmx('../ressource/map1.tmx')
+    #map = readfile.read_map_csv('../ressource/map.csv')
     label = readfile.read_desc_xml('../ressource/descripteur.tsx')
     
 
