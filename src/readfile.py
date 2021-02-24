@@ -1,10 +1,24 @@
 import xml.etree.ElementTree as ET
 import pandas as pd
+import sys
+
+if sys.version_info[0] < 3: 
+    from StringIO import StringIO
+else:
+    from io import StringIO
 
 def read_map_csv(filename):
     """ Str -> ndarray(int, int)
     Prend un fichier le lis puis renvoie notre carte sous une liste de matrice avec un dictionnaire de chaque id = terrain ou mur"""
     return pd.read_csv(filename, sep=',', header=None).values
+
+def read_map_tmx(filename):
+    """ Str -> ndarray(int, int)
+    Prend un fichier le lis puis renvoie notre carte sous une liste de matrice avec un dictionnaire de chaque id = terrain ou mur"""
+    root = ET.parse(filename).getroot()
+    res = pd.read_csv(StringIO(root.find('layer/data').text), sep=',', header=None).values
+    return res[:,:-1].astype(int) -1
+
 
 def read_desc_xml(filename):
     """ Str -> dict
