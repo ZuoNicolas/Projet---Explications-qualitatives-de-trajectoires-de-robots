@@ -9,8 +9,10 @@ import PCCH
 import readfile
 import descriptionTrajectoire as dt
 from math import sqrt
+import game
 
 def get_start_end(map,label):
+
     for key in label.keys():
         if label.get(key).get('name')=='start':
             start = ( np.where(map==key)[0][0] ,
@@ -123,10 +125,15 @@ def blue_path(map,label):
         
 def main():
     
-    
-    map = readfile.read_map_tmx('../ressource/zone_a_danger(rocher).tmx')
+    file = '../ressource/map1.tmx'
+    map = readfile.read_map_tmx(file)
     label = readfile.read_desc_xml('../ressource/descripteur.tsx')
-
+    path = blue_path(map, label)
+    print("Path Blue :", path)
+    g = game.Game(file, map, path, label)
+    g.on_execute()
+    
+    """
     start, end = get_start_end(map, label)
     wall = get_wall(map, label)
     weight = get_weight(map, label)
@@ -159,7 +166,8 @@ def main():
     
     d1 = dt.DescriptionTrajectoire(map,path,label)
     d1.descriptiontTrajectoireActif(4)
-
+    """
+    
 if __name__ == '__main__':
     main()
     map = readfile.read_map_tmx('../ressource/map1.tmx')
