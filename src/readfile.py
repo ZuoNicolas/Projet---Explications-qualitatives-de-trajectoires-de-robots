@@ -16,7 +16,8 @@ def read_map_tmx(filename):
     """ Str -> ndarray(int, int)
     Prend un fichier le lis puis renvoie notre carte sous une liste de matrice avec un dictionnaire de chaque id = terrain ou mur"""
     root = ET.parse(filename).getroot()
-    return pd.read_csv(StringIO(root.find('layer/data').text), sep=',', header=None).values
+    res = pd.read_csv(StringIO(root.find('layer/data').text), sep=',', header=None).values
+    return res[:,:-1].astype(int) -1
 
 
 def read_desc_xml(filename):
