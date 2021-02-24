@@ -6,6 +6,7 @@ class Etat:
         x_max = 20
         y_max = 20
         wallStates = []
+        weidght = dict()
 
         def __init__(self,position, g, parent, goal, pos_depart):
             self.parent = parent
@@ -16,6 +17,9 @@ class Etat:
 
         def setwall(wall):
             Etat.wallStates = wall
+
+        def setweight(weight):
+            Etat.weight = weight 
 
         def setx_max(x):
             Etat.x_max = x
@@ -67,7 +71,10 @@ class Etat:
             sens = [nord,sud,est,ouest]
             for (a,b) in sens :
                 if a>=0 and a<Etat.x_max and b>=0 and b<Etat.y_max and (a,b) not in list(Etat.visite.keys()) and (a,b) not in Etat.wallStates :
-                    self.ajout(Etat((a,b),self.g+1,self, self.goal, self.pos_depart))
+                    if (a,b) not in list(Etat.weight.keys()):
+                        self.ajout(Etat((a,b),self.g+1,self, self.goal, self.pos_depart))
+                    else:
+                        self.ajout(Etat((a,b),self.g+Etat.weight[(a,b)],self, self.goal, self.pos_depart))
             while "Etat.frontiere[0] n'est pas dans visite" :
                 if len(Etat.frontiere)==0:
                     return []
@@ -77,9 +84,10 @@ class Etat:
             return []
 
 
-def a_start(debut, goal, x_max, y_max, wall):
+def a_start(debut, goal, x_max, y_max, wall, weight=dict()):
     Etat.reset()
     Etat.setwall(wall)
+    Etat.setweight(weight)
     Etat.setx_max(x_max)
     Etat.sety_max(y_max)
     return Etat(debut,0,None, goal, debut).evaluer()
