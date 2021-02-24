@@ -108,11 +108,11 @@ def blue_path(map,label):
     while True:
         if x+1 < tx and label.get(map[x+1][y]).get('name') == 'tracé' and (x+1,y) not in path:
             point = (x+1,y)
-        elif x-1 > 0 and label.get(map[x-1][y]).get('name') == 'tracé' and (x-1,y) not in path:
+        elif x-1 >= 0 and label.get(map[x-1][y]).get('name') == 'tracé' and (x-1,y) not in path:
             point = (x-1,y)
         elif y+1 < ty and label.get(map[x][y+1]).get('name') == 'tracé' and (x,y+1) not in path:
             point = (x,y+1)
-        elif y-1 > 0 and label.get(map[x][y-1]).get('name') == 'tracé' and (x,y-1) not in path:
+        elif y-1 >= 0 and label.get(map[x][y-1]).get('name') == 'tracé' and (x,y-1) not in path:
             point = (x,y-1)
         else:
             break
