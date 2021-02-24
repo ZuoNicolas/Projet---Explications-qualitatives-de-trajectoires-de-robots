@@ -54,14 +54,14 @@ class Game(object):
         pygame.quit()
     
     def done(self):
-        return not self._running and self.iteration+1 > len(self.path)
+        return not self._running or self.iteration + 1 >= len(self.path)
 
     def on_execute(self):
         if self.on_init() == False:
             self._running = False
  
         while( not self.done() ):
-            time.sleep(0.5)
+            time.sleep(0.2)
             for event in pygame.event.get():
                 self.on_event(event)
             self.on_loop()
