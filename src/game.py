@@ -14,7 +14,7 @@ class Game(object):
 
         self.path = path
         self.iteration = 0
-        self.forward = False
+        self.forward = True
         self.radius = radius
         self.dt = DT.DescriptionTrajectoire(map,path,label)
         
@@ -108,6 +108,8 @@ class Game(object):
         if self.on_init() == False:
             self._running = False
  
+        if not self.done():
+            self.on_render()
         while( not self.done() ):
             self.forward = False
             for event in pygame.event.get():
