@@ -31,6 +31,28 @@ def get_wall(map,label):
                 wall.append((x,y))
                 
     return wall
+def get_weight(map,label):
+    res = dict()
+    for x in range(len(map)):
+        for y in range(len(map[x])):
+            radius = label.get(map[x][y]).get('danger_area')
+            if radius != None:
+                radius = int(radius)
+                for x2 in range(-radius,radius+1):
+                    for y2 in range(-radius,radius+1):
+                        x_tmp = x + x2
+                        y_tmp = y + y2
+                        radius_tmp = (x- x_tmp)**2 + (y-y_tmp)**2
+                        #si on est dans la zone
+                        if radius_tmp <= radius**2: 
+                            # si on ne sort pas de la map
+                            if x_tmp >= 0 and y_tmp >= 0 and x_tmp < len(map[x]) and y_tmp < len(map[x]): 
+                                if res.get((x_tmp, y_tmp)) == None:
+                                    res[(x_tmp, y_tmp)] = radius - sqrt(radius_tmp)
+                                else:
+                                    res[(x_tmp, y_tmp)] += radius - sqrt(radius_tmp)
+    return res
+
 
 def affichage_console(map,path,label):
     
@@ -100,7 +122,6 @@ def blue_path(map,label):
         
 def main():
     
-    map = readfile.read_map_csv('../ressource/map1.csv')
     map = readfile.read_map_tmx('../ressource/map1.tmx')
     label = readfile.read_desc_xml('../ressource/descripteur.tsx')
     #print(label)
