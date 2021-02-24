@@ -43,6 +43,11 @@ class Game(object):
 	        self._display_surf.blit(image,(x*16,y*16))
         y, x = self.path[self.iteration]
         self._display_surf.blit(self.robot,(x*16,y*16))
+        for y, x in self.path:
+            s = pygame.Surface((16,16))  # the size of your rect
+            s.set_alpha(50)                # alpha level
+            s.fill((0,0,255))           # this fills the entire surface
+            self._display_surf.blit(s,(x*16,y*16))
         pygame.display.flip()
     
     def on_cleanup(self):
