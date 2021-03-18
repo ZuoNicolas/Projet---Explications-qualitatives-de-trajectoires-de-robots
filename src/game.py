@@ -28,6 +28,7 @@ class Game(object):
         #zone d'affichage
         self._display_surf = pygame.display.set_mode(self.size, pygame.HWSURFACE | pygame.DOUBLEBUF)
         self._running = True
+        pygame.display.set_caption('robot')#ecrire le titre de window
         
         tm = pytmx.load_pygame(self.filename, pixelalpha=True)
         self.layer = tm.get_layer_by_name(root.find('layer').get("name"))
@@ -82,20 +83,26 @@ class Game(object):
         msg = self.dt.descriptiontTrajectoireActif(self.radius, saw=False, iterator=self.iteration)
         print(self.iteration,':',msg)
         self._display_surf.blit(self.robot,(x*16,y*16))
-        
         for y, x in self.path:
             s = pygame.Surface((16,16))  # the size of your rect
             s.set_alpha(50)                # alpha level
             s.fill((0,0,255))           # this fills the entire surface
             self._display_surf.blit(s,(x*16,y*16))
+        #affiche la discription
+        self.set_discription(self._display_surf,msg)
         pygame.display.flip()
-
     def draw_circle_alpha(self, surface, color, center, radius):
         target_rect = pygame.Rect(center, (0, 0)).inflate((radius * 2, radius * 2))
         shape_surf = pygame.Surface(target_rect.size, pygame.SRCALPHA)
         shape_surf.set_alpha(50)
         pygame.draw.circle(shape_surf, color, (radius, radius), radius)
         surface.blit(shape_surf, target_rect)
+
+
+    def set_discription(self,surface,discription):
+        font=pygame.font.SysFont('Times', 12)
+        text = font.render(discription, True, (0, 0, 255), (0, 255, 0))
+        surface.blit(text,(0,0))
         
     def on_cleanup(self):
         pygame.quit()
