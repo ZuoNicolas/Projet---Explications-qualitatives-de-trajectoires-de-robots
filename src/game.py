@@ -101,8 +101,13 @@ class Game(object):
 
     def set_discription(self,surface,discription):
         font=pygame.font.SysFont('Times', 12)
-        text = font.render(discription, True, (0, 0, 255), (0, 255, 0))
-        surface.blit(text,(0,0))
+        discrip=discription.split("/")
+        y=0
+        for d in discrip:
+            text = font.render(d, True, (0, 0, 255), (0, 255, 0))
+            text_w, text_h = text.get_size()
+            surface.blit(text, (0, y))
+            y=y+text_h
         
     def on_cleanup(self):
         pygame.quit()
