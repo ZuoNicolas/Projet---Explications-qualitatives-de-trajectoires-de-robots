@@ -211,7 +211,9 @@ def main():
 
     ### les fichiers disponible
     ## plusieur chemin
-    file = '../ressource/zone_non carre.tmx'
+    file = '../ressource/zone_non_carre2.tmx'
+    ## plusieur chemin avec un rocher
+    #file = '../ressource/zone_non carre.tmx'
     
     ## zone tres simple
     #file = '../ressource/map1.tmx'
@@ -238,12 +240,12 @@ def main():
     print("=>",find_intercection(map, label, paths))
 
     ##a* classique
-    paths = [PCCH.a_start(start, end, len(map), len(map[0]), wall)]
-    print("Path PCCH :", paths)
+    #paths = [PCCH.a_start(start, end, len(map), len(map[0]), wall)]
+    #print("Path PCCH :", paths)
 
     ##a* avec changement de poid
-    #paths = [PCCH.a_start(start, end, len(map),len(map[0]), wall, weight)]
-    #print("Path PCCH safe :", paths)
+    paths = [PCCH.a_start(start, end, len(map),len(map[0]), wall, weight)]
+    print("Path PCCH safe :", paths)
 
     for path in paths:
         g = game.Game(file, map, path, label, 2)
@@ -254,9 +256,9 @@ def main():
         dt.descriptiontTrajectoireSimple(2)
 
 
-        affichage_console(map, find_intercection(map, label,  paths), label)
+        affichage_console(map, paths, label)
     
-        d1 = dt.DescriptionTrajectoire(map,path,label)
+        #d1 = dt.DescriptionTrajectoire(map,path,label)
         # d1.descriptiontTrajectoireActif(4) # ???
         
     
