@@ -10,6 +10,7 @@ import readfile
 import descriptionTrajectoire as dt
 from math import sqrt
 import game
+import descriptionTrajectoire2
 
 def get_start_end(map,label):
 
@@ -130,10 +131,16 @@ def main():
     label = readfile.read_desc_xml('../ressource/descripteur.tsx')
     path = blue_path(map, label)
     print("Path Blue :", path)
+    dt = descriptionTrajectoire2.DescriptionTrajectoire(map, path, label)
+    
+    dt.descriptiontTrajectoireSimple(2)
+
+    """
+
     g = game.Game(file, map, path, label, 2)
     g.on_execute()
-    
-    """
+
+
     start, end = get_start_end(map, label)
     wall = get_wall(map, label)
     weight = get_weight(map, label)
