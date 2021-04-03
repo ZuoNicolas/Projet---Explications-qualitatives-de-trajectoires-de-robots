@@ -137,9 +137,8 @@ def blue_path2(map, label, path = []):
     
     new_path = False
 
-    while not (x+1,y) == end:
+    while not (x,y) == end:
         points= []
-        print(x,y)
         if x+1 < tx and (label.get(map[x+1][y]).get('name') == 'tracé' or (x+1,y) == start or (x+1,y) == end) and (x+1,y) not in path:
             points.append((x+1,y))
         if x-1 >= 0 and (label.get(map[x-1][y]).get('name') == 'tracé' or (x+1,y) == start or (x+1,y) == end) and (x-1,y) not in path:
@@ -222,6 +221,7 @@ def main():
     map = readfile.read_map_tmx(file)
     label = readfile.read_desc_xml('../ressource/descripteur.tsx')
     start, end = get_start_end(map, label)
+    print("Start", start, "end", end)
     wall = get_wall(map, label)
     weight = get_weight(map, label)
 
@@ -230,38 +230,38 @@ def main():
     paths = blue_path2(map, label)
     print("Path Blue v2 :", paths, np.shape(paths))
     wall = transform_wall(map, label, paths)
+    print("Wall = ", wall)
 
     print("=>",find_intercection(map, label, paths))
 
     ##a* classique
     path1 = [PCCH.a_start(start, end, len(map), len(map[0]), wall)]
-    print("Path PCCH :", paths)
+    print("Path PCCH :", path1)
 
     ##a* avec changement de poid
     path2 = [PCCH.a_start(start, end, len(map),len(map[0]), wall, weight)]
-    print("Path PCCH safe :", paths)
+    print("Path PCCH safe :", path2)
 
     res = (path1, path2, paths)
     
-    paths = res[2]
+    paths = res[0]
 
-    with_game = False
+    with_game = True
 
 
     for path in paths:
+
         if with_game:
             g = game.Game(file, map, path, label, 2)
             g.on_execute()
         
+        print("                 ====                         ",path,len(path))
         dt = descriptionTrajectoire2.DescriptionTrajectoire(map, path, label)
     
         dt.descriptiontTrajectoireSimple(2)
 
 
         affichage_console(map, path, label)
-    
-        #d1 = dt.DescriptionTrajectoire(map,path,label)
-        # d1.descriptiontTrajectoireActif(4) # ???
         
     
 if __name__ == '__main__':
