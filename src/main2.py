@@ -178,12 +178,31 @@ def transform_wall(map,label, path):
     for x in range(len(map)):
         for y in range(len(map[x])):
             if (x,y) not in path:
-                print(x,y)
                 wall.append((x,y))
                 
     return wall
 
 
+def find_intercection(map, label, paths):
+    inter = []
+    start, end = get_start_end(map,label)
+    tx = len(map)
+    ty = len(map[0])
+    for path in paths: # pour chaque chemin
+        for x, y in path:
+            tmp = 0
+            if x+1 < tx and (label.get(map[x+1][y]).get('name') == 'tracé' or (x+1,y) == start or (x+1,y) == end):
+                tmp+=1
+            if x-1 >= 0 and (label.get(map[x-1][y]).get('name') == 'tracé' or (x-1,y) == start or (x-1,y) == end):
+                tmp+=1
+            if y+1 < ty and (label.get(map[x][y+1]).get('name') == 'tracé' or (x,y+1) == start or (x,y+1) == end):
+                tmp+=1
+            if y-1 >= 0 and (label.get(map[x][y-1]).get('name') == 'tracé' or (x,y-1) == start or (x,y-1) == end):
+                tmp+=1
+            if tmp >= 3 and (x,y) not in inter:
+                inter.append((x,y))
+            
+    return inter
 
 
 
@@ -216,6 +235,8 @@ def main():
     print("Path Blue v2 :", paths, np.shape(paths))
     wall = transform_wall(map, label, paths)
 
+    print("=>",find_intercection(map, label, paths))
+
     ##a* classique
     paths = [PCCH.a_start(start, end, len(map), len(map[0]), wall)]
     print("Path PCCH :", paths)
@@ -227,17 +248,17 @@ def main():
     for path in paths:
         g = game.Game(file, map, path, label, 2)
         g.on_execute()
-        """
+        
         dt = descriptionTrajectoire2.DescriptionTrajectoire(map, path, label)
     
         dt.descriptiontTrajectoireSimple(2)
 
 
-        affichage_console(map, path, label)
+        affichage_console(map, find_intercection(map, label,  paths), label)
     
         d1 = dt.DescriptionTrajectoire(map,path,label)
-        d1.descriptiontTrajectoireActif(4)
-        """
+        # d1.descriptiontTrajectoireActif(4) # ???
+        
     
 if __name__ == '__main__':
     main()
