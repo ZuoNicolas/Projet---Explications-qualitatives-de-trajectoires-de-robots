@@ -9,7 +9,7 @@ import PCCH
 import readfile
 import descriptionTrajectoire as dt
 from math import sqrt
-import game
+import game2
 import descriptionTrajectoire2
 import Traduction
 
@@ -138,7 +138,7 @@ def main():
 
     print(Traduction.Description_to_Txt(description_list,label))
     
-    g = game.Game(file, map, path, label, 2)
+    g = game2.Game(file, map, path, label, 2)
     g.on_execute()
     """
 
