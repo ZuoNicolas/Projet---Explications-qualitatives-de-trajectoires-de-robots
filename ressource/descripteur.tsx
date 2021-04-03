@@ -47,7 +47,7 @@
   <terrain name="rebort_mur" tile="949">
    <properties>
     <property name="canPass" type="bool" value="false"/>
-    <property name="genre" value=""/>
+    <property name="genre" value="M"/>
     <property name="vision_area" type="int" value="2"/>
    </properties>
   </terrain>
