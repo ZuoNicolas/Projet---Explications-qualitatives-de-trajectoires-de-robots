@@ -137,15 +137,15 @@ def blue_path2(map, label, path = []):
     
     new_path = False
 
-    while not (x,y) == end:
+    while not path[-1] == end:
         points= []
         if x+1 < tx and (label.get(map[x+1][y]).get('name') == 'tracé' or (x+1,y) == start or (x+1,y) == end) and (x+1,y) not in path:
             points.append((x+1,y))
-        if x-1 >= 0 and (label.get(map[x-1][y]).get('name') == 'tracé' or (x+1,y) == start or (x+1,y) == end) and (x-1,y) not in path:
+        if x-1 >= 0 and (label.get(map[x-1][y]).get('name') == 'tracé' or (x-1,y) == start or (x-1,y) == end) and (x-1,y) not in path:
             points.append((x-1,y))
-        if y+1 < ty and (label.get(map[x][y+1]).get('name') == 'tracé' or (x+1,y) == start or (x+1,y) == end) and (x,y+1) not in path:
+        if y+1 < ty and (label.get(map[x][y+1]).get('name') == 'tracé' or (x,y+1) == start or (x,y+1) == end) and (x,y+1) not in path:
             points.append((x,y+1))
-        if y-1 >= 0 and (label.get(map[x][y-1]).get('name') == 'tracé' or (x+1,y) == start or (x+1,y) == end) and (x,y-1) not in path:
+        if y-1 >= 0 and (label.get(map[x][y-1]).get('name') == 'tracé' or (x,y-1) == start or (x,y-1) == end) and (x,y-1) not in path:
             points.append((x,y-1))
         if len(points) > 1:
             path_tmp = path.copy()
@@ -163,7 +163,7 @@ def blue_path2(map, label, path = []):
             break
     if path[-1] == end:
         return [path]
-    return [path]
+    return []
 
 def transform_wall(map,label, path):
     wall=[]
@@ -242,9 +242,9 @@ def main():
     path2 = [PCCH.a_start(start, end, len(map),len(map[0]), wall, weight)]
     print("Path PCCH safe :", path2)
 
-    res = (path1, path2, paths)
+    res = (path1, path2, paths) # a* a* safe toutles chemin par blue path
     
-    paths = res[1]
+    paths = res[2]
 
     with_game = True
 
@@ -255,7 +255,6 @@ def main():
             g = game.Game(file, map, path, label, 2)
             g.on_execute()
         
-        print("                 ====                         ",path,len(path))
         dt = descriptionTrajectoire2.DescriptionTrajectoire(map, path, label)
     
         dt.descriptiontTrajectoireSimple(2)
