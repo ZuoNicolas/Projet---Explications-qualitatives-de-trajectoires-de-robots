@@ -89,6 +89,7 @@ class DescriptionTrajectoire():
             old = orientation
             
             if description_temp == sauvegarde: #Si il n'y a aucun changement on incrémente l'anti-spam
+                description_temp = description_temp[:-1]
                 anti_spam+=1
                 if anti_spam > nb_de_case_anti_spam:
                     old_res=''
@@ -145,14 +146,14 @@ class DescriptionTrajectoire():
         vect_y = case_suivante[1] - case_present[1]
         
         if vect_x > 0 :
-            return self.myEnum.EST #Est
+            return self.myEnum.SUD
         elif vect_x < 0 :
-            return self.myEnum.OUEST #Ouest
+            return self.myEnum.NORD
         elif vect_x == 0:
             if vect_y > 0:
-                return self.myEnum.NORD #Nord
+                return self.myEnum.EST
             elif vect_y < 0:
-                return self.myEnum.SUD #Sud
+                return self.myEnum.OUEST
             
     def calcul_position_objet(self, d , point,point_objet):
         """         0 : Nord
