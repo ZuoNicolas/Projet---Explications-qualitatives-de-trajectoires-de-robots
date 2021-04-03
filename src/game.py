@@ -23,10 +23,11 @@ class Game(object):
         pygame.init()
         
         root = ET.parse(self.filename).getroot()
-        self.size = self.weight, self.height = int(root.get("height")) * 16, int(root.get("width")) * 16 #a changer
+        self.size = self.weight, self.height = int(root.get("width")) * 16, (int(root.get("height"))+10) * 16  #a changer
         print(self.size)
         #zone d'affichage
         self._display_surf = pygame.display.set_mode(self.size, pygame.HWSURFACE | pygame.DOUBLEBUF)
+        
         self._running = True
         pygame.display.set_caption('robot')#ecrire le titre de window
         
@@ -76,6 +77,7 @@ class Game(object):
         self.iteration +=1
         
     def on_render(self):
+
         for x, y, image in self.layer.tiles():
 	        self._display_surf.blit(image,(x*16,y*16))
         y, x = self.path[self.iteration]
@@ -100,15 +102,17 @@ class Game(object):
 
 
     def set_discription(self,surface,discription):
+        discp_surf=pygame.Surface((self.weight,10*16))
+        discp_surf.fill((255,255,255))
         font=pygame.font.SysFont('Times', 12)
         discrip=discription.split("/")
         y=0
         for d in discrip:
             text = font.render(d, True, (0, 0, 255), (0, 255, 0))
             text_w, text_h = text.get_size()
-            surface.blit(text, (0, y))
+            discp_surf.blit(text, (0, y))
             y=y+text_h
-        
+        self._display_surf.blit(discp_surf,((0,self.height-10*16)))
     def on_cleanup(self):
         pygame.quit()
     
