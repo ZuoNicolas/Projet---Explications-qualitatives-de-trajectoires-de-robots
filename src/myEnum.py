@@ -28,12 +28,17 @@ class Description(Enum):
     PROCHE = -15
     LOIN = -16
     
-    #Direction
+    #Direction Passe
     GAUCHE = -22
     DROITE = -23
     DEVANT = -24
     DERRIERE = -25
     ENTRE = -26
+    
+    #Direction Tourner
+    A_GAUCHE = -30
+    A_DROITE = -31
+    _DERRIERE = -32
     
     #Objet 
     OBJECT = -60

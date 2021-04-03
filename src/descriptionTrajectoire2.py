@@ -9,7 +9,7 @@ class DescriptionTrajectoire():
             self.path = path
             self.label = label
             self.description = []
-            self.myEnum = myEnum.Description
+            self.myDescription = myEnum.Description
             
     def descriptiontTrajectoireSimple(self, agent_rayon=None):
         """ list(list(int)) * list(int) * dict{int:dict{str:str}}
@@ -21,7 +21,7 @@ class DescriptionTrajectoire():
     
         #créer une liste qui décris chaque case du path où les objets sont a porter d'intéraction de la case en question
         map_local = self.local_map(agent_rayon)
-        print(map_local)
+        #print(map_local)
         
         old = None #Sauvegarde de l'ancienne orientation
         n_case = -1 #Compteur du nombre de case parcourus avant un événement
@@ -60,8 +60,8 @@ class DescriptionTrajectoire():
                 #     desc += self.msg_avance_de(n_case)
             
                 # n_case=0 #Remise à 0 du compteur après un événement
-                description_temp.append(self.myEnum.INTERSECTION)
-                description_temp += [self.myEnum.TOURNE, self.message_orientation(old, orientation) ]#Ajout du bon message en fonction des orientations
+                description_temp.append(self.myDescription.INTERSECTION)
+                description_temp += [self.myDescription.TOURNE, self.message_orientation(old, orientation) ]#Ajout du bon message en fonction des orientations
                 
             #Si il y a un événement sur la case
             if map_local[i] != [] :
@@ -76,9 +76,9 @@ class DescriptionTrajectoire():
                     
                     # if n_case != 0: #Pour évité les messages "j'avance de 0 case
                     #     desc += self.msg_avance_de(n_case)
-                    
-                    description_temp.append(self.myEnum.OBJECT)
+                    description_temp.append(self.myDescription.PASSE)
                     description_temp += res
+                    description_temp.append(self.myDescription.OBJECT)
                     
                     #Mise à jour des variables
                     old_res = res
@@ -99,11 +99,9 @@ class DescriptionTrajectoire():
         #Ajout du dernier événement
         description_temp = []
         description_temp.append(orientation)
-        description_temp += self.avancer_jusqu_a() + [self.myEnum.ARRIVER]
+        description_temp += self.avancer_jusqu_a() + [self.myDescription.ARRIVER]
         
         self.description.append(description_temp)
-        
-        print(self.description)
         
         return self.description
             
@@ -146,14 +144,14 @@ class DescriptionTrajectoire():
         vect_y = case_suivante[1] - case_present[1]
         
         if vect_x > 0 :
-            return self.myEnum.SUD
+            return self.myDescription.SUD
         elif vect_x < 0 :
-            return self.myEnum.NORD
+            return self.myDescription.NORD
         elif vect_x == 0:
             if vect_y > 0:
-                return self.myEnum.EST
+                return self.myDescription.EST
             elif vect_y < 0:
-                return self.myEnum.OUEST
+                return self.myDescription.OUEST
             
     def calcul_position_objet(self, d , point,point_objet):
         """         0 : Nord
@@ -167,43 +165,43 @@ class DescriptionTrajectoire():
         x, y = point
         xo, yo = point_objet
         
-        if d == 0:
+        if d == self.myDescription.NORD:
             if y < yo :
-                return self.myEnum.GAUCHE
+                return self.myDescription.GAUCHE
             elif y > yo  :
-                return self.myEnum.DROITE
+                return self.myDescription.DROITE
             elif x > xo :
-                return self.myEnum.DEVANT
+                return self.myDescription.DEVANT
             else :
-                return self.myEnum.DERRIERE
-        if d == 1:
+                return self.myDescription.DERRIERE
+        if d == self.myDescription.EST:
             if x < xo :
-                return self.myEnum.GAUCHE
+                return self.myDescription.GAUCHE
             elif x > xo :
-                return self.myEnum.DROITE
+                return self.myDescription.DROITE
             elif y < yo :
-                return self.myEnum.DEVANT
+                return self.myDescription.DEVANT
             else :
-                return self.myEnum.DERRIERE
+                return self.myDescription.DERRIERE
             
-        if d == 2:#check
+        if d == self.myDescription.SUD:
             if y > yo :
-                return self.myEnum.GAUCHE
+                return self.myDescription.GAUCHE
             elif y < yo :
-                return self.myEnum.DROITE
+                return self.myDescription.DROITE
             elif x < xo :
-                return self.myEnum.DEVANT
+                return self.myDescription.DEVANT
             else :
-                return self.myEnum.DERRIERE
-        if d == 3:
+                return self.myDescription.DERRIERE
+        if d == self.myDescription.OUEST:
             if x > xo :
-                return self.myEnum.GAUCHE
+                return self.myDescription.GAUCHE
             elif x < xo :
-                return self.myEnum.DROITE
+                return self.myDescription.DROITE
             elif y > yo:
-                return self.myEnum.DEVANT
+                return self.myDescription.DEVANT
             else :
-                return self.myEnum.DERRIERE
+                return self.myDescription.DERRIERE
         
     def message_orientation(self, old, now):
         """         0 : Nord
@@ -211,52 +209,52 @@ class DescriptionTrajectoire():
                     2 : Sud
         Prend deux direction : {0,1,2,3}  et renvoie un String pour dire dans quel sens on a tourné depuis la dernière orientation
         """
-        if old == self.myEnum.NORD:
+        if old == self.myDescription.NORD:
             
-            if now == self.myEnum.EST:
-                return self.myEnum.DROITE
+            if now == self.myDescription.EST:
+                return self.myDescription.A_DROITE
             
-            if now == self.myEnum.SUD:
-                return self.myEnum.DERRIERE
+            if now == self.myDescription.SUD:
+                return self.myDescription._DERRIERE
             
-            if now == self.myEnum.OUEST:
-                return self.myEnum.GAUCHE
+            if now == self.myDescription.OUEST:
+                return self.myDescription.A_GAUCHE
             
-        if old == self.myEnum.EST:
+        if old == self.myDescription.EST:
             
-            if now == self.myEnum.SUD:
-                return self.myEnum.DROITE
+            if now == self.myDescription.SUD:
+                return self.myDescription.A_DROITE
             
-            if now == self.myEnum.OUEST:
-                return self.myEnum.DERRIERE
+            if now == self.myDescription.OUEST:
+                return self.myDescription._DERRIERE
             
-            if now == self.myEnum.NORD:
-                return self.myEnum.GAUCHE
+            if now == self.myDescription.NORD:
+                return self.myDescription.A_GAUCHE
             
-        if old == self.myEnum.SUD:
+        if old == self.myDescription.SUD:
             
-            if now == self.myEnum.OUEST:
-                return self.myEnum.DROITE
+            if now == self.myDescription.OUEST:
+                return self.myDescription.A_DROITE
             
-            if now == self.myEnum.NORD:
-                return self.myEnum.DERRIERE
+            if now == self.myDescription.NORD:
+                return self.myDescription._DERRIERE
             
-            if now == self.myEnum.EST:
-                return self.myEnum.GAUCHE
+            if now == self.myDescription.EST:
+                return self.myDescription.A_GAUCHE
             
-        if old == self.myEnum.OUEST:
+        if old == self.myDescription.OUEST:
             
-            if now == self.myEnum.NORD:
-                return self.myEnum.DROITE
+            if now == self.myDescription.NORD:
+                return self.myDescription.A_DROITE
             
-            if now == self.myEnum.EST:
-                return self.myEnum.DERRIERE
+            if now == self.myDescription.EST:
+                return self.myDescription._DERRIERE
             
-            if now == self.myEnum.SUD:
-                return self.myEnum.GAUCHE
+            if now == self.myDescription.SUD:
+                return self.myDescription.A_GAUCHE
         
     def avancer_jusqu_a(self):
         
-        return [self.myEnum.AVANCE, self.myEnum.JUSQU_A]
+        return [self.myDescription.AVANCE, self.myDescription.JUSQU_A]
         
 
