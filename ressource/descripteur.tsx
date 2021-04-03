@@ -8,6 +8,7 @@
   <terrain name="terre" tile="185">
    <properties>
     <property name="canPass" type="bool" value="true"/>
+    <property name="genre" value="F"/>
    </properties>
   </terrain>
   <terrain name="eau" tile="673">
@@ -21,6 +22,7 @@
   <terrain name="tracé" tile="120">
    <properties>
     <property name="canPass" type="bool" value="true"/>
+    <property name="genre" value="M"/>
    </properties>
   </terrain>
   <terrain name="eau" tile="120">
@@ -32,23 +34,27 @@
   <terrain name="caillou" tile="603">
    <properties>
     <property name="canPass" type="bool" value="false"/>
+    <property name="genre" value="M"/>
     <property name="vision_area" type="int" value="2"/>
    </properties>
   </terrain>
   <terrain name="entrée_sortie" tile="932">
    <properties>
+    <property name="genre" value="F"/>
     <property name="vision_area" type="int" value="1"/>
    </properties>
   </terrain>
   <terrain name="rebort_mur" tile="949">
    <properties>
     <property name="canPass" type="bool" value="false"/>
+    <property name="genre" value=""/>
     <property name="vision_area" type="int" value="2"/>
    </properties>
   </terrain>
   <terrain name="arbre" tile="1081">
    <properties>
     <property name="canPass" type="bool" value="false"/>
+    <property name="genre" value="M"/>
     <property name="vision_area" type="int" value="2"/>
    </properties>
   </terrain>
@@ -56,24 +62,28 @@
    <properties>
     <property name="canPass" type="bool" value="false"/>
     <property name="danger_area" type="int" value="5"/>
+    <property name="genre" value="M"/>
     <property name="vision_area" type="int" value="4"/>
    </properties>
   </terrain>
   <terrain name="fleur" tile="945">
    <properties>
     <property name="canPass" type="bool" value="false"/>
+    <property name="genre" value="F"/>
     <property name="vision_area" type="int" value="1"/>
    </properties>
   </terrain>
-  <terrain name="bouisson" tile="1081">
+  <terrain name="buisson" tile="1081">
    <properties>
     <property name="canPass" type="bool" value="false"/>
+    <property name="genre" value="M"/>
     <property name="vision_area" type="int" value="1"/>
    </properties>
   </terrain>
   <terrain name="passerelle" tile="677">
    <properties>
     <property name="canPass" type="bool" value="true"/>
+    <property name="genre" value="F"/>
    </properties>
   </terrain>
  </terraintypes>
