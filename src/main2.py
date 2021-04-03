@@ -127,50 +127,43 @@ def blue_path(map,label):
         
 
 
-
-
-
-def blue_path2(map,label, path_save = []):
+def blue_path2(map, label, path = []):
     start, end = get_start_end(map,label)
-    x, y = start
-    point =()
-    path=[start]
+    if len(path)== 0: 
+        path=[start]
+    x, y = path[-1]
     tx = len(map)
     ty = len(map[0])
     
     new_path = False
 
-    while True:
-        if x+1 < tx and label.get(map[x+1][y]).get('name') == 'tracé' and (x+1,y) not in path_save:
-            point = (x+1,y)
-            new_path = True
-        elif x-1 >= 0 and label.get(map[x-1][y]).get('name') == 'tracé' and (x-1,y) not in path_save:
-            point = (x-1,y)
-            new_path = True
-        elif y+1 < ty and label.get(map[x][y+1]).get('name') == 'tracé' and (x,y+1) not in path_save:
-            point = (x,y+1)
-            new_path = True
-        elif y-1 >= 0 and label.get(map[x][y-1]).get('name') == 'tracé' and (x,y-1) not in path_save:
-            point = (x,y-1)
-            new_path = True
-        elif x+1 < tx and label.get(map[x+1][y]).get('name') == 'tracé' and (x+1,y) not in path:
-            point = (x+1,y)
-        elif x-1 >= 0 and label.get(map[x-1][y]).get('name') == 'tracé' and (x-1,y) not in path:
-            point = (x-1,y)
-        elif y+1 < ty and label.get(map[x][y+1]).get('name') == 'tracé' and (x,y+1) not in path:
-            point = (x,y+1)
-        elif y-1 >= 0 and label.get(map[x][y-1]).get('name') == 'tracé' and (x,y-1) not in path:
-            point = (x,y-1)
+    while not (x,y) == end:
+        points= []
+        if x+1 < tx and (label.get(map[x+1][y]).get('name') == 'tracé' or (x+1,y) == start or (x+1,y) == end) and (x+1,y) not in path:
+            points.append((x+1,y))
+        if x-1 >= 0 and (label.get(map[x-1][y]).get('name') == 'tracé' or (x+1,y) == start or (x+1,y) == end) and (x-1,y) not in path:
+            points.append((x-1,y))
+        if y+1 < ty and (label.get(map[x][y+1]).get('name') == 'tracé' or (x+1,y) == start or (x+1,y) == end) and (x,y+1) not in path:
+            points.append((x,y+1))
+        if y-1 >= 0 and (label.get(map[x][y-1]).get('name') == 'tracé' or (x+1,y) == start or (x+1,y) == end) and (x,y-1) not in path:
+            points.append((x,y-1))
+        if len(points) > 1:
+            path_tmp = path.copy()
+            path = []
+            for point in points:
+                path_tmp = path_tmp.copy()
+                res_tmp = blue_path2(map, label, path_tmp + [point])
+                for res in res_tmp:
+                    path.append(res)
+            return path
+        elif len(points) == 1:
+            x, y = points[0]
+            path.append(points[0])
         else:
             break
-        x, y = point
-        path.append(point)
-        path_save.append(point)
-        
-    path.append(end)
-    if new_path:
-        return [path] + blue_path2(map, label, path_save)
-    return []
+    if path[-1] == end:
+        return [path]
+    return [path]
 
 def transform_wall(map,label, path):
     wall=[]
@@ -228,6 +221,7 @@ def main():
     map = readfile.read_map_tmx(file)
     label = readfile.read_desc_xml('../ressource/descripteur.tsx')
     start, end = get_start_end(map, label)
+    print("Start", start, "end", end)
     wall = get_wall(map, label)
     weight = get_weight(map, label)
 
@@ -236,30 +230,38 @@ def main():
     paths = blue_path2(map, label)
     print("Path Blue v2 :", paths, np.shape(paths))
     wall = transform_wall(map, label, paths)
+    print("Wall = ", wall)
 
     print("=>",find_intercection(map, label, paths))
 
     ##a* classique
-    #paths = [PCCH.a_start(start, end, len(map), len(map[0]), wall)]
-    #print("Path PCCH :", paths)
+    path1 = [PCCH.a_start(start, end, len(map), len(map[0]), wall)]
+    print("Path PCCH :", path1)
 
     ##a* avec changement de poid
-    paths = [PCCH.a_start(start, end, len(map),len(map[0]), wall, weight)]
-    print("Path PCCH safe :", paths)
+    path2 = [PCCH.a_start(start, end, len(map),len(map[0]), wall, weight)]
+    print("Path PCCH safe :", path2)
+
+    res = (path1, path2, paths)
+    
+    paths = res[0]
+
+    with_game = True
+
 
     for path in paths:
-        g = game.Game(file, map, path, label, 2)
-        g.on_execute()
+
+        if with_game:
+            g = game.Game(file, map, path, label, 2)
+            g.on_execute()
         
+        print("                 ====                         ",path,len(path))
         dt = descriptionTrajectoire2.DescriptionTrajectoire(map, path, label)
     
         dt.descriptiontTrajectoireSimple(2)
 
 
-        affichage_console(map, paths, label)
-    
-        #d1 = dt.DescriptionTrajectoire(map,path,label)
-        # d1.descriptiontTrajectoireActif(4) # ???
+        affichage_console(map, path, label)
         
     
 if __name__ == '__main__':
