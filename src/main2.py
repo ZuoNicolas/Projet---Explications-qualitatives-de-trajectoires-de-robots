@@ -136,7 +136,6 @@ def blue_path2(map, label, path = []):
     ty = len(map[0])
     
     new_path = False
-    print(path)
 
     while not (x+1,y) == end:
         points= []
@@ -154,9 +153,7 @@ def blue_path2(map, label, path = []):
             path = []
             for point in points:
                 path_tmp = path_tmp.copy()
-                #print("===>",path_tmp, "===",path_tmp + [point], "===", point)
                 res_tmp = blue_path2(map, label, path_tmp + [point])
-                print(res_tmp)
                 for res in res_tmp:
                     path.append(res)
             return path
@@ -248,7 +245,7 @@ def main():
     
     paths = res[2]
 
-    with_game = True
+    with_game = False
 
 
     for path in paths:
