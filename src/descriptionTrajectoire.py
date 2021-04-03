@@ -235,14 +235,14 @@ class DescriptionTrajectoire():
         vect_y = case_suivante[1] - case_present[1]
         
         if vect_x > 0 :
-            return 2 #Est
+            return 2 
         elif vect_x < 0 :
-            return 0 #Ouest
+            return 0 
         elif vect_x == 0:
             if vect_y > 0:
-                return 1 #Nord
+                return 1 
             elif vect_y < 0:
-                return 3 #Sud
+                return 3 
             else:
                 print("Erreur dans le calcul de direction")
                 return -1 #erreur

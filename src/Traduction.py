@@ -1,12 +1,22 @@
+import myEnum
+import re
+import numpy as np
 
-def Description_to_Txt(list):
-    voyelle = ['A', 'E', 'I', 'O', 'U', 'Y']
+def Description_to_Txt(list, label):
+    """
+    Fait la traduction de la liste des Descriptions en Texte
+    
+    Difficulté rencontrer, devoir apprendre l'étymologie de la langue Française ... :'(
+    """
+    voyelle = ['A', 'E', 'I', 'O', 'U', 'Y','a', 'e', 'i', 'o', 'u', 'y']
     msg = ''
     old_orientation = ''
     old_msg = ''
     espace = ' '
     virgule =', '
     point = '.'
+    description = []
+    
     for ite in list:
         orientation = ''
         list_action = []
@@ -18,18 +28,20 @@ def Description_to_Txt(list):
         direction_sens = ''
         obj = ''
         old_action = ''
+        obj_id = None
         
         for description in ite:
             if description == None:
                 continue
             
-            if type(description) == str:
-                obj_name = description
+            if type(description) == tuple: #Quand c'est un objet description = tuple(ID,name)
+                obj_id, obj_name = description
                 continue
-            
+
+                
             value = description.value
             name = description.name
-            
+
             if value <= -1 and value >= -4:
                 orientation = name
                 
@@ -57,7 +69,7 @@ def Description_to_Txt(list):
             elif value >= -60:
                 obj = name
             
-        
+
         msg_tmp = ''
         for action in list_action:
             
@@ -77,10 +89,31 @@ def Description_to_Txt(list):
             elif action == 'PASSE' : 
                 a = ''
                 de = ''
+                le = ''
                 if direction_obj in ['GAUCHE', 'DROITE']:
                     a = 'à '
-                    de = 'de'
-                msg_tmp += je + action + espace + a + direction_obj + espace + de + espace + 'l\'' + obj +':' + obj_name
+                    if obj_name[0] in voyelle:
+                        de = 'de' + espace
+                        le = 'l\''
+                    elif label.get(obj_id).get('genre') == 'M':
+                        de = 'du' + espace
+                    else:
+                        de = 'de' + espace
+                        le = 'la' + espace
+                else : #Derriere
+                    if obj_name[0] in voyelle:
+                        le = 'l\''
+                    elif label.get(obj_id).get('genre') == 'M':
+                        le = 'le' + espace
+                    else:
+                        le = 'la' + espace
+
+                if obj_name in msg_tmp:
+                    msg_tmp = re.sub(de + le + obj_name, 'des' + espace + obj_name + 's', msg_tmp) #modifie pour avoir en pluriel
+                    msg_tmp = msg_tmp[:-2] #pour enlever les virgules de fin, comme on rajoute pas de contenu mais qu'on a modifié
+                else : 
+                    msg_construit = je + action + espace + a + direction_obj + espace + de + le + obj_name
+                    msg_tmp += msg_construit
     
         if old_msg != msg_tmp  and msg_tmp != '':
             msg += msg_tmp + point +'\n'
@@ -89,13 +122,42 @@ def Description_to_Txt(list):
             
     return msg
 
-def txt_to_Description(list):
+def txt_to_Description(text, case_départ, orientation_départ, map):
+    """
+    L'utilisateur donne des descriptions sur la carte, sur des mots prédefinie, exemple :
+        J'avance jusqu'au fleur, ou j'avance très près des fleurs, et s'il y a plusieur fleur sur la carte,
+        soit on laisse l'utilisateur choisir lequelles soit on choisis les fleurs les plus proche du robot
+        
+    On pourra faire cette traduction en faisant plusieur A* du point actuelle jusqu'au point demandé avec de certaine option,
+    par exemple si dans la phrase l'utilisateur dit, 'par un chemin sécurisé', alors on mettra une option dans notre A*, pour qu'il
+    trouve un chemin sûr d'un point A à un point B, et quand on a construit notre path, il nous reste plus qu'a le faire passer 
+    dans notre descriptionTrajectoire2
+    """
+    # Version Incomplète a refaire en ->
+    # description = []
+    # list_description = list(myEnum.Description.name)
+    # list_description_name = [ desc.name for desc in list_description]
     
-    msg = ''
+    # text = re.sub("'", " ", text)
+    # text = re.sub(",", " ", text)
+    # text = re.sub(".", " ", text)
     
-def Description_to_path(discip,case_present):
+    # orientation = orientation_départ
+    
+    # for txt in text.split('\n'):
+    #     tmp = []
+    #     text_list = txt.split()
+        
+    #     tmp.append(myEnum.orientation)
+    #     for elem in text_list:
+            
+    #         if elem in list_description_name:
+    #             tmp.append(myEnum.elem)
+    
+    
+def Description_to_path(description,case_present):
     path=[case_present]
-    for d in discip:
+    for d in description:
     #direction
         case_suivante=get_next_pos(case_present,d[0])
         path.append(case_suivante)

@@ -69,21 +69,24 @@ class DescriptionTrajectoire():
                 #if path[i] == map_local[i][0][1]: #Pour vérifié si on est bien sur la case, inutile ici
                 
                 #Calcul du message de passage à coté de ...
-                res = [self.calcul_position_objet(orientation, map_local[i][0][1],map_local[i][0][2]), map_local[i][0][0]]
-    
-                #Pour évité le spam quand on passe a coté d'un objet qui a un rayon d'interraction sur plusieur case
-                if res != old_res:
+
+                for ind in range(len(map_local[i])):
                     
-                    # if n_case != 0: #Pour évité les messages "j'avance de 0 case
-                    #     desc += self.msg_avance_de(n_case)
-                    description_temp.append(self.myDescription.PASSE)
-                    description_temp += res
-                    description_temp.append(self.myDescription.OBJECT)
-                    
-                    #Mise à jour des variables
-                    old_res = res
-                    anti_spam=0
+                    res = [self.calcul_position_objet(orientation, map_local[i][ind][1],map_local[i][ind][2]), map_local[i][ind][0]]
+        
+                    #Pour évité le spam quand on passe a coté d'un objet qui a un rayon d'interraction sur plusieur case
+                    if res != old_res:
                         
+                        # if n_case != 0: #Pour évité les messages "j'avance de 0 case
+                        #     desc += self.msg_avance_de(n_case)
+                        description_temp.append(self.myDescription.PASSE)
+                        description_temp += res
+                        description_temp.append(self.myDescription.OBJECT)
+                        
+                        #Mise à jour des variables
+                        old_res = res
+                        anti_spam=0
+
             
             
             old = orientation
@@ -124,7 +127,7 @@ class DescriptionTrajectoire():
                             a,b = self.path[i]
                             rayon = (a - x)**2 + (b - y)**2 #Formule de rayon au carré
                             if rayon <= int(agent_rayon)**2 :
-                                path_area[i].append((self.label.get(self.map[x][y]).get('name'),(a,b),(x,y)))
+                                path_area[i].append(((self.map[x][y],self.label.get(self.map[x][y]).get('name')), (a,b), (x,y)))
                                 
                     else :
                         #Parcours du path pour savoir si une de nos case est dans le rayon d'action de l'objet en question ou non
@@ -132,7 +135,7 @@ class DescriptionTrajectoire():
                             a,b = self.path[i]
                             rayon = (a - x)**2 + (b - y)**2 #Formule de rayon au carré
                             if rayon <= int(rayon_action)**2 :
-                                path_area[i].append((self.label.get(self.map[x][y]).get('name'),(a,b),(x,y)))
+                                path_area[i].append((self.map[x][y], (self.label.get(self.map[x][y]).get('name')), (a,b), (x,y)))
         
     
         return path_area

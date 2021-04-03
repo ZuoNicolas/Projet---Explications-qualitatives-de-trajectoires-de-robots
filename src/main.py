@@ -136,7 +136,7 @@ def main():
     
     description_list = dt.descriptiontTrajectoireSimple(2)
 
-    print(Traduction.Description_to_Txt(description_list))
+    print(Traduction.Description_to_Txt(description_list,label))
     
     g = game.Game(file, map, path, label, 2)
     g.on_execute()
