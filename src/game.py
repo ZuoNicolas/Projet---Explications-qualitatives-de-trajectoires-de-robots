@@ -107,8 +107,9 @@ class Game(object):
         font=pygame.font.SysFont('Times', 12)
         discrip=discription.split("/")
         y=0
-        for d in discrip:
-            text = font.render(d, True, (0, 0, 255), (0, 255, 0))
+        for d in discrip[0:]:
+
+            text = font.render(d, True, (0,0,0), (255,255,255))
             text_w, text_h = text.get_size()
             discp_surf.blit(text, (0, y))
             y=y+text_h
