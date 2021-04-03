@@ -174,9 +174,11 @@ def blue_path2(map,label, path_save = []):
 
 def transform_wall(map,label, path):
     wall=[]
+    path = [elem for e in path for elem in e]
     for x in range(len(map)):
         for y in range(len(map[x])):
             if (x,y) not in path:
+                print(x,y)
                 wall.append((x,y))
                 
     return wall
@@ -212,11 +214,11 @@ def main():
     # chemin bleu
     paths = blue_path2(map, label)
     print("Path Blue v2 :", paths, np.shape(paths))
-    
+    wall = transform_wall(map, label, paths)
 
     ##a* classique
-    paths = [PCCH.a_start(start, end, len(map),len(map[0]),wall)]
-    #print("Path PCCH :", paths)
+    paths = [PCCH.a_start(start, end, len(map), len(map[0]), wall)]
+    print("Path PCCH :", paths)
 
     ##a* avec changement de poid
     #paths = [PCCH.a_start(start, end, len(map),len(map[0]), wall, weight)]
@@ -225,7 +227,7 @@ def main():
     for path in paths:
         g = game.Game(file, map, path, label, 2)
         g.on_execute()
-
+        """
         dt = descriptionTrajectoire2.DescriptionTrajectoire(map, path, label)
     
         dt.descriptiontTrajectoireSimple(2)
@@ -235,6 +237,7 @@ def main():
     
         d1 = dt.DescriptionTrajectoire(map,path,label)
         d1.descriptiontTrajectoireActif(4)
+        """
     
 if __name__ == '__main__':
     main()
