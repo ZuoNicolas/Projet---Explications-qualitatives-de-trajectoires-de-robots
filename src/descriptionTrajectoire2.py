@@ -15,10 +15,10 @@ class DescriptionTrajectoire():
         """ list(list(int)) * list(int) * dict{int:dict{str:str}}
         Parcours le chemin path en regardant les objets au alentours,
         pour retourner la description contruite"""
-        
-        #Stockage de notre description
-        #desc = 'Initialisation :\n'
-    
+
+        if len(self.path) == 0:
+            print("Erreur path vide dans descriptiontrajectoireSimple")
+            return -1
         #créer une liste qui décris chaque case du path où les objets sont a porter d'intéraction de la case en question
         map_local = self.local_map(agent_rayon)
         #print(map_local)
@@ -39,7 +39,6 @@ class DescriptionTrajectoire():
             if i == len(self.path)-1 :
                 break
             
-            #desc += str(i)+" :" #Etape de notre avancement
 
             description_temp = []
             orientation = self.direction(self.path[i],self.path[i+1]) #Calcul de l'orientation de notre agent en regardant sa case actuel et la case suivante
@@ -55,30 +54,18 @@ class DescriptionTrajectoire():
     
             #Si l'orientation du case suivante est différente, alors on rajoute l'événement tourner
             if  old != orientation:
-                #Pour évité les messages "j'avance de 0 case
-                # if n_case != 0:
-                #     desc += self.msg_avance_de(n_case)
-            
-                # n_case=0 #Remise à 0 du compteur après un événement
                 description_temp.append(self.myDescription.INTERSECTION)
                 description_temp += [self.myDescription.TOURNE, self.message_orientation(old, orientation) ]#Ajout du bon message en fonction des orientations
                 
             #Si il y a un événement sur la case
             if map_local[i] != [] :
                 
-                #if path[i] == map_local[i][0][1]: #Pour vérifié si on est bien sur la case, inutile ici
-                
                 #Calcul du message de passage à coté de ...
-
                 for ind in range(len(map_local[i])):
-                    
                     res = [self.calcul_position_objet(orientation, map_local[i][ind][1],map_local[i][ind][2]), map_local[i][ind][0]]
-        
+                    
                     #Pour évité le spam quand on passe a coté d'un objet qui a un rayon d'interraction sur plusieur case
                     if res != old_res:
-                        
-                        # if n_case != 0: #Pour évité les messages "j'avance de 0 case
-                        #     desc += self.msg_avance_de(n_case)
                         description_temp.append(self.myDescription.PASSE)
                         description_temp += res
                         description_temp.append(self.myDescription.OBJECT)
@@ -86,9 +73,7 @@ class DescriptionTrajectoire():
                         #Mise à jour des variables
                         old_res = res
                         anti_spam=0
-
-            
-            
+                        
             old = orientation
             
             if description_temp == sauvegarde: #Si il n'y a aucun changement on incrémente l'anti-spam
