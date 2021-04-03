@@ -93,5 +93,24 @@ def txt_to_Description(list):
     
     msg = ''
     
+def Description_to_path(discip,case_present):
+    path=[case_present]
+    for d in discip:
+    #direction
+        case_suivante=get_next_pos(case_present,d[0])
+        path.append(case_suivante)
+        case_present=case_suivante
+    print(path)
+    return path
+def get_next_pos(case_present,d):
+    if(d.value==-3):#sud
+        return (case_present[0]+1,case_present[1])
+    if(d.value==-1):#nord
+        return (case_present[0]-1,case_present[1])
+    if(d.value==-2):#est
+        return (case_present[0],case_present[1]+1)
+    if(d.value==-4):#ouest
+        return (case_present[0],case_present[1]-1)
+    
 
     
