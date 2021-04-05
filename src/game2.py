@@ -2,8 +2,9 @@ import pygame
 import pytmx
 import xml.etree.ElementTree as ET
 import time
-import descriptionTrajectoire as DT
+import descriptionTrajectoire2 as DT
 import readfile
+import Traduction
 clock = pygame.time.Clock()
 black = (0,0,0)
 white = (255,255,255)
@@ -28,6 +29,11 @@ class Game(object):
         self.forward = True
         self.radius = radius
         self.dt =DT.DescriptionTrajectoire(map, path, label)
+        self.description_list = self.dt.descriptiontTrajectoireSimple(2)
+        
+
+
+
         self.map=map
         self.label=label
 
@@ -35,7 +41,10 @@ class Game(object):
         pygame.init()
         
         root = ET.parse(self.filename).getroot()
-        self.size = self.weight, self.height = (int(root.get("width"))+10) * 16, (int(root.get("height"))+2) * 16  #a changer
+
+        self.tool_width=10*16 #toolbar a droite de fenetre
+        self.discription_height=5*16 #discription en bas de fenetre
+        self.size = self.weight, self.height = (int(root.get("width"))) * 16+self.tool_width, (int(root.get("height"))) * 16+self.discription_height #a changer
         print(self.size)
         #zone d'affichage
         self._display_surf = pygame.display.set_mode(self.size, pygame.HWSURFACE | pygame.DOUBLEBUF)
@@ -58,17 +67,18 @@ class Game(object):
     def add_buttons(self):
         self.construction()
         list_obj=self.list_objets()
+
         while True:
             for event in pygame.event.get():
             #print(event)
                 if event.type == pygame.QUIT:
                     pygame.quit()
                     quit()
-            pos_x=self.weight-10*16
+            pos_x=self.weight-self.tool_width
             pos_y=0
-            print("obj",list_obj)
+            
             for obj in list_obj:
-                if(pos_y+40 >=(self.height-2*16)):
+                if(pos_y+40 >=(self.height-self.discription_height)):
                     pos_x=pos_x+90
                     pos_y=0
                 self.button(obj,pos_x,pos_y,90,40,green,bright_green,self.one_step)
@@ -76,7 +86,7 @@ class Game(object):
                 pos_y=pos_y+40
                 
             pygame.display.update()
-            clock.tick(15)
+            clock.tick(30)
 
     def list_objets(self):
         list_obj=[]
@@ -87,17 +97,6 @@ class Game(object):
                     list_obj.append(objet)
         return list_obj
 
-    def click_avance(self):
-        self.construction()
-        while True:
-            for event in pygame.event.get():
-            #print(event)
-                if event.type == pygame.QUIT:
-                    pygame.quit()
-                    quit()
-            self.button("avancer",0,self.height-10*16,50,self.height-10*16+50,green,bright_green,self.click_jusqu_a)
-            pygame.display.update()
-            clock.tick(15)
 
     def construction(self):
         self._display_surf.fill(white)
@@ -112,23 +111,11 @@ class Game(object):
             s.set_alpha(50)                # alpha level
             s.fill((0,0,255))           # this fills the entire surface
             self._display_surf.blit(s,(x*16,y*16))
-        discp_surf=pygame.Surface((self.weight,2*16))
+        discp_surf=pygame.Surface((self.weight,self.discription_height))
         discp_surf.fill(block_color)
-        self._display_surf.blit(discp_surf,((0,self.height-2*16)))
+        self._display_surf.blit(discp_surf,((0,self.height-self.discription_height)))
     
-    def click_jusqu_a(self):
 
-        while True:
-            for event in pygame.event.get():
-            #print(event)
-                if event.type == pygame.QUIT:
-                    pygame.quit()
-                    quit()
-            self.construction()
-            self.button("jusqu_a",50,self.height-10*16,50,self.height-10*16+50,green,bright_green,self.one_step)
-
-            pygame.display.update()
-            clock.tick(15)
     #action lier au event
     def on_lbutton_up(self, event):
         self.forward = False
@@ -181,7 +168,9 @@ class Game(object):
             self._display_surf.blit(image,(x*16,y*16))
         y, x = self.path[self.iteration]
         self.draw_circle_alpha( self._display_surf, (255,0,0), ((x+0.5)*16,(y+0.5)*16), self.radius*16)
-        msg = self.dt.descriptiontTrajectoireActif(self.radius, saw=False, iterator=self.iteration)
+        
+        msg=Traduction.Description_to_Txt([self.description_list[self.iteration]],self.label)
+        #msg = self.dt.descriptiontTrajectoireActif(self.radius, saw=False, iterator=self.iteration)
         print(self.iteration,':',msg)
         self._display_surf.blit(self.robot,(x*16,y*16))
         for y, x in self.path:
@@ -192,8 +181,7 @@ class Game(object):
         #affiche la discription
         self.set_discription(self._display_surf,msg)
 
-        pygame.display.update()
-        clock.tick(15)
+        pygame.display.flip()
 
 
     def draw_circle_alpha(self, surface, color, center, radius):
@@ -225,18 +213,18 @@ class Game(object):
         self._display_surf.blit(textSurf, textRect)
 
     def set_discription(self,surface,discription):
-        discp_surf=pygame.Surface((self.weight,2*16))
+        discp_surf=pygame.Surface((self.weight,self.discription_height))
         discp_surf.fill(block_color)
         font=pygame.font.SysFont('Times', 12)
-        discrip=discription.split("/")
+        discrip=discription.split(",")
         y=0
-        for d in discrip[1:]:
+        for d in discrip:
 
             text = font.render(d, True, (0,0,0), (255,255,255))
             text_w, text_h = text.get_size()
             discp_surf.blit(text, (0, y))
             y=y+text_h
-        self._display_surf.blit(discp_surf,((0,self.height-2*16)))
+        self._display_surf.blit(discp_surf,((0,self.height-self.discription_height)))
     def on_cleanup(self):
         pygame.quit()
     
