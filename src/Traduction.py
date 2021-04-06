@@ -162,8 +162,8 @@ def Description_to_path(description,case_present):
         case_suivante=get_next_pos(case_present,d[0])
         path.append(case_suivante)
         case_present=case_suivante
-    print(path)
-    return path
+    return path[:-1]
+
 def get_next_pos(case_present,d):
     if(d.value==-3):#sud
         return (case_present[0]+1,case_present[1])
