@@ -149,11 +149,10 @@ def main():
     print("\nIf initial path == Traduction.Description_to_path\n")
     print(path == Desc_to_path)
     
-    """
     g = game2.Game(file, map, path, label, 2)
     g.on_execute()
     
-
+"""
     start, end = get_start_end(map, label)
     wall = get_wall(map, label)
     weight = get_weight(map, label)

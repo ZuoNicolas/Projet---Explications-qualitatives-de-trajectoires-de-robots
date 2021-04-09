@@ -5,7 +5,9 @@ import time
 import descriptionTrajectoire2 as DT
 import readfile
 import Traduction
-clock = pygame.time.Clock()
+import slider 
+
+#clock = pygame.time.Clock()
 black = (0,0,0)
 white = (255,255,255)
 
@@ -64,6 +66,36 @@ class Game(object):
         self.robot = pygame.image.load("../ressource/robot16.png").convert()
 
         self.image_dict = dict()
+        self.construction()
+    def slider(self):
+        
+        danger = slider.Slider("danger", 50, 150, 10, self.weight-self.tool_width,0)
+        slides=[danger]
+        while True:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    quit()
+                    
+                elif event.type == pygame.MOUSEBUTTONDOWN:
+                    pos = pygame.mouse.get_pos()
+                    for s in slides:
+                        if s.button_rect.collidepoint(pos):
+                            s.hit = True
+                elif event.type == pygame.MOUSEBUTTONUP:
+                    for s in slides:
+                        s.hit = False
+
+            # Move slides
+            for s in slides:
+                if s.hit:
+                    s.move()
+            for s in slides:
+                s.draw(self._display_surf)
+
+            pygame.display.flip()
+        #clock.tick(speed.val)
+
     def add_buttons(self):
         self.construction()
         list_obj=self.list_objets()
@@ -86,8 +118,7 @@ class Game(object):
                 pos_y=pos_y+40
                 
             pygame.display.update()
-            clock.tick(30)
-
+            #clock.tick(15)
     def list_objets(self):
         list_obj=[]
         for x in range(len(self.map)):
@@ -181,8 +212,8 @@ class Game(object):
         #affiche la discription
         self.set_discription(self._display_surf,msg)
 
-        pygame.display.flip()
-
+        pygame.display.update()
+        #clock.tick(15)
 
     def draw_circle_alpha(self, surface, color, center, radius):
         target_rect = pygame.Rect(center, (0, 0)).inflate((radius * 2, radius * 2))
@@ -198,7 +229,7 @@ class Game(object):
     def button(self,msg,x,y,w,h,ic,ac,action=None):
         mouse = pygame.mouse.get_pos()
         click = pygame.mouse.get_pressed()
-        print(click)
+        #print(click)
         if x+w > mouse[0] > x and y+h > mouse[1] > y:
             pygame.draw.rect(self._display_surf, ac,(x,y,w,h))
 
@@ -234,7 +265,8 @@ class Game(object):
     def on_execute(self):
         if self.on_init() == False:
             self._running = False
-        self.add_buttons()
+        self.slider()
+        self.one_step()
         #if not self.done():
             #self.on_render()
         #while( not self.done() ):
