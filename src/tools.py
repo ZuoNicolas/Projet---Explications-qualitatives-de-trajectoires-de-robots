@@ -190,13 +190,13 @@ def find_intercection(map, label, paths):
     for path in paths: # pour chaque chemin
         for x, y in path:
             tmp = 0
-            if x+1 < tx and (label.get(map[x+1][y]).get('name') == 'tracé' or (x+1,y) == start or (x+1,y) == end):
+            if x+1 < tx and (any((x+1,y) in sublist for sublist in paths) or (x+1,y) == start or (x+1,y) == end):
                 tmp+=1
-            if x-1 >= 0 and (label.get(map[x-1][y]).get('name') == 'tracé' or (x-1,y) == start or (x-1,y) == end):
+            if x-1 >= 0 and (any((x-1,y) in sublist for sublist in paths) or (x-1,y) == start or (x-1,y) == end):
                 tmp+=1
-            if y+1 < ty and (label.get(map[x][y+1]).get('name') == 'tracé' or (x,y+1) == start or (x,y+1) == end):
+            if y+1 < ty and (any((x,y+1) in sublist for sublist in paths) or (x,y+1) == start or (x,y+1) == end):
                 tmp+=1
-            if y-1 >= 0 and (label.get(map[x][y-1]).get('name') == 'tracé' or (x,y-1) == start or (x,y-1) == end):
+            if y-1 >= 0 and (any((x,y-1) in sublist for sublist in paths) or (x,y-1) == start or (x,y-1) == end):
                 tmp+=1
             if tmp >= 3 and (x,y) not in inter:
                 inter.append((x,y))
@@ -234,7 +234,7 @@ def path_by_retriction(map, label, ltuple_rest):
 
     path, score = PCCH.a_start(start, end, len(map), len(map[0]), wall)
     paths = [path]
-    path_weight = [weight.get(pos) == None for pos in path if weight.get(pos) != None]
+    path_weight = [0 if weight.get(pos) != None else weight.get(pos) == None for pos in path]
     scores = [(score, np.sum(path_weight),len(path), np.max(path_weight))]
     for restriction in ltuple_rest:
         weight_rest = fuse_weidgh([get_weight_dist(map, label, restriction[0]), get_weight(map, label, restriction[1])])
