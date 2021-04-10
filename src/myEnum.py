@@ -3,10 +3,10 @@ from enum import Enum
 class Description(Enum):
     
     #Orientation
-    NORD = -1
-    EST = -2
-    SUD = -3
-    OUEST = -4
+    NORD = 'nord'
+    EST = 'est'
+    SUD = 'sud'
+    OUEST = 'ouest'
     
     #Action
     TOURNE = -5
@@ -39,6 +39,19 @@ class Description(Enum):
     A_GAUCHE = -30
     A_DROITE = -31
     _DERRIERE = -32
+    
+    #Explication Intersection
+    BEAUCOUP_MOINS_SECURITE = 'le chemin est très peu sûr'
+    MOINS_SECURITE = 'le chemin est un peu moins sûr'
+    SECURITE = 'le chemin est aussi sûr'
+    PLUS_SECURITE = 'le chemin est un peu plus sûr'
+    BEAUCOUP_PLUS_SECURITE = 'le chemin est très sûr'
+    
+    BEAUCOUP_MOINS_RAPIDE = 'le chemin est très long'
+    MOINS_RAPIDE = 'le chemin est un peu plus long'
+    RAPIDE = 'le chemin est aussi court'
+    PLUS_RAPIDE = 'le chemin est un peu plus court'
+    BEAUCOU_PLUS_RAPIDE = 'le chemin est beaucoup plus court'
     
     #Objet 
     OBJECT = -60
