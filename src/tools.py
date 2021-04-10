@@ -25,7 +25,7 @@ def get_wall(map,label):
                 
     return wall
 
-def get_weight(map,label):
+def get_weight(map,label,alpha=1):
     res = dict()
     for x in range(len(map)):
         for y in range(len(map[x])):
@@ -42,9 +42,9 @@ def get_weight(map,label):
                             # si on ne sort pas de la map
                             if x_tmp >= 0 and y_tmp >= 0 and x_tmp < len(map[x]) and y_tmp < len(map[x]): 
                                 if res.get((x_tmp, y_tmp)) == None:
-                                    res[(x_tmp, y_tmp)] = radius - sqrt(radius_tmp)
+                                    res[(x_tmp, y_tmp)] = (radius - sqrt(radius_tmp))*alpha
                                 else:
-                                    res[(x_tmp, y_tmp)] += radius - sqrt(radius_tmp)
+                                    res[(x_tmp, y_tmp)] +=(radius - sqrt(radius_tmp))*alpha
     return res
 
 

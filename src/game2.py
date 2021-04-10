@@ -71,6 +71,7 @@ class Game(object):
         
         danger = slider.Slider("danger", 50, 150, 10, self.weight-self.tool_width,0)
         slides=[danger]
+        value=0
         while True:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -90,12 +91,12 @@ class Game(object):
             for s in slides:
                 if s.hit:
                     s.move()
+                    value=s.value
             for s in slides:
                 s.draw(self._display_surf)
 
             pygame.display.flip()
         #clock.tick(speed.val)
-
     def add_buttons(self):
         self.construction()
         list_obj=self.list_objets()
