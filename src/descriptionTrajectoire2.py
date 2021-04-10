@@ -143,7 +143,7 @@ class DescriptionTrajectoire():
             if i == len(self.path)-1 :
                 break
             
-
+            orienter = False
             description_temp = []
             orientation = self.direction(self.path[i],self.path[i+1]) #Calcul de l'orientation de notre agent en regardant sa case actuel et la case suivante
             
@@ -159,16 +159,17 @@ class DescriptionTrajectoire():
             #Si l'orientation du case suivante est différente, alors on rajoute l'événement tourner
             if  old != orientation:
                 description_temp += [self.myDescription.TOURNE, self.message_orientation(old, orientation) ]#Ajout du bon message en fonction des orientations
-
-                if self.path[i] in self.list_tout_les_inter:
-                    description_temp += [self.myDescription.AVANCE, self.myDescription.JUSQU_A,self.myDescription.INTERSECTION]
-                    description_temp += self.explication_intersection(self.path[i], i+1, self.path, path_rapide, path_securiter)
+                orienter = True
+            if self.path[i] in self.list_tout_les_inter:
+                if orienter:
+                    description_temp += [self.myDescription.AVANCE]
+                description_temp += [self.myDescription.JUSQU_A,self.myDescription.INTERSECTION]
+                description_temp += self.explication_intersection(self.path[i], i+1, self.path, path_rapide, path_securiter)
             #Si il y a un événement sur la case
             if map_local[i] != [] :
                 
                 #Calcul du message de passage à coté de ...
                 for ind in range(len(map_local[i])):
-                    print(map_local[i][ind])
                     res = [self.calcul_position_objet(orientation, map_local[i][ind][1],map_local[i][ind][2]), map_local[i][ind][0]]
                     
                     #Pour évité le spam quand on passe a coté d'un objet qui a un rayon d'interraction sur plusieur case
@@ -196,7 +197,7 @@ class DescriptionTrajectoire():
         description_temp += [self.myDescription.AVANCE, self.myDescription.JUSQU_A, self.myDescription.ARRIVER]
         
         self.description.append(description_temp)
-        
+
         return self.description
             
     def local_map(self, agent_rayon=None):

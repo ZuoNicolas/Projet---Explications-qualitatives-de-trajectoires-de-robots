@@ -51,7 +51,7 @@ class Game(object):
         self.tool_width=10*16 #toolbar a droite de fenetre
         self.discription_height=5*16 #discription en bas de fenetre
         self.size = self.weight, self.height = (int(root.get("width"))) * 16+self.tool_width, (int(root.get("height"))) * 16+self.discription_height #a changer
-        print(self.size)
+        #print(self.size)
         #zone d'affichage
         self._display_surf = pygame.display.set_mode(self.size, pygame.HWSURFACE | pygame.DOUBLEBUF)
         self._display_surf.fill(white)
@@ -185,7 +185,7 @@ class Game(object):
                 self.on_rbutton_down(event)
     def one_step(self):
         self.restriction.append((1-self.s.value,self.s.value))
-        print(self.restriction)
+        #print(self.restriction)
         self.discription=self.dt.descriptiontTrajectoirePlusExplication(agent_rayon=self.radius, ltuple_rest=self.restriction)
         self.list_msg = Traduction.Description_to_Txt2(self.discription, self.label)
         for path in self.dt.list_tout_les_chemins:
@@ -202,8 +202,8 @@ class Game(object):
             self._display_surf.blit(s,(x*16,y*16))
 
         
-        print('list chemin',self.dt.list_tout_les_chemins)
-        print('my path',self.dt.path)
+        #print('list chemin',self.dt.list_tout_les_chemins)
+        #print('my path',self.dt.path)
         self.chemin()
         self.construction()
     def chemin(self):

@@ -15,7 +15,7 @@ import Traduction
 from tools import *    
 def main():
     
-    file = '../ressource/exemple1.tmx'
+    file = '../ressource/zone_a_danger(rocher).tmx'
     map = readfile.read_map_tmx(file)
     label = readfile.read_desc_xml('../ressource/descripteur.tsx')
     path = blue_path(map, label)
@@ -25,15 +25,16 @@ def main():
     description_list = dt.descriptiontTrajectoirePlusExplication(2)
     
     
-    #print(description_list)
-    # i = 0
-    # for gen in description_list:
-    #     print(i,':', gen)
-    #     i+=1
+    print(description_list)
+    i = 0
+    for gen in description_list:
+        print(i,':', gen)
+        i+=1
 
     
     print("\n-----Traduction.Description_to_Txt-----\n")
     print(Traduction.Description_to_Txt2(description_list,label))
+    
     """
     print("\n-----Traduction.Description_to_path-----\n")
     Desc_to_path = Traduction.Description_to_path(description_list,path[0])

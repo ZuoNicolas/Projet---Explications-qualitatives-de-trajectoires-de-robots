@@ -10,9 +10,10 @@ def Description_to_Txt2(list_desc, label):
 
     for descriptions in list_desc:
         msg = ''
+        list_obj = []
         for description in descriptions:
             msg_tmp = ''
-
+            
             if description == None:
                 continue
             
@@ -21,7 +22,7 @@ def Description_to_Txt2(list_desc, label):
                 continue
             
             if description in [myEnum.Description.NORD, myEnum.Description.SUD, myEnum.Description.EST, myEnum.Description.OUEST]:
-                    continue
+                continue
                 
             if type(description) == list:
                 msg_tmp += str(myEnum.Description.EXPLICATION.value)+' '
@@ -51,17 +52,42 @@ def Description_to_Txt2(list_desc, label):
                     if rapi_bonne != '':
                         msg_tmp += rapi_bonne+' en terme de distance, mais en terme de sécurité on est '+secu_mauvaise
                     else:
-                        msg_tmp +='bug2'
-            """     
+                        msg_tmp +='bug2'  
             else:
+                
                 value = description.value  
                 
+                if description == myEnum.Description.OBJECT:
+                    value = obj_name
+                    if obj_name not in list_obj:
+                        list_obj.append((obj_id, obj_name))
+                    obj_name = ''
+                
                 msg_tmp += str(value)
-            """
+                
             msg += msg_tmp+' '
-            
+
+        for id, valeur in list_obj:
+
+            if myEnum.Description.GAUCHE.value+' '+valeur in msg:
+                msg = re.sub(' '+myEnum.Description.PASSE.value+' '+myEnum.Description.GAUCHE.value+' '+valeur,'', msg)
+                if myEnum.Description.DROITE.value+' '+valeur in msg:
+                    msg = re.sub(' '+myEnum.Description.PASSE.value+' '+myEnum.Description.DROITE.value+' '+valeur,'', msg)
+                    msg += ' '+myEnum.Description.PASSE.value+' '+myEnum.Description.ENTRE.value+' les '+valeur+'(s)'
+                else:
+                    msg += ' '+myEnum.Description.PASSE.value+' '+myEnum.Description.GAUCHE.value+' '+de(id, valeur, label)+valeur
+                    
+            elif myEnum.Description.DROITE.value+' '+valeur in msg:
+                msg = re.sub(' '+myEnum.Description.PASSE.value+' '+myEnum.Description.DROITE.value+' '+valeur,'', msg)
+                
+                if myEnum.Description.GAUCHE.value+' '+valeur in msg:
+                    msg = re.sub(' '+myEnum.Description.PASSE.value+' '+myEnum.Description.GAUCHE.value+' '+valeur,'', msg)
+                    msg += ' '+myEnum.Description.PASSE.value+' '+myEnum.Description.ENTRE.value+' les '+valeur+'(s)'
+                else:
+                    msg += ' '+myEnum.Description.PASSE.value+' '+myEnum.Description.DROITE.value+' '+de(id, valeur, label)+valeur
+    
         list_msg.append(msg)
-            
+
     return list_msg
 
 def Description_to_Txt(list, label):
@@ -234,5 +260,18 @@ def get_next_pos(case_present,d):
     if(d.value==myEnum.Description.OUEST.value):#ouest
         return (case_present[0],case_present[1]-1)
     
+def de(obj_id, obj_name, label):
+    voyelle = ['A', 'E', 'I', 'O', 'U', 'Y','a', 'e', 'i', 'o', 'u', 'y']
+    de = ''
+    le = ''
+    if obj_name[0] in voyelle:
+        de = 'de l\''
+    elif label.get(obj_id).get('genre') == 'M':
+        de = 'du '
+    else:
+        de = 'de la '
+
+    return de
+
 
     

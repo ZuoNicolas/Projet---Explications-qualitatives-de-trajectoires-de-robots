@@ -29,8 +29,8 @@ class Description(Enum):
     LOIN = -16
     
     #Direction Passe
-    GAUCHE = 'gauche'
-    DROITE = 'droite'
+    GAUCHE = 'à gauche'
+    DROITE = 'à droite'
     DEVANT = 'devant'
     DERRIERE = 'derrière'
     ENTRE = 'entre'
