@@ -61,7 +61,7 @@ def get_weight_dist(map, label, alpha=1):
     res = dict()
     for x in range(len(map)):
         for y in range(len(map[x])):
-            res[(x, y)] = max(-0.99, (alpha - 1))
+            res[(x, y)] = max(0.01, alpha)
     return res
 
 
@@ -234,15 +234,12 @@ def path_by_retriction(map, label, ltuple_rest):
 
     path, score = PCCH.a_start(start, end, len(map), len(map[0]), wall)
     paths = [path]
-    path_weight = [0 if weight.get(pos) != None else weight.get(pos) == None for pos in path]
-    
+    path_weight = [0 if weight.get(pos) == None else weight.get(pos) for pos in path]
     scores = [(score, np.sum(path_weight),len(path), np.max(path_weight))]
     for restriction in ltuple_rest:
         weight_rest = fuse_weight([get_weight_dist(map, label, restriction[0]), get_weight(map, label, restriction[1])])
         path, score = PCCH.a_start(start, end, len(map), len(map[0]), wall, weight_rest)
         paths.append(path)
         path_weight = [0 if weight.get(pos) == None else weight.get(pos) for pos in path]
-        print("path_weigth\n",path_weight)
-        print("weight_rest \n",weight_rest )
         scores.append((score, np.sum(path_weight), len(path), np.max(path_weight)))
     return paths, scores
