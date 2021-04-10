@@ -1,4 +1,5 @@
 import numpy as np
+import PCCH
 
 from math import sqrt
 def get_start_end(map,label):
@@ -45,6 +46,22 @@ def get_weight(map,label,alpha=1):
                                     res[(x_tmp, y_tmp)] = (radius - sqrt(radius_tmp))*alpha
                                 else:
                                     res[(x_tmp, y_tmp)] +=(radius - sqrt(radius_tmp))*alpha
+    return res
+
+
+def get_weight_dist(map, label, alpha=1):
+    """
+    Attr: 
+        alpha : coeff entre 0.01 et 1 donnant l'importance de la distance en %
+    Return:
+        paths(list(list(tuple))) : la lists des chemins possible avec comme premier chemin le pcch 
+        scores(list(tuple(int))) : score optenu pour chaque chemin (dist, danger, danger_max)
+    
+    """
+    res = dict()
+    for x in range(len(map)):
+        for y in range(len(map[x])):
+            res[(x, y)] = max(-0.99, (alpha - 1))
     return res
 
 
@@ -199,3 +216,30 @@ def fuse_weidgh(list_dico_weidgh):
             if(lis.has_key(cle)):
                 l[cle]+=lis[cle]
     return l
+
+
+def path_by_retriction(map, label, ltuple_rest):
+    """
+    Attr: 
+        map : la carte 
+        label : les labels
+        tuple_rest(list(tuple)) : list avec les tuples des restriction (dist, danger)
+    Return:
+        paths(list(list(tuple))) : la lists des chemins possible avec comme premier chemin le pcch 
+        scores(list(tuple(int))) : score optenu pour chaque chemin (dist, danger, danger_max)
+    """
+    start, end = get_start_end(map, label)
+    wall = get_wall(map, label)
+    weight = get_weight(map, label)
+
+    path, score = PCCH.a_start(start, end, len(map), len(map[0]), wall)
+    paths = [path]
+    path_weight = [weight.get(pos) == None for pos in path if weight.get(pos) != None]
+    scores = [(score, np.sum(path_weight), np.max(path_weight))]
+    for restriction in ltuple_rest:
+        weight_rest = fuse_weidgh([get_weight_dist(map, label, restriction[0]), get_weight(map, label, restriction[1])])
+        path, score = PCCH.a_start(start, end, len(map), len(map[0]), wall, weight_rest)
+        paths.append(path)
+        path_weight = [0 if weight.get(pos) == None else weight.get(pos) for pos in path]
+        scores.append((score, np.sum(path_weight), np.max(path_weight)))
+    return paths, scores
