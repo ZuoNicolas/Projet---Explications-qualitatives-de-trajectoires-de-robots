@@ -228,23 +228,29 @@ def main():
     ###choix du moyen de recuperer les chemin
     # chemin bleu
     paths = blue_path2(map, label)
-    print("Path Blue v2 :", paths, np.shape(paths))
+    #print("Path Blue v2 :", paths, np.shape(paths))
     wall = transform_wall(map, label, paths)
     print("Wall = ", wall)
 
     print("=>",find_intercection(map, label, paths))
+    affichage_console(map, find_intercection(map, label, paths), label)     
 
     ##a* classique
-    path1 = [PCCH.a_start(start, end, len(map), len(map[0]), wall)]
+    path1, score1 = PCCH.a_start(start, end, len(map), len(map[0]), wall)
+    path1 = [path1]
     print("Path PCCH :", path1)
+    print("score PCCH :", score1)
+
 
     ##a* avec changement de poid
-    path2 = [PCCH.a_start(start, end, len(map),len(map[0]), wall, weight)]
-    print("Path PCCH safe :", path2)
+    path2 , score2 = PCCH.a_start(start, end, len(map),len(map[0]), wall, weight)
+    path2 = [path2]
+    #print("Path PCCH safe :", path2)
+    print("score PCCH :", score2)
 
     res = (path1, path2, paths) # a* a* safe toutles chemin par blue path
     
-    paths = res[2]
+    paths = res[1]
 
     with_game = True
 
@@ -261,7 +267,8 @@ def main():
 
 
         affichage_console(map, path, label)
-        
+
+    
     
 if __name__ == '__main__':
     main()

@@ -62,7 +62,7 @@ class Etat:
             """if self.pos in goalStates:
                 return self.chemin(self.pos, [])"""
             if self.pos == self.goal:
-                return self.chemin(self.pos, [])
+                return self.chemin(self.pos, []), self.g # le chemin et le score associer
             x,y = self.pos
             nord = (x,y+1)
             sud = (x,y-1)
