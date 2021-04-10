@@ -2,7 +2,7 @@ import pygame
 import pytmx
 import xml.etree.ElementTree as ET
 import time
-import descriptionTrajectoire as DT
+import descriptionTrajectoire2 as DT
 import readfile
 import Traduction
 import slider 
@@ -11,14 +11,20 @@ from tools import *
 #clock = pygame.time.Clock()
 black = (0,0,0)
 white = (255,255,255)
-
 red = (200,0,0)
 green = (0,200,0)
-
 bright_red = (255,0,0)
 bright_green = (0,255,0)
- 
 block_color = (53,115,255)
+
+YELLOW = (255, 255, 0)
+GREEN = (0, 255, 50)
+BLUE = (50, 50, 255)
+GREY = (200, 200, 200)
+ORANGE = (200, 100, 50)
+CYAN = (0, 255, 255)
+MAGENTA = (255, 0, 255)
+TRANS = (1, 1, 1)
 
 class Game(object):
 
@@ -37,9 +43,8 @@ class Game(object):
 
         self.map=map
         self.label=label
+        self.dt=DT.DescriptionTrajectoire(self.map,self.path,self.label)
 
-        self.paths=[]
-        self.scores=[]
         self.restriction=[]
     def on_init(self):
         pygame.init()
@@ -184,11 +189,25 @@ class Game(object):
     def one_step(self):
         self.restriction.append((1-self.s.value,self.s.value))
         print(self.restriction)
-        self.paths,self.scores=path_by_retriction(self.map, self.label, self.restriction)
-        for path in self.paths[1:]:
-            self.path=path
-            self.chemin()
-        self.restriction=[]
+        self.discription=self.dt.descriptiontTrajectoirePlusExplication(ltuple_rest=self.restriction)
+        for path in self.dt.list_tout_les_chemins:
+            for y, x in path:
+                s = pygame.Surface((16,16))  # the size of your rect
+                s.set_alpha(50)                # alpha level
+                s.fill(BLUE)           # this fills the entire surface
+                self._display_surf.blit(s,(x*16,y*16))
+
+        for y, x in self.dt.path:
+            s = pygame.Surface((16,16))  # the size of your rect
+            s.set_alpha(50)                # alpha level
+            s.fill(bright_red)           # this fills the entire surface
+            self._display_surf.blit(s,(x*16,y*16))
+
+        
+        print('list chemin',self.dt.list_tout_les_chemins)
+        print('my path',self.dt.path)
+        self.chemin()
+        self.construction()
     def chemin(self):
         if self.on_init() == False:
             self._running = False
@@ -210,24 +229,32 @@ class Game(object):
 
         for x, y, image in self.layer.tiles():
             self._display_surf.blit(image,(x*16,y*16))
-        y, x = self.path[self.iteration]
+        y, x = self.dt.path[self.iteration]
         self.draw_circle_alpha( self._display_surf, (255,0,0), ((x+0.5)*16,(y+0.5)*16), self.radius*16)
         
-        dt =DT.DescriptionTrajectoire(self.map, self.path, self.label)
+        
         #description_list =dt.descriptiontTrajectoireSimple(2)
 
-        #msg=Traduction.Description_to_Txt([description_list[self.iteration]],self.label)
+        msg=self.discription[self.iteration]
 
-        msg = dt.descriptiontTrajectoireActif(self.radius, saw=False, iterator=self.iteration)
+        #msg = dt.descriptiontTrajectoireActif(self.radius, saw=False, iterator=self.iteration)
         print(self.iteration,':',msg)
         self._display_surf.blit(self.robot,(x*16,y*16))
-        for y, x in self.path:
+
+        for path in self.dt.list_tout_les_chemins:
+            for y, x in path:
+                s = pygame.Surface((16,16))  # the size of your rect
+                s.set_alpha(50)                # alpha level
+                s.fill(BLUE)           # this fills the entire surface
+                self._display_surf.blit(s,(x*16,y*16))
+
+        for y, x in self.dt.path:
             s = pygame.Surface((16,16))  # the size of your rect
             s.set_alpha(50)                # alpha level
-            s.fill((0,0,255))           # this fills the entire surface
+            s.fill(bright_red)           # this fills the entire surface
             self._display_surf.blit(s,(x*16,y*16))
         #affiche la discription
-        self.set_discription(self._display_surf,msg)
+        #self.set_discription(self._display_surf,msg)
 
         pygame.display.update()
         #clock.tick(15)
@@ -277,7 +304,7 @@ class Game(object):
         pygame.quit()
     
     def done(self):
-        return not self._running or self.iteration + 1 >= len(self.path)
+        return not self._running or self.iteration + 1 >= len(self.dt.path)
 
     def on_execute(self):
         if self.on_init() == False:

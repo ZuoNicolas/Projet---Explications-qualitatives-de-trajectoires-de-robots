@@ -14,7 +14,7 @@ def main():
     ## plusieur chemin
     #file = '../ressource/zone_non_carre2.tmx'
     ## plusieur chemin avec un rocher
-    file = '../ressource/zone_non carre.tmx'
+    file = '../ressource/zone_a_danger(rocher).tmx'
     
     ## zone tres simple
     #file = '../ressource/map1.tmx'
@@ -34,6 +34,6 @@ def main():
     
 if __name__ == '__main__':
     main()
-    map = readfile.read_map_tmx('../ressource/map1.tmx')
+    map = readfile.read_map_tmx('../ressource/zone_a_danger(rocher).tmx')
     label = readfile.read_desc_xml('../ressource/descripteur.tsx')
    
