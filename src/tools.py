@@ -203,7 +203,7 @@ def find_intercection(map, label, paths):
             
     return inter
 
-def fuse_weidgh(list_dico_weidgh):
+def fuse_weight(list_dico_weidgh):
     l=list_dico_weidgh[0].copy()
     
     #fusionner avec tout les keys
@@ -213,7 +213,7 @@ def fuse_weidgh(list_dico_weidgh):
     for cle in l.keys():
         l[cle]=0
         for lis in list_dico_weidgh:
-            if(lis.has_key(cle)):
+            if(lis.get(cle) != None):
                 l[cle]+=lis[cle]
     return l
 
@@ -235,11 +235,14 @@ def path_by_retriction(map, label, ltuple_rest):
     path, score = PCCH.a_start(start, end, len(map), len(map[0]), wall)
     paths = [path]
     path_weight = [0 if weight.get(pos) != None else weight.get(pos) == None for pos in path]
+    
     scores = [(score, np.sum(path_weight),len(path), np.max(path_weight))]
     for restriction in ltuple_rest:
-        weight_rest = fuse_weidgh([get_weight_dist(map, label, restriction[0]), get_weight(map, label, restriction[1])])
+        weight_rest = fuse_weight([get_weight_dist(map, label, restriction[0]), get_weight(map, label, restriction[1])])
         path, score = PCCH.a_start(start, end, len(map), len(map[0]), wall, weight_rest)
         paths.append(path)
         path_weight = [0 if weight.get(pos) == None else weight.get(pos) for pos in path]
+        print("path_weigth\n",path_weight)
+        print("weight_rest \n",weight_rest )
         scores.append((score, np.sum(path_weight), len(path), np.max(path_weight)))
     return paths, scores

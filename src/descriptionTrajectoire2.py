@@ -109,16 +109,21 @@ class DescriptionTrajectoire():
         #print(map_local)
         # fonction.getScore
         paths, score = tools.path_by_retriction(self.map, self.label,  ltuple_rest=[(0.1,0.9)])
-        argmin = np.argmin(score[:,0])
+        argmin = np.argmin(np.array(score)[:,0])
         self.path = paths[argmin] #Le meilleu path
         _, path_securiter, path_rapide, path_secu_max = score[argmin] #<--------- A compléter
-        
+        print("meilleur path\n", self.path)
+        print("les chemins\n",paths)
+        print("==\n",paths[0]==paths[1])
+        print("score\n",score)     
         del paths[0]
         del score[0]
         self.list_tout_les_chemins = paths
         self.list_tout_les_inter = tools.find_intercection(self.map, self.label, paths)
-        self.list_score_tout_les_chemins = []
-            
+        self.list_score_tout_les_chemins = score
+        print("Intersection\n",self.list_tout_les_inter)
+
+        return 
         old = None #Sauvegarde de l'ancienne orientation
         n_case = -1 #Compteur du nombre de case parcourus avant un événement
         old_res='' #Sauverade du dernier objet de passage pour évité le spam

@@ -22,8 +22,9 @@ def main():
     #print("Path Blue :", path)
     dt = descriptionTrajectoire2.DescriptionTrajectoire(map, path, label)
     
-    description_list = dt.descriptiontTrajectoireSimple(2)
+    description_list = dt.descriptiontTrajectoirePlusExplication(2)
     
+    """
     #print(description_list)
     i = 0
     for gen in description_list:
@@ -37,10 +38,11 @@ def main():
     print("\nIf initial path == Traduction.Description_to_path\n")
     print(path == Desc_to_path)
     
+    
     g = game2.Game(file, map, path, label, 2)
     g.on_execute()
     
-"""
+    
     start, end = get_start_end(map, label)
     wall = get_wall(map, label)
     weight = get_weight(map, label)
