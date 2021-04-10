@@ -2,10 +2,11 @@ import pygame
 import pytmx
 import xml.etree.ElementTree as ET
 import time
-import descriptionTrajectoire2 as DT
+import descriptionTrajectoire as DT
 import readfile
 import Traduction
 import slider 
+from tools import *
 
 #clock = pygame.time.Clock()
 black = (0,0,0)
@@ -21,24 +22,25 @@ block_color = (53,115,255)
 
 class Game(object):
 
-    def __init__(self, filename, map, path, label, radius=5):
+    def __init__(self, filename, map, label, radius=5):
         self._running = True
         self._display_surf = None
         self.filename = filename
 
-        self.path = path
+        self.path = []
         self.iteration = 0
         self.forward = True
         self.radius = radius
-        self.dt =DT.DescriptionTrajectoire(map, path, label)
-        self.description_list = self.dt.descriptiontTrajectoireSimple(2)
-        
+
 
 
 
         self.map=map
         self.label=label
 
+        self.paths=[]
+        self.scores=[]
+        self.restriction=[]
     def on_init(self):
         pygame.init()
         
@@ -67,11 +69,9 @@ class Game(object):
 
         self.image_dict = dict()
         self.construction()
+
     def slider(self):
-        
-        danger = slider.Slider("danger", 50, 150, 10, self.weight-self.tool_width,0)
-        slides=[danger]
-        value=0
+        self.s = slider.Slider("danger", 50, 150, 10, self.weight-self.tool_width,0)
         while True:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -80,22 +80,21 @@ class Game(object):
                     
                 elif event.type == pygame.MOUSEBUTTONDOWN:
                     pos = pygame.mouse.get_pos()
-                    for s in slides:
-                        if s.button_rect.collidepoint(pos):
-                            s.hit = True
+                    
+                    if self.s.button_rect.collidepoint(pos):
+                        self.s.hit = True
                 elif event.type == pygame.MOUSEBUTTONUP:
-                    for s in slides:
-                        s.hit = False
-
+                    self.s.hit = False
             # Move slides
-            for s in slides:
-                if s.hit:
-                    s.move()
-                    value=s.value
-            for s in slides:
-                s.draw(self._display_surf)
+            
+            if self.s.hit:
+                self.s.move()
+            
+            
+            self.s.draw(self._display_surf)
+            self.button('confirm',self.weight-self.tool_width,100,90,40,green,bright_green,self.one_step)
+            pygame.display.update()
 
-            pygame.display.flip()
         #clock.tick(speed.val)
     def add_buttons(self):
         self.construction()
@@ -131,10 +130,12 @@ class Game(object):
 
 
     def construction(self):
+
+        start,end=get_start_end(self.map,self.label)
         self._display_surf.fill(white)
         for x, y, image in self.layer.tiles():
             self._display_surf.blit(image,(x*16,y*16))
-        y, x = self.path[self.iteration]
+        y, x = start
         self.draw_circle_alpha( self._display_surf, (255,0,0), ((x+0.5)*16,(y+0.5)*16), self.radius*16)
         
         self._display_surf.blit(self.robot,(x*16,y*16))
@@ -181,8 +182,16 @@ class Game(object):
             elif event.button == 3:
                 self.on_rbutton_down(event)
     def one_step(self):
-        if not self.done():
-            self.on_render()
+        self.restriction.append((1-self.s.value,self.s.value))
+        print(self.restriction)
+        self.paths,self.scores=path_by_retriction(self.map, self.label, self.restriction)
+        for path in self.paths[1:]:
+            self.path=path
+            self.chemin()
+    def chemin(self):
+        if self.on_init() == False:
+            self._running = False
+ 
         while( not self.done() ):
             self.forward = False
             for event in pygame.event.get():
@@ -190,6 +199,8 @@ class Game(object):
             if self.forward:
                 self.on_loop()
                 self.on_render()
+        self.iteration=0
+        
 
     def on_loop(self):
         self.iteration +=1
@@ -201,8 +212,12 @@ class Game(object):
         y, x = self.path[self.iteration]
         self.draw_circle_alpha( self._display_surf, (255,0,0), ((x+0.5)*16,(y+0.5)*16), self.radius*16)
         
-        msg=Traduction.Description_to_Txt([self.description_list[self.iteration]],self.label)
-        #msg = self.dt.descriptiontTrajectoireActif(self.radius, saw=False, iterator=self.iteration)
+        dt =DT.DescriptionTrajectoire(self.map, self.path, self.label)
+        #description_list =dt.descriptiontTrajectoireSimple(2)
+
+        #msg=Traduction.Description_to_Txt([description_list[self.iteration]],self.label)
+
+        msg = dt.descriptiontTrajectoireActif(self.radius, saw=False, iterator=self.iteration)
         print(self.iteration,':',msg)
         self._display_surf.blit(self.robot,(x*16,y*16))
         for y, x in self.path:
@@ -248,7 +263,7 @@ class Game(object):
         discp_surf=pygame.Surface((self.weight,self.discription_height))
         discp_surf.fill(block_color)
         font=pygame.font.SysFont('Times', 12)
-        discrip=discription.split(",")
+        discrip=discription.split("/")
         y=0
         for d in discrip:
 
@@ -267,7 +282,7 @@ class Game(object):
         if self.on_init() == False:
             self._running = False
         self.slider()
-        self.one_step()
+        #self.one_step()
         #if not self.done():
             #self.on_render()
         #while( not self.done() ):
