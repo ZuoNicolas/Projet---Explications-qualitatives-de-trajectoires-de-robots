@@ -190,13 +190,13 @@ def find_intercection(map, label, paths):
     for path in paths: # pour chaque chemin
         for x, y in path:
             tmp = 0
-            if x+1 < tx and (any((x+1,y) in sublist for sublist in paths) or (x+1,y) == start or (x+1,y) == end):
+            if any((x+1,y) in p for p in paths) or (x+1,y) == start or (x+1,y) == end:
                 tmp+=1
-            if x-1 >= 0 and (any((x-1,y) in sublist for sublist in paths) or (x-1,y) == start or (x-1,y) == end):
+            if any((x-1,y) in sublist for sublist in paths) or (x-1,y) == start or (x-1,y) == end:
                 tmp+=1
-            if y+1 < ty and (any((x,y+1) in sublist for sublist in paths) or (x,y+1) == start or (x,y+1) == end):
+            if any((x,y+1) in sublist for sublist in paths) or (x,y+1) == start or (x,y+1) == end:
                 tmp+=1
-            if y-1 >= 0 and (any((x,y-1) in sublist for sublist in paths) or (x,y-1) == start or (x,y-1) == end):
+            if any((x,y-1) in sublist for sublist in paths) or (x,y-1) == start or (x,y-1) == end:
                 tmp+=1
             if tmp >= 3 and (x,y) not in inter:
                 inter.append((x,y))

@@ -116,10 +116,11 @@ class DescriptionTrajectoire():
         print("les chemins\n",paths)
         print("==\n",paths[0]==paths[1])
         print("score\n",score)     
+        self.list_tout_les_inter = tools.find_intercection(self.map, self.label, paths)
         del paths[0]
         del score[0]
         self.list_tout_les_chemins = paths
-        self.list_tout_les_inter = tools.find_intercection(self.map, self.label, paths)
+        
         self.list_score_tout_les_chemins = score
         print("Intersection\n",self.list_tout_les_inter)
 
