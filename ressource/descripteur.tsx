@@ -14,6 +14,7 @@
   <terrain name="eau" tile="673">
    <properties>
     <property name="canPass" type="bool" value="true"/>
+    <property name="danger_area" type="int" value="1"/>
     <property name="vision_area" type="int" value="2"/>
    </properties>
   </terrain>
