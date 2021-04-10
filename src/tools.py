@@ -233,9 +233,10 @@ def path_by_retriction(map, label, ltuple_rest):
     weight = get_weight(map, label)
 
     path, score = PCCH.a_start(start, end, len(map), len(map[0]), wall)
-    paths = [path]
+    paths = [path] * len(ltuple_rest)
     path_weight = [0 if weight.get(pos) == None else weight.get(pos) for pos in path]
-    scores = [(score, np.sum(path_weight),len(path), np.max(path_weight))]
+    somme, taille, maxi = np.sum(path_weight),len(path), np.max(path_weight)
+    scores = [(score * rest[0], somme, taille, maxi) for rest in ltuple_rest]
     for restriction in ltuple_rest:
         weight_rest = fuse_weight([get_weight_dist(map, label, restriction[0]), get_weight(map, label, restriction[1])])
         path, score = PCCH.a_start(start, end, len(map), len(map[0]), wall, weight_rest)
@@ -243,3 +244,24 @@ def path_by_retriction(map, label, ltuple_rest):
         path_weight = [0 if weight.get(pos) == None else weight.get(pos) for pos in path]
         scores.append((score, np.sum(path_weight), len(path), np.max(path_weight)))
     return paths, scores
+
+def Bellman_Ford(map, label, weight):
+    start, end = get_start_end(map, label)
+    c, l = np.shape(map)
+
+    d = np.ones((c,l)) * np.inf
+    
+    d[start[0]][start[1]] = 0
+    
+    for x in range(c):
+        for y in range(l):
+            if x+1 < tx and label.get(map[x+1][y]).get('name') == 'tracé' and (x+1,y) not in path:
+                d[x][y] = min(d[x][y], d[x+1][y] + weight.get((x, y)))
+            elif x-1 >= 0 and label.get(map[x-1][y]).get('name') == 'tracé' and (x-1,y) not in path:
+                d[x][y] = min(d[x][y], d[x-1][y] + weight.get((x, y)))
+            elif y+1 < ty and label.get(map[x][y+1]).get('name') == 'tracé' and (x,y+1) not in path:
+                d[x][y] = min(d[x][y], d[x][y+1] + weight.get((x, y)))
+            elif y-1 >= 0 and label.get(map[x][y-1]).get('name') == 'tracé' and (x,y-1) not in path:
+                d[x][y] = min(d[x][y], d[x][y-1] + weight.get((x, y)))
+            
+    return d
