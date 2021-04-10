@@ -65,7 +65,7 @@ class DescriptionTrajectoire():
                 
                 #Calcul du message de passage à coté de ...
                 for ind in range(len(map_local[i])):
-                    res = [self.calcul_position_objet(orientation, map_local[i][ind][2],map_local[i][ind][3]), map_local[i][ind][0]]
+                    res = [self.calcul_position_objet(orientation, map_local[i][ind][1],map_local[i][ind][2]), map_local[i][ind][0]]
                     
                     #Pour évité le spam quand on passe a coté d'un objet qui a un rayon d'interraction sur plusieur case
                     if res != old_res:
@@ -168,7 +168,8 @@ class DescriptionTrajectoire():
                 
                 #Calcul du message de passage à coté de ...
                 for ind in range(len(map_local[i])):
-                    res = [self.calcul_position_objet(orientation, map_local[i][ind][2],map_local[i][ind][3]), map_local[i][ind][0]]
+                    print(map_local[i][ind])
+                    res = [self.calcul_position_objet(orientation, map_local[i][ind][1],map_local[i][ind][2]), map_local[i][ind][0]]
                     
                     #Pour évité le spam quand on passe a coté d'un objet qui a un rayon d'interraction sur plusieur case
                     if res != old_res:
@@ -225,7 +226,7 @@ class DescriptionTrajectoire():
                             a,b = self.path[i]
                             rayon = (a - x)**2 + (b - y)**2 #Formule de rayon au carré
                             if rayon <= int(rayon_action)**2 :
-                                path_area[i].append((self.map[x][y], (self.label.get(self.map[x][y]).get('name')), (a,b), (x,y)))
+                                path_area[i].append((self.map[x][y], self.label.get(self.map[x][y]).get('name')), (a,b), (x,y))
         
     
         return path_area

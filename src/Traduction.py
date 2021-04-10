@@ -5,28 +5,11 @@ def Description_to_Txt2(list_desc, label):
     """
     Fait la traduction de la liste des Descriptions en Texte
     """
-    voyelle = ['A', 'E', 'I', 'O', 'U', 'Y','a', 'e', 'i', 'o', 'u', 'y']
-    msg = ''
-    old_orientation = ''
-    old_msg = ''
-    espace = ' '
-    virgule =', '
-    point = '.'
-    description = []
-    
+
+    list_msg = []
+
     for descriptions in list_desc:
-        orientation = ''
-        list_action = []
-        precition_avancer = ''
-        descrip_avancer = ''
-        precision_distance = ''
-        distance = ''
-        direction_obj = ''
-        direction_sens = ''
-        obj = ''
-        old_action = ''
-        obj_id = None
-        
+        msg = ''
         for description in descriptions:
             msg_tmp = ''
 
@@ -76,9 +59,11 @@ def Description_to_Txt2(list_desc, label):
                 msg_tmp += str(value)
             
             msg += msg_tmp+' '
-        msg += '\n'
             
-    return msg
+        list_msg.append(msg)
+            
+    return list_msg
+
 def Description_to_Txt(list, label):
     """
     Fait la traduction de la liste des Descriptions en Texte
