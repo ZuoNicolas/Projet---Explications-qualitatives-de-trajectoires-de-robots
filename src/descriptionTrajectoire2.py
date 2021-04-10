@@ -52,7 +52,7 @@ class DescriptionTrajectoire():
             if old == None:
                 old=orientation
                 
-            description_temp = description_temp + self.avancer_jusqu_a()
+            description_temp = description_temp + [self.myDescription.AVANCE, self.myDescription.JUSQU_A]
             sauvegarde = description_temp.copy()
     
             #Si l'orientation du case suivante est différente, alors on rajoute l'événement tourner
@@ -101,30 +101,32 @@ class DescriptionTrajectoire():
         Parcours le chemin path en regardant les objets au alentours,
         pour retourner la description contruite"""
 
+        # fonction.getScore
+        paths, score = tools.path_by_retriction(self.map, self.label,  ltuple_rest=[(0.9,0.1)])
+        argmin = np.argmin(np.array(score)[:,0])
+        self.path = paths[argmin] #Le meilleu path
+        _, path_securiter, path_rapide, path_secu_max = score[argmin] 
+        
+        print("meilleur path\n", self.path)
+        print("les chemins\n",paths)
+        print("==\n",paths[0]==paths[1])
+        print("score\n",score)     
+        
+        self.list_tout_les_inter = tools.find_intercection(self.map, self.label, paths)
+        del paths[argmin]
+        del score[argmin]
+        self.list_tout_les_chemins = paths
+        
+        self.list_score_tout_les_chemins = score
+        print("Intersection\n",self.list_tout_les_inter)
+        
         if len(self.path) == 0:
             print("Erreur path vide dans descriptiontrajectoireSimple")
             return -1
         #créer une liste qui décris chaque case du path où les objets sont a porter d'intéraction de la case en question
         map_local = self.local_map(agent_rayon)
         #print(map_local)
-        # fonction.getScore
-        paths, score = tools.path_by_retriction(self.map, self.label,  ltuple_rest=[(0.1,0.9)])
-        argmin = np.argmin(np.array(score)[:,0])
-        self.path = paths[argmin] #Le meilleu path
-        _, path_securiter, path_rapide, path_secu_max = score[argmin] #<--------- A compléter
-        print("meilleur path\n", self.path)
-        print("les chemins\n",paths)
-        print("==\n",paths[0]==paths[1])
-        print("score\n",score)     
-        self.list_tout_les_inter = tools.find_intercection(self.map, self.label, paths)
-        del paths[0]
-        del score[0]
-        self.list_tout_les_chemins = paths
-        
-        self.list_score_tout_les_chemins = score
-        print("Intersection\n",self.list_tout_les_inter)
 
-        return 
         old = None #Sauvegarde de l'ancienne orientation
         n_case = -1 #Compteur du nombre de case parcourus avant un événement
         old_res='' #Sauverade du dernier objet de passage pour évité le spam
@@ -151,14 +153,16 @@ class DescriptionTrajectoire():
             if old == None:
                 old=orientation
                 
-            description_temp = description_temp + self.avancer_jusqu_a()
+            description_temp += [self.myDescription.AVANCE]
             sauvegarde = description_temp.copy()
     
             #Si l'orientation du case suivante est différente, alors on rajoute l'événement tourner
             if  old != orientation:
-                description_temp.append(self.myDescription.INTERSECTION)
                 description_temp += [self.myDescription.TOURNE, self.message_orientation(old, orientation) ]#Ajout du bon message en fonction des orientations
-                description_temp.append(self.explication_intersection(self.path[i], i+1, self.path, path_rapide, path_securiter))
+
+                if self.path[i] in self.list_tout_les_inter:
+                    description_temp += [self.myDescription.AVANCE, self.myDescription.JUSQU_A,self.myDescription.INTERSECTION]
+                    description_temp.append(self.explication_intersection(self.path[i], i+1, self.path, path_rapide, path_securiter))
             #Si il y a un événement sur la case
             if map_local[i] != [] :
                 
@@ -179,7 +183,6 @@ class DescriptionTrajectoire():
             old = orientation
             
             if description_temp == sauvegarde: #Si il n'y a aucun changement on incrémente l'anti-spam
-                description_temp = description_temp[:-1]
                 anti_spam+=1
                 if anti_spam > nb_de_case_anti_spam:
                     old_res=''
@@ -189,7 +192,7 @@ class DescriptionTrajectoire():
         #Ajout du dernier événement
         description_temp = []
         description_temp.append(orientation)
-        description_temp += self.avancer_jusqu_a() + [self.myDescription.ARRIVER]
+        description_temp += [self.myDescription.AVANCE, self.myDescription.JUSQU_A, self.myDescription.ARRIVER]
         
         self.description.append(description_temp)
         
@@ -342,10 +345,6 @@ class DescriptionTrajectoire():
             
             if now == self.myDescription.SUD:
                 return self.myDescription.A_GAUCHE
-        
-    def avancer_jusqu_a(self):
-        
-        return [self.myDescription.AVANCE, self.myDescription.JUSQU_A]
     
     
     def explication_intersection(self, case_actuelle, id_case_suivante, path_choisi, path_rapide, path_securiter):
@@ -353,30 +352,29 @@ class DescriptionTrajectoire():
         x, y = case_actuelle; #(ligne, colonne)
         
         msg = []
-        
         i = 0
         for chemin in self.list_tout_les_chemins :
             #Pour enlever les chemin qui vont dans la meme direction
-            if len(chemin) < id_case_suivante and chemin[id_case_suivante] != path_choisi[id_case_suivante]:
+            if id_case_suivante < len(chemin)  and chemin[id_case_suivante] != path_choisi[id_case_suivante]:
                 if (x+1, y) == chemin[id_case_suivante] or (x-1, y) == chemin[id_case_suivante] or \
                     (x, y+1) == chemin[id_case_suivante] or (x, y-1) == chemin[id_case_suivante] :
                     #case_actuelle = une intersection
                     if case_actuelle in chemin:
-                        rapide, securiter = self.list_score_tout_les_chemins[i]
+                        _, securiter, rapide, _ = self.list_score_tout_les_chemins[i]
                         
                         msg.append(('CHEMIN', i))
                         tmp_msg = []
                         
-                        if securiter/path_securiter >= 1.7 :
-                            tmp_msg.append(self.myDescription.BEAUCOUP_MOINS_SECURITE)
-                        elif securiter/path_securiter > 1 :
-                            tmp_msg.append(self.myDescription.MOINS_SECURITE)
-                        elif securiter/path_securiter == 1 :
-                            tmp_msg.append(self.myDescription.SECURITE)
-                        elif securiter/path_securiter > 0.5 :
-                            tmp_msg.append(self.myDescription.PLUS_SECURITE)
+                        if rapide/path_rapide >= 1.7 :
+                            tmp_msg.append(self.myDescription.BEAUCOUP_MOINS_RAPIDE)
+                        elif rapide/path_rapide > 1 :
+                            tmp_msg.append(self.myDescription.MOINS_RAPIDE)
+                        elif rapide/path_rapide == 1 :
+                            tmp_msg.append(self.myDescription.RAPIDE)
+                        elif rapide/path_rapide > 0.5 :
+                            tmp_msg.append(self.myDescription.PLUS_RAPIDE)
                         else:
-                            tmp_msg.append(self.myDescription.BEAUCOUP_PLUS_SECURITE)
+                            tmp_msg.append(self.myDescription.BEAUCOUP_PLUS_RAPIDE)
                             
                         if securiter/path_securiter >= 1.7 :
                             tmp_msg.append(self.myDescription.BEAUCOUP_MOINS_SECURITE)
@@ -390,6 +388,7 @@ class DescriptionTrajectoire():
                             tmp_msg.append(self.myDescription.BEAUCOUP_PLUS_SECURITE)
                         
                         msg.append(tmp_msg)
+                        print(path_securiter,securiter,'=',securiter/path_securiter,'\n',path_rapide, rapide,'=',rapide/path_rapide)
             i+=1
         
         return msg
