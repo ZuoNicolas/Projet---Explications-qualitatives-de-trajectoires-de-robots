@@ -226,7 +226,7 @@ class DescriptionTrajectoire():
                             a,b = self.path[i]
                             rayon = (a - x)**2 + (b - y)**2 #Formule de rayon au carré
                             if rayon <= int(rayon_action)**2 :
-                                path_area[i].append((self.map[x][y], self.label.get(self.map[x][y]).get('name')), (a,b), (x,y))
+                                path_area[i].append(((self.map[x][y], self.label.get(self.map[x][y]).get('name')), (a,b), (x,y)))
         
     
         return path_area

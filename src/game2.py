@@ -38,9 +38,6 @@ class Game(object):
         self.forward = True
         self.radius = radius
 
-
-
-
         self.map=map
         self.label=label
         self.dt=DT.DescriptionTrajectoire(self.map,self.path,self.label)
@@ -189,7 +186,8 @@ class Game(object):
     def one_step(self):
         self.restriction.append((1-self.s.value,self.s.value))
         print(self.restriction)
-        self.discription=self.dt.descriptiontTrajectoirePlusExplication(ltuple_rest=self.restriction)
+        self.discription=self.dt.descriptiontTrajectoirePlusExplication(agent_rayon=self.radius, ltuple_rest=self.restriction)
+        self.list_msg = Traduction.Description_to_Txt2(self.discription, self.label)
         for path in self.dt.list_tout_les_chemins:
             for y, x in path:
                 s = pygame.Surface((16,16))  # the size of your rect
@@ -235,10 +233,10 @@ class Game(object):
         
         #description_list =dt.descriptiontTrajectoireSimple(2)
 
-        msg=self.discription[self.iteration]
+        msg=self.list_msg[self.iteration]
 
         #msg = dt.descriptiontTrajectoireActif(self.radius, saw=False, iterator=self.iteration)
-        print(self.iteration,':',msg)
+        #print(self.iteration,':',msg)
         self._display_surf.blit(self.robot,(x*16,y*16))
 
         for path in self.dt.list_tout_les_chemins:
@@ -254,7 +252,7 @@ class Game(object):
             s.fill(bright_red)           # this fills the entire surface
             self._display_surf.blit(s,(x*16,y*16))
         #affiche la discription
-        #self.set_discription(self._display_surf,msg)
+        self.set_discription(self._display_surf,msg)
 
         pygame.display.update()
         #clock.tick(15)

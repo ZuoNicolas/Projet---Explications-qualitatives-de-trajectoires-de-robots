@@ -52,12 +52,12 @@ def Description_to_Txt2(list_desc, label):
                         msg_tmp += rapi_bonne+' en terme de distance, mais en terme de sécurité on est '+secu_mauvaise
                     else:
                         msg_tmp +='bug2'
-                    
+            """     
             else:
                 value = description.value  
                 
                 msg_tmp += str(value)
-            
+            """
             msg += msg_tmp+' '
             
         list_msg.append(msg)
