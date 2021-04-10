@@ -188,6 +188,7 @@ class Game(object):
         for path in self.paths[1:]:
             self.path=path
             self.chemin()
+        self.restriction=[]
     def chemin(self):
         if self.on_init() == False:
             self._running = False
