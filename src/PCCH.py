@@ -1,4 +1,5 @@
 import numpy as np
+import math
 
 class Etat:
         visite = dict()
@@ -62,7 +63,7 @@ class Etat:
             """if self.pos in goalStates:
                 return self.chemin(self.pos, [])"""
             if self.pos == self.goal:
-                return self.chemin(self.pos, [])
+                return self.chemin(self.pos, []), self.g # le chemin et le score associer
             x,y = self.pos
             nord = (x,y+1)
             sud = (x,y-1)
@@ -77,11 +78,11 @@ class Etat:
                         self.ajout(Etat((a,b),self.g+Etat.weight[(a,b)],self, self.goal, self.pos_depart))
             while "Etat.frontiere[0] n'est pas dans visite" :
                 if len(Etat.frontiere)==0:
-                    return []
+                    return [], math.inf
                 e = Etat.frontiere.pop(0)
                 if e.pos not in Etat.visite :
                     return e.evaluer()
-            return []
+            return [], math.inf
 
 
 def a_start(debut, goal, x_max, y_max, wall, weight=dict()):
