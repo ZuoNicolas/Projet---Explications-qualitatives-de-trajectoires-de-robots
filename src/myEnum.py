@@ -9,16 +9,16 @@ class Description(Enum):
     OUEST = 'ouest'
     
     #Action
-    TOURNE = -5
-    PASSE = -6
-    AVANCE = -7
+    TOURNE = 'je tourne'
+    PASSE = 'je passe'
+    AVANCE = 'j\'avance'
     
     #Precision Avancer
-    JUSQU_A = -9
+    JUSQU_A = 'jusqu\'à'
     
     #Description Avancer
-    INTERSECTION = -10
-    ARRIVER = -11
+    INTERSECTION = 'l\'intersection'
+    ARRIVER = 'l\'arriver'
     
     #Precision Distance
     PEU = -12
@@ -29,30 +29,32 @@ class Description(Enum):
     LOIN = -16
     
     #Direction Passe
-    GAUCHE = -22
-    DROITE = -23
-    DEVANT = -24
-    DERRIERE = -25
-    ENTRE = -26
+    GAUCHE = 'gauche'
+    DROITE = 'droite'
+    DEVANT = 'devant'
+    DERRIERE = 'derrière'
+    ENTRE = 'entre'
     
     #Direction Tourner
-    A_GAUCHE = -30
-    A_DROITE = -31
-    _DERRIERE = -32
+    A_GAUCHE = 'à gauche'
+    A_DROITE = 'à droite'
+    _DERRIERE = 'derrière'
     
     #Explication Intersection
-    BEAUCOUP_MOINS_SECURITE = 'le chemin est très peu sûr'
-    MOINS_SECURITE = 'le chemin est un peu moins sûr'
-    SECURITE = 'le chemin est aussi sûr'
-    PLUS_SECURITE = 'le chemin est un peu plus sûr'
-    BEAUCOUP_PLUS_SECURITE = 'le chemin est très sûr'
+    EXPLICATION = 'j\'ai pris ce chemin, car les autres chemins sont'
     
-    BEAUCOUP_MOINS_RAPIDE = 'le chemin est très long'
-    MOINS_RAPIDE = 'le chemin est un peu plus long'
-    RAPIDE = 'le chemin est aussi court'
-    PLUS_RAPIDE = 'le chemin est un peu plus court'
-    BEAUCOU_PLUS_RAPIDE = 'le chemin est beaucoup plus court'
+    BEAUCOUP_MOINS_SECURITE = 'très peu sûr'
+    MOINS_SECURITE = 'un peu moins sûr'
+    SECURITE = 'aussi sûr'
+    PLUS_SECURITE = 'un peu plus sûr'
+    BEAUCOUP_PLUS_SECURITE = 'beaucoup plus sûr'
+    
+    BEAUCOUP_MOINS_RAPIDE = 'très long'
+    MOINS_RAPIDE = 'un peu plus long'
+    RAPIDE = 'aussi court'
+    PLUS_RAPIDE = 'un peu plus court'
+    BEAUCOUP_PLUS_RAPIDE = 'beaucoup plus court'
     
     #Objet 
-    OBJECT = -60
+    OBJECT = 'Objet'
 

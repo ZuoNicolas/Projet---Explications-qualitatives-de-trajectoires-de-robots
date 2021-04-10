@@ -1,12 +1,87 @@
 import myEnum
 import re
 import numpy as np
+def Description_to_Txt2(list_desc, label):
+    """
+    Fait la traduction de la liste des Descriptions en Texte
+    """
+    voyelle = ['A', 'E', 'I', 'O', 'U', 'Y','a', 'e', 'i', 'o', 'u', 'y']
+    msg = ''
+    old_orientation = ''
+    old_msg = ''
+    espace = ' '
+    virgule =', '
+    point = '.'
+    description = []
+    
+    for descriptions in list_desc:
+        orientation = ''
+        list_action = []
+        precition_avancer = ''
+        descrip_avancer = ''
+        precision_distance = ''
+        distance = ''
+        direction_obj = ''
+        direction_sens = ''
+        obj = ''
+        old_action = ''
+        obj_id = None
+        
+        for description in descriptions:
+            msg_tmp = ''
 
+            if description == None:
+                continue
+            
+            if type(description) == tuple: #Quand c'est un objet description = tuple(ID,name)
+                obj_id, obj_name = description
+                continue
+            
+            if description in [myEnum.Description.NORD, myEnum.Description.SUD, myEnum.Description.EST, myEnum.Description.OUEST]:
+                    continue
+                
+            if type(description) == list:
+                msg_tmp += str(myEnum.Description.EXPLICATION.value)+' '
+                secu_bonne = ''
+                secu_mauvaise = ''
+                rapi_bonne = ''
+                rapi_mauvaise = ''
+                for desc in description:
+                    value = desc.value
+                    if desc in [myEnum.Description.BEAUCOUP_MOINS_SECURITE, myEnum.Description.MOINS_SECURITE]:
+                        secu_mauvaise = value
+                    elif desc in [myEnum.Description.PLUS_SECURITE, myEnum.Description.BEAUCOUP_PLUS_SECURITE,myEnum.Description.SECURITE]:
+                        secu_bonne = value
+                    elif desc in  [myEnum.Description.BEAUCOUP_MOINS_RAPIDE, myEnum.Description.MOINS_RAPIDE]:
+                        rapi_mauvaise = value
+                    elif desc in [myEnum.Description.PLUS_RAPIDE, myEnum.Description.BEAUCOUP_PLUS_RAPIDE, myEnum.Description.RAPIDE]:
+                        rapi_bonne = value
+                    else:  
+                        msg_tmp += ' '+str(value)
+                
+                if secu_bonne != '':
+                    if rapi_mauvaise != '':
+                        msg_tmp += secu_bonne+', mais '+rapi_mauvaise
+                    else:
+                        msg_tmp += 'bug1'
+                elif secu_mauvaise != '':
+                    if rapi_bonne != '':
+                        msg_tmp += rapi_bonne+' en terme de distance, mais en terme de sécurité on est '+secu_mauvaise
+                    else:
+                        msg_tmp +='bug2'
+                    
+            else:
+                value = description.value  
+                
+                msg_tmp += str(value)
+            
+            msg += msg_tmp+' '
+        msg += '\n'
+            
+    return msg
 def Description_to_Txt(list, label):
     """
     Fait la traduction de la liste des Descriptions en Texte
-    
-    Difficulté rencontrer, devoir apprendre l'étymologie de la langue Française ... :'(
     """
     voyelle = ['A', 'E', 'I', 'O', 'U', 'Y','a', 'e', 'i', 'o', 'u', 'y']
     msg = ''
@@ -165,13 +240,13 @@ def Description_to_path(description,case_present):
     return path[:-1]
 
 def get_next_pos(case_present,d):
-    if(d.value==-3):#sud
+    if(d.value==myEnum.Description.SUD.value):#sud
         return (case_present[0]+1,case_present[1])
-    if(d.value==-1):#nord
+    if(d.value==myEnum.Description.NORD.value):#nord
         return (case_present[0]-1,case_present[1])
-    if(d.value==-2):#est
+    if(d.value==myEnum.Description.EST.value):#est
         return (case_present[0],case_present[1]+1)
-    if(d.value==-4):#ouest
+    if(d.value==myEnum.Description.OUEST.value):#ouest
         return (case_present[0],case_present[1]-1)
     
 

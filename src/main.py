@@ -24,14 +24,17 @@ def main():
     
     description_list = dt.descriptiontTrajectoirePlusExplication(2)
     
-    """
+    
     #print(description_list)
-    i = 0
-    for gen in description_list:
-        print(i,':', gen)
-        i+=1
+    # i = 0
+    # for gen in description_list:
+    #     print(i,':', gen)
+    #     i+=1
+
+    
     print("\n-----Traduction.Description_to_Txt-----\n")
-    print(Traduction.Description_to_Txt(description_list,label))
+    print(Traduction.Description_to_Txt2(description_list,label))
+    """
     print("\n-----Traduction.Description_to_path-----\n")
     Desc_to_path = Traduction.Description_to_path(description_list,path[0])
     print(Desc_to_path)

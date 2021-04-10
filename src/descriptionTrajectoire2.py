@@ -65,7 +65,7 @@ class DescriptionTrajectoire():
                 
                 #Calcul du message de passage à coté de ...
                 for ind in range(len(map_local[i])):
-                    res = [self.calcul_position_objet(orientation, map_local[i][ind][1],map_local[i][ind][2]), map_local[i][ind][0]]
+                    res = [self.calcul_position_objet(orientation, map_local[i][ind][2],map_local[i][ind][3]), map_local[i][ind][0]]
                     
                     #Pour évité le spam quand on passe a coté d'un objet qui a un rayon d'interraction sur plusieur case
                     if res != old_res:
@@ -96,7 +96,7 @@ class DescriptionTrajectoire():
         
         return self.description
     
-    def descriptiontTrajectoirePlusExplication(self, agent_rayon=None, ltuple_rest=(0.1,0.9)):
+    def descriptiontTrajectoirePlusExplication(self, agent_rayon=None, ltuple_rest=[(0.1,0.9)]):
         """ list(list(int)) * list(int) * dict{int:dict{str:str}}
         Parcours le chemin path en regardant les objets au alentours,
         pour retourner la description contruite"""
@@ -106,19 +106,19 @@ class DescriptionTrajectoire():
         argmin = np.argmin(np.array(score)[:,0])
         self.path = paths[argmin] #Le meilleu path
         _, path_securiter, path_rapide, path_secu_max = score[argmin] 
-        
+        self.list_tout_les_inter = tools.find_intercection(self.map, self.label, paths)
         print("meilleur path\n", self.path)
         print("les chemins\n",paths)
         print("==\n",paths[0]==paths[1])
         print("score\n",score)     
+        print("Intersection\n",self.list_tout_les_inter)
         
-        self.list_tout_les_inter = tools.find_intercection(self.map, self.label, paths)
         del paths[argmin]
         del score[argmin]
         self.list_tout_les_chemins = paths
         
         self.list_score_tout_les_chemins = score
-        print("Intersection\n",self.list_tout_les_inter)
+        
         
         if len(self.path) == 0:
             print("Erreur path vide dans descriptiontrajectoireSimple")
@@ -162,13 +162,13 @@ class DescriptionTrajectoire():
 
                 if self.path[i] in self.list_tout_les_inter:
                     description_temp += [self.myDescription.AVANCE, self.myDescription.JUSQU_A,self.myDescription.INTERSECTION]
-                    description_temp.append(self.explication_intersection(self.path[i], i+1, self.path, path_rapide, path_securiter))
+                    description_temp += self.explication_intersection(self.path[i], i+1, self.path, path_rapide, path_securiter)
             #Si il y a un événement sur la case
             if map_local[i] != [] :
                 
                 #Calcul du message de passage à coté de ...
                 for ind in range(len(map_local[i])):
-                    res = [self.calcul_position_objet(orientation, map_local[i][ind][1],map_local[i][ind][2]), map_local[i][ind][0]]
+                    res = [self.calcul_position_objet(orientation, map_local[i][ind][2],map_local[i][ind][3]), map_local[i][ind][0]]
                     
                     #Pour évité le spam quand on passe a coté d'un objet qui a un rayon d'interraction sur plusieur case
                     if res != old_res:
@@ -365,30 +365,39 @@ class DescriptionTrajectoire():
                         msg.append(('CHEMIN', i))
                         tmp_msg = []
                         
-                        if rapide/path_rapide >= 1.7 :
+                        if rapide-path_rapide >= 7:
                             tmp_msg.append(self.myDescription.BEAUCOUP_MOINS_RAPIDE)
-                        elif rapide/path_rapide > 1 :
+                            
+                        elif rapide-path_rapide > 0 :
                             tmp_msg.append(self.myDescription.MOINS_RAPIDE)
-                        elif rapide/path_rapide == 1 :
+                            
+                        elif rapide-path_rapide == 0 :
                             tmp_msg.append(self.myDescription.RAPIDE)
-                        elif rapide/path_rapide > 0.5 :
+                            
+                        elif rapide-path_rapide >= -5 :
                             tmp_msg.append(self.myDescription.PLUS_RAPIDE)
+                            
                         else:
                             tmp_msg.append(self.myDescription.BEAUCOUP_PLUS_RAPIDE)
                             
-                        if securiter/path_securiter >= 1.7 :
+                            
+                        if securiter-path_securiter >= 7 :
                             tmp_msg.append(self.myDescription.BEAUCOUP_MOINS_SECURITE)
-                        elif securiter/path_securiter > 1 :
+                            
+                        elif securiter-path_securiter > 0 :
                             tmp_msg.append(self.myDescription.MOINS_SECURITE)
-                        elif securiter/path_securiter == 1 :
+                            
+                        elif securiter-path_securiter == 0 :
                             tmp_msg.append(self.myDescription.SECURITE)
-                        elif securiter/path_securiter > 0.5 :
+                            
+                        elif securiter-path_securiter > -5 :
                             tmp_msg.append(self.myDescription.PLUS_SECURITE)
+                            
                         else:
                             tmp_msg.append(self.myDescription.BEAUCOUP_PLUS_SECURITE)
                         
                         msg.append(tmp_msg)
-                        print(path_securiter,securiter,'=',securiter/path_securiter,'\n',path_rapide, rapide,'=',rapide/path_rapide)
+                        print(path_securiter, '-', securiter,'=',securiter-path_securiter,'\n',path_rapide, '-', rapide,'=',rapide-path_rapide)
             i+=1
         
         return msg
