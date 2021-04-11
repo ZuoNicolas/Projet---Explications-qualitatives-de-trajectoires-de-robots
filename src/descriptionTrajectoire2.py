@@ -112,7 +112,7 @@ class DescriptionTrajectoire():
         print("==\n",paths[0]==paths[1])
         print("score\n",score)     
         print("Intersection\n",self.list_tout_les_inter)
-        
+        print(argmin)
         del paths[argmin]
         del score[argmin]
         self.list_tout_les_chemins = paths
@@ -367,32 +367,47 @@ class DescriptionTrajectoire():
                         msg.append(('CHEMIN', i))
                         tmp_msg = []
                         
-                        if rapide-path_rapide >= 7:
+                        ratio_rapide = rapide/path_rapide
+                        ratio_securiter = securiter/path_securiter
+                        
+                        if path_rapide == 0 :
+                            ratio_rapide = rapide-path_rapide
+                            if rapide == 0 :
+                                ratio_rapide = 1
+                        
+                        if path_securiter == 0 :
+                            ratio_securiter = securiter-path_securiter
+                            if securiter == 0 :
+                                ratio_securiter = 1
+                                
+                        
+                        
+                        if ratio_rapide >= 1.7:
                             tmp_msg.append(self.myDescription.BEAUCOUP_MOINS_RAPIDE)
                             
-                        elif rapide-path_rapide > 0 :
+                        elif ratio_rapide > 1 :
                             tmp_msg.append(self.myDescription.MOINS_RAPIDE)
                             
-                        elif rapide-path_rapide == 0 :
+                        elif ratio_rapide == 1 :
                             tmp_msg.append(self.myDescription.RAPIDE)
                             
-                        elif rapide-path_rapide >= -5 :
+                        elif ratio_rapide >= 0.5 :
                             tmp_msg.append(self.myDescription.PLUS_RAPIDE)
                             
                         else:
                             tmp_msg.append(self.myDescription.BEAUCOUP_PLUS_RAPIDE)
                             
                             
-                        if securiter-path_securiter >= 7 :
+                        if ratio_securiter >= 1.7 :
                             tmp_msg.append(self.myDescription.BEAUCOUP_MOINS_SECURITE)
                             
-                        elif securiter-path_securiter > 0 :
+                        elif ratio_securiter > 1 :
                             tmp_msg.append(self.myDescription.MOINS_SECURITE)
                             
-                        elif securiter-path_securiter == 0 :
+                        elif ratio_securiter == 1 :
                             tmp_msg.append(self.myDescription.SECURITE)
                             
-                        elif securiter-path_securiter > -5 :
+                        elif ratio_securiter > 0.5 :
                             tmp_msg.append(self.myDescription.PLUS_SECURITE)
                             
                         else:

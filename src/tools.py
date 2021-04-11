@@ -236,7 +236,7 @@ def path_by_retriction(map, label, ltuple_rest):
     paths = [path] * len(ltuple_rest)
     path_weight = [0 if weight.get(pos) == None else weight.get(pos) for pos in path]
     somme, taille, maxi = np.sum(path_weight),len(path), np.max(path_weight)
-    scores = [(score * rest[0], somme, taille, maxi) for rest in ltuple_rest]
+    scores = [(score * rest[0] + somme * rest[1], somme, taille, maxi) for rest in ltuple_rest]
     for restriction in ltuple_rest:
         weight_rest = fuse_weight([get_weight_dist(map, label, restriction[0]), get_weight(map, label, restriction[1])])
         path, score = PCCH.a_start(start, end, len(map), len(map[0]), wall, weight_rest)
