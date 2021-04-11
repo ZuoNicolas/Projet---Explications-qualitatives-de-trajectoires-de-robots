@@ -73,7 +73,7 @@ class Game(object):
         self.construction()
 
     def slider(self):
-        self.s = slider.Slider("danger", 50, 150, 10, self.weight-self.tool_width,0)
+        self.s = slider.Slider("danger", 0, 150, 10, self.weight-self.tool_width,0)
         while True:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -289,14 +289,18 @@ class Game(object):
         discp_surf=pygame.Surface((self.weight,self.discription_height))
         discp_surf.fill(block_color)
         font=pygame.font.SysFont('Times', 12)
-        discrip=discription.split("/")
+        discrip=discription.split(" ")
         y=0
-        for d in discrip:
+        x=0
+        for word in discrip:
 
-            text = font.render(d, True, (0,0,0), (255,255,255))
+            text = font.render(word+" ", True, (0,0,0), (255,255,255))
             text_w, text_h = text.get_size()
-            discp_surf.blit(text, (0, y))
-            y=y+text_h
+            discp_surf.blit(text, (x, y))
+            x=x+text_w
+            if(x>=self.weight):
+                x=0
+                y=y+text_h
         self._display_surf.blit(discp_surf,((0,self.height-self.discription_height)))
     def on_cleanup(self):
         pygame.quit()
