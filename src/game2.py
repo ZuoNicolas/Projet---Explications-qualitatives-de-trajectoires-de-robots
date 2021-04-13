@@ -185,7 +185,7 @@ class Game(object):
                 self.on_rbutton_down(event)
     def one_step(self):
         self.restriction.append((1-self.s.value,self.s.value))
-        #print(self.restriction)
+        print("Liste de restriction : (rapidité, sécurite)\n",self.restriction)
         self.discription=self.dt.descriptiontTrajectoirePlusExplication(agent_rayon=self.radius, ltuple_rest=self.restriction)
         self.list_msg = Traduction.Description_to_Txt2(self.discription, self.label)
         for path in self.dt.list_tout_les_chemins:

@@ -100,6 +100,8 @@ class DescriptionTrajectoire():
         """ list(list(int)) * list(int) * dict{int:dict{str:str}}
         Parcours le chemin path en regardant les objets au alentours,
         pour retourner la description contruite"""
+        
+        self.clearParameters()
 
         # fonction.getScore
         paths, score = tools.path_by_retriction(self.map, self.label,  ltuple_rest)
@@ -107,12 +109,12 @@ class DescriptionTrajectoire():
         self.path = paths[argmin] #Le meilleu path
         _, path_securiter, path_rapide, path_secu_max = score[argmin] 
         self.list_tout_les_inter = tools.find_intercection(self.map, self.label, paths)
-        print("meilleur path\n", self.path)
-        print("les chemins\n",paths)
-        print("==\n",paths[0]==paths[1])
-        print("score\n",score)     
-        print("Intersection\n",self.list_tout_les_inter)
-        print(argmin)
+        # print("meilleur path\n", self.path)
+        # print("les chemins\n",paths)
+        # print("==\n",paths[0]==paths[1])
+        # print("score\n",score)     
+        # print("Intersection\n",self.list_tout_les_inter)
+        # print(argmin)
         del paths[argmin]
         del score[argmin]
         self.list_tout_les_chemins = paths
@@ -414,14 +416,18 @@ class DescriptionTrajectoire():
                             tmp_msg.append(self.myDescription.BEAUCOUP_PLUS_SECURITE)
                         
                         msg.append(tmp_msg)
-                        print(path_securiter, '-', securiter,'=',securiter-path_securiter,'\n',path_rapide, '-', rapide,'=',rapide-path_rapide)
+                        # print(path_securiter, '-', securiter,'=',securiter-path_securiter,'\n',path_rapide, '-', rapide,'=',rapide-path_rapide)
             i+=1
         
         return msg
         
         
-        
-        
+    def clearParameters(self):
+        self.description = []
+        self.myDescription = myEnum.Description
+        self.list_tout_les_chemins = []
+        self.list_tout_les_inter = []
+        self.list_score_tout_les_chemins = []
         
         
         
