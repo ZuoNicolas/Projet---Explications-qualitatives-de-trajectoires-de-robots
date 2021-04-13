@@ -12,18 +12,18 @@ def main():
 
     ### les fichiers disponible
     ## plusieur chemin
-    #file = '../ressource/zone_non_carre2.tmx'
+    file = '../ressource/zone_non_carre2.tmx'
     ## plusieur chemin avec un rocher
-    #file = '../ressource/zone_non carre.tmx'
+    # file = '../ressource/zone_non carre.tmx'
     
     ## zone tres simple
-    #file = '../ressource/map1.tmx'
+    # file = '../ressource/map1.tmx'
     
     ## pres
-    #file = '../ressource/exemple1.tmx'
+    # file = '../ressource/exemple1.tmx'
     
     ## rocher
-    file = '../ressource/zone_a_danger(rocher).tmx'
+    # file = '../ressource/zone_a_danger(rocher).tmx'
     
     #initialisation des données
     map = readfile.read_map_tmx(file)

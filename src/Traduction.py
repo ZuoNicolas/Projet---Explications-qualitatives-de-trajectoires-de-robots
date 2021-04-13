@@ -24,7 +24,7 @@ def Description_to_Txt2(list_desc, label):
             if description in [myEnum.Description.NORD, myEnum.Description.SUD, myEnum.Description.EST, myEnum.Description.OUEST]:
                 continue
                 
-            if type(description) == list:
+            if type(description) == list: #Quand il y a une explication d'un choix de chemin
                 msg_tmp += str(myEnum.Description.EXPLICATION.value)+' '
                 secu_bonne = ''
                 secu_mauvaise = ''
@@ -57,7 +57,7 @@ def Description_to_Txt2(list_desc, label):
                 
                 value = description.value  
                 
-                if description == myEnum.Description.OBJECT:
+                if description == myEnum.Description.OBJECT: 
                     value = obj_name
                     if obj_name not in list_obj:
                         list_obj.append((obj_id, obj_name))

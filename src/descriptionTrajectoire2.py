@@ -112,7 +112,7 @@ class DescriptionTrajectoire():
         # print("meilleur path\n", self.path)
         # print("les chemins\n",paths)
         # print("==\n",paths[0]==paths[1])
-        # print("score\n",score)     
+        print("Score des différents chemin : (Score Global, Score de sécurité, Score de rapidité)\n",score)     
         # print("Intersection\n",self.list_tout_les_inter)
         # print(argmin)
         del paths[argmin]
