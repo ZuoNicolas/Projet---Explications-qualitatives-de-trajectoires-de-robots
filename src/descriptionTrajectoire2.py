@@ -104,6 +104,7 @@ class DescriptionTrajectoire():
         self.clearParameters()
 
         # fonction.getScore
+        self.description=[]
         paths, score = tools.path_by_retriction(self.map, self.label,  ltuple_rest)
         argmin = np.argmin(np.array(score)[:,0])
         self.path = paths[argmin] #Le meilleu path
@@ -199,7 +200,6 @@ class DescriptionTrajectoire():
         description_temp += [self.myDescription.AVANCE, self.myDescription.JUSQU_A, self.myDescription.ARRIVER]
         
         self.description.append(description_temp)
-
         return self.description
             
     def local_map(self, agent_rayon=None):

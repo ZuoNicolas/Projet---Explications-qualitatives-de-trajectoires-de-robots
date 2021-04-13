@@ -73,7 +73,7 @@ class Game(object):
         self.construction()
 
     def slider(self):
-        self.s = slider.Slider("danger", 50, 150, 10, self.weight-self.tool_width,0)
+        self.s = slider.Slider("danger", 0, 150, 10, self.weight-self.tool_width,0)
         while True:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -132,7 +132,6 @@ class Game(object):
 
 
     def construction(self):
-
         start,end=get_start_end(self.map,self.label)
         self._display_surf.fill(white)
         for x, y, image in self.layer.tiles():
@@ -141,11 +140,6 @@ class Game(object):
         self.draw_circle_alpha( self._display_surf, (255,0,0), ((x+0.5)*16,(y+0.5)*16), self.radius*16)
         
         self._display_surf.blit(self.robot,(x*16,y*16))
-        for y, x in self.path:
-            s = pygame.Surface((16,16))  # the size of your rect
-            s.set_alpha(50)                # alpha level
-            s.fill((0,0,255))           # this fills the entire surface
-            self._display_surf.blit(s,(x*16,y*16))
         discp_surf=pygame.Surface((self.weight,self.discription_height))
         discp_surf.fill(block_color)
         self._display_surf.blit(discp_surf,((0,self.height-self.discription_height)))
@@ -184,8 +178,14 @@ class Game(object):
             elif event.button == 3:
                 self.on_rbutton_down(event)
     def one_step(self):
+<<<<<<< HEAD
         self.restriction.append((1-self.s.value,self.s.value))
         print("Liste de restriction : (rapidité, sécurite)\n",self.restriction)
+=======
+        self.restriction=[(1-self.s.value,self.s.value)]
+        #print(self.restriction)
+
+>>>>>>> f7e9492ce4e5d92cbb93cba0070abc3c059867f8
         self.discription=self.dt.descriptiontTrajectoirePlusExplication(agent_rayon=self.radius, ltuple_rest=self.restriction)
         self.list_msg = Traduction.Description_to_Txt2(self.discription, self.label)
         for path in self.dt.list_tout_les_chemins:
@@ -289,14 +289,18 @@ class Game(object):
         discp_surf=pygame.Surface((self.weight,self.discription_height))
         discp_surf.fill(block_color)
         font=pygame.font.SysFont('Times', 12)
-        discrip=discription.split("/")
+        discrip=discription.split(" ")
         y=0
-        for d in discrip:
+        x=0
+        for word in discrip:
 
-            text = font.render(d, True, (0,0,0), (255,255,255))
+            text = font.render(word+" ", True, (0,0,0), (255,255,255))
             text_w, text_h = text.get_size()
-            discp_surf.blit(text, (0, y))
-            y=y+text_h
+            discp_surf.blit(text, (x, y))
+            x=x+text_w
+            if(x>=self.weight):
+                x=0
+                y=y+text_h
         self._display_surf.blit(discp_surf,((0,self.height-self.discription_height)))
     def on_cleanup(self):
         pygame.quit()
