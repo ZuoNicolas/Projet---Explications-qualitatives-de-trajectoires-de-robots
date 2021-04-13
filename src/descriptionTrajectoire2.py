@@ -104,7 +104,6 @@ class DescriptionTrajectoire():
         self.clearParameters()
 
         # fonction.getScore
-        self.description=[]
         paths, score = tools.path_by_retriction(self.map, self.label,  ltuple_rest)
         argmin = np.argmin(np.array(score)[:,0])
         self.path = paths[argmin] #Le meilleu path
