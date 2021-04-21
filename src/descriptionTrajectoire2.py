@@ -96,7 +96,7 @@ class DescriptionTrajectoire():
         
         return self.description
     
-    def descriptiontTrajectoirePlusExplication(self, agent_rayon=None, ltuple_rest=[(0.1,0.9)]):
+    def descriptiontTrajectoirePlusExplication(self, agent_rayon=None, ltuple_rest=[(0.1,0.9)],lobjet=[]):
         """ list(list(int)) * list(int) * dict{int:dict{str:str}}
         Parcours le chemin path en regardant les objets au alentours,
         pour retourner la description contruite"""
@@ -104,7 +104,7 @@ class DescriptionTrajectoire():
         self.clearParameters()
 
         # fonction.getScore
-        paths, score = tools.path_by_retriction(self.map, self.label,  ltuple_rest)
+        paths, score = tools.path_by_retriction(self.map, self.label,  ltuple_rest,lobjet)
         argmin = np.argmin(np.array(score)[:,0])
         self.path = paths[argmin] #Le meilleu path
         _, path_securiter, path_rapide, path_secu_max = score[argmin] 

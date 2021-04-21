@@ -73,54 +73,46 @@ class Game(object):
         self.construction()
 
     def slider(self):
-        self.s = slider.Slider("danger", 0, 150, 10, self.weight-self.tool_width,0)
+        self.secu = slider.Slider("sécurité", 0, 150, 10, self.weight-self.tool_width,0)
+        self.rapid=slider.Slider("rapidité",0,150,10,self.weight-self.tool_width,60)
+        self.preference=slider.Slider("préférence",0,150,10,self.weight-self.tool_width,120)
+        self.slides=[self.secu,self.rapid,self.preference]
+
+        list_obj=self.list_objets()
+        font=pygame.font.SysFont("Verdana", 12)
+        self.option=slider.OptionBox(self.weight-self.tool_width,180,90,40,BLUE,block_color,font,list_obj)
         while True:
-            for event in pygame.event.get():
+            self._display_surf.fill(white)
+            self.construction()
+            event_list = pygame.event.get()
+            for event in event_list:
                 if event.type == pygame.QUIT:
                     pygame.quit()
                     quit()
                     
                 elif event.type == pygame.MOUSEBUTTONDOWN:
                     pos = pygame.mouse.get_pos()
-                    
-                    if self.s.button_rect.collidepoint(pos):
-                        self.s.hit = True
+                    for s in self.slides:
+                        if s.button_rect.collidepoint(pos):
+                            s.hit = True
                 elif event.type == pygame.MOUSEBUTTONUP:
-                    self.s.hit = False
+                    for s in self.slides:
+                        s.hit = False
             # Move slides
+            for s in self.slides:
+                if s.hit:
+                    s.move()
             
-            if self.s.hit:
-                self.s.move()
-            
-            
-            self.s.draw(self._display_surf)
-            self.button('confirm',self.weight-self.tool_width,100,90,40,green,bright_green,self.one_step)
+            for s in self.slides:
+                s.draw(self._display_surf)
+            self.button('confirm',self.weight-self.tool_width,240,90,40,green,bright_green,self.one_step)
+
+            self.option.update(event_list)
+            self.option.draw(self._display_surf)
             pygame.display.update()
 
         #clock.tick(speed.val)
-    def add_buttons(self):
-        self.construction()
-        list_obj=self.list_objets()
 
-        while True:
-            for event in pygame.event.get():
-            #print(event)
-                if event.type == pygame.QUIT:
-                    pygame.quit()
-                    quit()
-            pos_x=self.weight-self.tool_width
-            pos_y=0
-            
-            for obj in list_obj:
-                if(pos_y+40 >=(self.height-self.discription_height)):
-                    pos_x=pos_x+90
-                    pos_y=0
-                self.button(obj,pos_x,pos_y,90,40,green,bright_green,self.one_step)
-                
-                pos_y=pos_y+40
-                
-            pygame.display.update()
-            #clock.tick(15)
     def list_objets(self):
         list_obj=[]
         for x in range(len(self.map)):
@@ -178,10 +170,10 @@ class Game(object):
             elif event.button == 3:
                 self.on_rbutton_down(event)
     def one_step(self):
-        self.restriction=[(1-self.s.value,self.s.value)]
-        print("Liste de restriction : (rapidité, sécurite)\n",self.restriction)
-
-        self.discription=self.dt.descriptiontTrajectoirePlusExplication(agent_rayon=self.radius, ltuple_rest=self.restriction)
+        self.restriction=[(self.rapid.value,self.secu.value,self.preference.value)]
+        print("Liste de restriction :\n",self.restriction)
+        print(self.option.selections)
+        self.discription=self.dt.descriptiontTrajectoirePlusExplication(agent_rayon=self.radius, ltuple_rest=self.restriction,lobjet=self.option.list_sel)
         self.list_msg = Traduction.Description_to_Txt2(self.discription, self.label)
         for path in self.dt.list_tout_les_chemins:
             for y, x in path:

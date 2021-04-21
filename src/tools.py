@@ -268,7 +268,7 @@ def path_by_retriction(map, label, ltuple_rest, lobjet=[]):
         weight_rest = fuse_weight([weight_dist, weight_secu])
         if len(lobjet) !=0: #cas attractif
             for i in range(len(lobjet)):
-                weight_attract = get_weight_attract(map, label, lobjet[i], restriction[2])
+                weight_attract = get_weight_attract(map, label, lobjet[i], 1,restriction[2])
                 weight_rest = fuse_weight([weight_rest, weight_attract])
         path, score = PCCH.a_start(start, end, len(map), len(map[0]), wall, weight_rest)
         paths.append(path)

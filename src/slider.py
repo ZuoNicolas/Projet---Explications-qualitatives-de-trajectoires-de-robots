@@ -11,14 +11,81 @@ ORANGE = (200, 100, 50)
 CYAN = (0, 255, 255)
 MAGENTA = (255, 0, 255)
 TRANS = (1, 1, 1)
+import pygame
+
+class OptionBox():
+
+    def __init__(self, x, y, w, h, color, highlight_color, font, option_list, selected = 0):
+        self.color = color
+        self.highlight_color = highlight_color
+        self.rect = pygame.Rect(x, y, w, h)
+        self.font = font
+        self.option_list = option_list
+        self.selected = selected
+        self.draw_menu = False
+        self.menu_active = False
+        self.active_option = -1
+        self.selections=[]
+        self.list_sel=[]
+    def draw(self, surf):
+        pygame.draw.rect(surf, self.highlight_color if self.menu_active else self.color, self.rect)
+        pygame.draw.rect(surf, (0, 0, 0), self.rect, 2)
+        m=""
+        self.list_sel=[]
+        for i in self.selections:
+            m=m+self.option_list[i]+' '
+            self.list_sel.append(self.option_list[i])
+        msg = self.font.render(m, 1, (0, 0, 0))
+        surf.blit(msg, msg.get_rect(center = self.rect.center))
+
+        if self.draw_menu:
+            for i, text in enumerate(self.option_list):
+                rect = self.rect.copy()
+                rect.y += (i+1) * self.rect.height
+                pygame.draw.rect(surf, self.highlight_color if i in self.selections else self.color, rect)
+                msg = self.font.render(text, 1, (0, 0, 0))
+                surf.blit(msg, msg.get_rect(center = rect.center))
+            outer_rect = (self.rect.x, self.rect.y + self.rect.height, self.rect.width, self.rect.height * len(self.option_list))
+            pygame.draw.rect(surf, (0, 0, 0), outer_rect, 2)
+
+    def update(self, event_list):
+        mpos = pygame.mouse.get_pos()
+        self.menu_active = self.rect.collidepoint(mpos)
+        
+        self.active_option = -1
+        for i in range(len(self.option_list)):
+            rect = self.rect.copy()
+            rect.y += (i+1) * self.rect.height
+            if rect.collidepoint(mpos):
+                self.active_option = i
+                break
+        if not self.menu_active and self.active_option == -1:
+            self.draw_menu = False
+
+        for event in event_list:
+            if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+                if self.menu_active:
+                    self.draw_menu = not self.draw_menu
+                elif self.draw_menu and self.active_option >= 0:
+                    if(self.active_option in self.selections):
+                        self.selections.remove(self.active_option)
+                    else:
+                        self.selections.append(self.active_option)
+                    self.selected = self.active_option
+
+                    self.draw_menu = False
+                    return self.active_option
+        return -1
+
+
 class Slider():
-    def __init__(self, name, val, maxi, mini, pos,y_pos):
-        self.val = val  # start value
+    def __init__(self, name, value, maxi, mini, pos,y_pos):
+        self.value = value  # start value
         self.maxi = maxi  # maximum at slider position right
         self.mini = mini  # minimum at slider position left
         self.xpos = pos  # x-location on screen
         self.ypos = y_pos
-        self.value=0
+        self.val=(self.maxi-self.mini)*self.value+self.mini
         self.name=name
 
 
@@ -26,7 +93,7 @@ class Slider():
         #font = pygame.font.SysFont("Verdana", 12)
         self.hit = False  # the hit attribute indicates slider movement due to mouse interaction
         font = pygame.font.SysFont("Verdana", 12)
-        self.txt_surf = font.render(name+':'+str(self.value)+'%', 1, BLACK)
+        self.txt_surf = font.render(name+':'+str(self.value), 1, BLACK)
         self.txt_rect = self.txt_surf.get_rect(center=(50, 15))
 
         # Static graphics - slider background #
@@ -53,7 +120,7 @@ class Slider():
         self.txt_surf.fill((255,255,255))
         surf.blit(self.txt_surf,self.txt_rect)
         font = pygame.font.SysFont("Verdana", 12)
-        self.txt_surf = font.render(self.name+':'+"%.2f"%(self.value*100)+'%', 1, BLACK)
+        self.txt_surf = font.render(self.name+':'+"%.2f"%self.value, 1, BLACK)
         self.txt_rect = self.txt_surf.get_rect(center=(50, 15))
         surf.blit(self.txt_surf, self.txt_rect) 
         # dynamic
