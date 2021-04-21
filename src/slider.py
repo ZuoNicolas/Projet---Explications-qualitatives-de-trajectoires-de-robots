@@ -11,7 +11,6 @@ ORANGE = (200, 100, 50)
 CYAN = (0, 255, 255)
 MAGENTA = (255, 0, 255)
 TRANS = (1, 1, 1)
-import pygame
 
 class OptionBox():
 
@@ -47,7 +46,6 @@ class OptionBox():
                 surf.blit(msg, msg.get_rect(center = rect.center))
             outer_rect = (self.rect.x, self.rect.y + self.rect.height, self.rect.width, self.rect.height * len(self.option_list))
             pygame.draw.rect(surf, (0, 0, 0), outer_rect, 2)
-
     def update(self, event_list):
         mpos = pygame.mouse.get_pos()
         self.menu_active = self.rect.collidepoint(mpos)

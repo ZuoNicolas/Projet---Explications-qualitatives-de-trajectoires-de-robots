@@ -48,8 +48,8 @@ class Game(object):
         
         root = ET.parse(self.filename).getroot()
 
-        self.tool_width=10*16 #toolbar a droite de fenetre
-        self.discription_height=5*16 #discription en bas de fenetre
+        self.tool_width=20*16 #toolbar a droite de fenetre
+        self.discription_height=10*16 #discription en bas de fenetre
         self.size = self.weight, self.height = (int(root.get("width"))) * 16+self.tool_width, (int(root.get("height"))) * 16+self.discription_height #a changer
         #print(self.size)
         #zone d'affichage
@@ -80,7 +80,7 @@ class Game(object):
 
         list_obj=self.list_objets()
         font=pygame.font.SysFont("Verdana", 12)
-        self.option=slider.OptionBox(self.weight-self.tool_width,180,90,40,BLUE,block_color,font,list_obj)
+        self.option=slider.OptionBox(self.weight-self.tool_width,180,90,30,(150, 150, 150), (100, 200, 255),font,list_obj)
         while True:
             self._display_surf.fill(white)
             self.construction()
@@ -105,7 +105,7 @@ class Game(object):
             
             for s in self.slides:
                 s.draw(self._display_surf)
-            self.button('confirm',self.weight-self.tool_width,240,90,40,green,bright_green,self.one_step)
+            self.button('confirm',self.weight-(self.tool_width/2),240,90,40,green,bright_green,self.one_step)
 
             self.option.update(event_list)
             self.option.draw(self._display_surf)
@@ -120,6 +120,9 @@ class Game(object):
                 objet = self.label.get(self.map[x][y]).get('name') 
                 if(objet not in list_obj):
                     list_obj.append(objet)
+        list_obj.remove('terre')
+        list_obj.remove('start')
+        list_obj.remove('end')
         return list_obj
 
 
@@ -136,39 +139,6 @@ class Game(object):
         discp_surf.fill(block_color)
         self._display_surf.blit(discp_surf,((0,self.height-self.discription_height)))
     
-
-    #action lier au event
-    def on_lbutton_up(self, event):
-        self.forward = False
-    def on_mbutton_up(self, event):
-        pass
-    def on_rbutton_up(self, event):
-        pass
-    def on_lbutton_down(self, event):
-        self.forward = True
-    def on_mbutton_down(self, event):
-        pass
-    def on_rbutton_down(self, event):
-        pass
-    
-
-    def on_event(self, event):
-        if event.type == pygame.QUIT:
-            self._running = False
-        elif event.type == pygame.MOUSEBUTTONUP:
-            if event.button == 1:
-                self.on_lbutton_up(event)
-            elif event.button == 2:
-                self.on_mbutton_up(event)
-            elif event.button == 3:
-                self.on_rbutton_up(event)
-        elif event.type == pygame.MOUSEBUTTONDOWN:
-            if event.button == 1:
-                self.on_lbutton_down(event)
-            elif event.button == 2:
-                self.on_mbutton_down(event)
-            elif event.button == 3:
-                self.on_rbutton_down(event)
     def one_step(self):
         self.restriction=[(self.rapid.value,self.secu.value,self.preference.value)]
         print("Liste de restriction :\n",self.restriction)
@@ -289,6 +259,41 @@ class Game(object):
                 x=0
                 y=y+text_h
         self._display_surf.blit(discp_surf,((0,self.height-self.discription_height)))
+
+
+        #action lier au event
+    def on_lbutton_up(self, event):
+        self.forward = False
+    def on_mbutton_up(self, event):
+        pass
+    def on_rbutton_up(self, event):
+        pass
+    def on_lbutton_down(self, event):
+        self.forward = True
+    def on_mbutton_down(self, event):
+        pass
+    def on_rbutton_down(self, event):
+        pass
+    
+
+    def on_event(self, event):
+        if event.type == pygame.QUIT:
+            self._running = False
+        elif event.type == pygame.MOUSEBUTTONUP:
+            if event.button == 1:
+                self.on_lbutton_up(event)
+            elif event.button == 2:
+                self.on_mbutton_up(event)
+            elif event.button == 3:
+                self.on_rbutton_up(event)
+        elif event.type == pygame.MOUSEBUTTONDOWN:
+            if event.button == 1:
+                self.on_lbutton_down(event)
+            elif event.button == 2:
+                self.on_mbutton_down(event)
+            elif event.button == 3:
+                self.on_rbutton_down(event)
+    
     def on_cleanup(self):
         pygame.quit()
     
