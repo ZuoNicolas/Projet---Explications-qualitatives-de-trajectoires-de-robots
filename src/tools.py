@@ -83,7 +83,7 @@ def get_weight_dist(map, label, alpha=1):
     res = dict()
     for x in range(len(map)):
         for y in range(len(map[x])):
-            res[(x, y)] = max(0.01, alpha)
+            res[(x, y)] = alpha
     return res
 
 def fuse_weight(list_dico_weidgh):
@@ -257,10 +257,10 @@ def path_by_retriction(map, label, ltuple_rest, lobjet=[]):
     val_attract = 7
 
     path, score = PCCH.a_start(start, end, len(map), len(map[0]), wall)
-    path2, score2 = PCCH.a_start(start, end, len(map), len(map[0]), wall,weight)
-    paths = [path] * len(ltuple_rest) +[path2] * len(ltuple_rest)
+    path2, score2 = PCCH.a_start(start, end, len(map), len(map[0]), wall, weight)
+    paths = [path] * len(ltuple_rest) + [path2] * len(ltuple_rest)
     path_weight = [0 if weight.get(pos) == None else weight.get(pos) for pos in path]
-    path_weight2 = [0 if weight.get(pos) == None else weight.get(pos) for pos in path]
+    path_weight2 = [0 if weight.get(pos) == None else weight.get(pos) for pos in path2]
     
     
 
@@ -287,9 +287,6 @@ def path_by_retriction(map, label, ltuple_rest, lobjet=[]):
         weight_attract = get_weight_attract(map, label, lobjet, 1, restriction[2] * val_attract)
         weight_rest = fuse_weight([weight_rest, weight_attract])
         
-        """val_min = np.min(list(weight_rest.values()))
-        for cle in weight_rest.keys():
-            weight_rest[cle] += np.abs(val_min)"""
 
         path, score = PCCH.a_start(start, end, len(map), len(map[0]), wall, weight_rest)
         paths.append(path)
