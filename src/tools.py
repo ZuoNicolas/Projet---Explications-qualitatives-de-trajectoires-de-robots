@@ -98,7 +98,7 @@ def fuse_weight(list_dico_weidgh):
         for lis in list_dico_weidgh:
             if(lis.get(cle) != None):
                 l[cle]+=lis[cle]
-    val_min = np.min(l.values()) + 1 #pour evité la valeur null
+    val_min = np.min(list(l.values())) + 1 #pour evité la valeur null
     for cle in l.keys():
         l[cle] += val_min
     return l
@@ -243,7 +243,7 @@ def find_intercection(map, label, paths):
     return inter
 
 
-def path_by_retriction(map, label, ltuple_rest):
+def path_by_retriction(map, label, ltuple_rest, lobjet=[]):
     """
     Attr: 
         map : la carte 
@@ -263,7 +263,13 @@ def path_by_retriction(map, label, ltuple_rest):
     somme, taille, maxi = np.sum(path_weight),len(path), np.max(path_weight)
     scores = [(score * rest[0] + somme * rest[1], somme, taille, maxi) for rest in ltuple_rest]
     for restriction in ltuple_rest:
-        weight_rest = fuse_weight([get_weight_dist(map, label, restriction[0]), get_weight(map, label, restriction[1])])
+        weight_secu = get_weight(map, label, restriction[1])
+        weight_dist = get_weight_dist(map, label, restriction[0])
+        weight_rest = fuse_weight([weight_dist, weight_secu])
+        if len(lobjet) !=0: #cas attractif
+            for i in range(len(lobjet)):
+                weight_attract = get_weight_attract(map, label, lobjet[i], restriction[2])
+                weight_rest = fuse_weight([weight_rest, weight_attract])
         path, score = PCCH.a_start(start, end, len(map), len(map[0]), wall, weight_rest)
         paths.append(path)
         path_weight = [0 if weight.get(pos) == None else weight.get(pos) for pos in path]
