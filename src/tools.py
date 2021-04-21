@@ -2,6 +2,7 @@ import numpy as np
 import PCCH
 
 from math import sqrt
+
 def get_start_end(map,label):
 
     for key in label.keys():
@@ -48,6 +49,27 @@ def get_weight(map,label,alpha=1):
                                     res[(x_tmp, y_tmp)] +=(radius - sqrt(radius_tmp))*alpha
     return res
 
+def get_weight_attract(map, label, objet, radius = 6, alpha=1):
+    res = dict()
+    for x in range(len(map)):
+        for y in range(len(map[x])):
+            name = label.get(map[x][y]).get('name')
+            if name != objet:
+                for x2 in range(-radius,radius+1):
+                    for y2 in range(-radius,radius+1):
+                        x_tmp = x + x2
+                        y_tmp = y + y2
+                        radius_tmp = (x- x_tmp)**2 + (y-y_tmp)**2
+                        #si on est dans la zone
+                        if radius_tmp <= radius**2: 
+                            # si on ne sort pas de la map
+                            if x_tmp >= 0 and y_tmp >= 0 and x_tmp < len(map[x]) and y_tmp < len(map[x]): 
+                                if res.get((x_tmp, y_tmp)) == None:
+                                    res[(x_tmp, y_tmp)] = -(radius - sqrt(radius_tmp))*alpha
+                                else:
+                                    res[(x_tmp, y_tmp)] += -(radius - sqrt(radius_tmp))*alpha
+    return res
+
 
 def get_weight_dist(map, label, alpha=1):
     """
@@ -63,6 +85,23 @@ def get_weight_dist(map, label, alpha=1):
         for y in range(len(map[x])):
             res[(x, y)] = max(0.01, alpha)
     return res
+
+def fuse_weight(list_dico_weidgh):
+    l=list_dico_weidgh[0].copy()
+    
+    #fusionner avec tout les keys
+    for lis in list_dico_weidgh:
+        l.update(lis)
+    #additionner les valeurs
+    for cle in l.keys():
+        l[cle]=0
+        for lis in list_dico_weidgh:
+            if(lis.get(cle) != None):
+                l[cle]+=lis[cle]
+    val_min = np.min(l.values()) + 1 #pour evité la valeur null
+    for cle in l.keys():
+        l[cle] += val_min
+    return l
 
 
 def affichage_console(map,path,label):
@@ -202,20 +241,6 @@ def find_intercection(map, label, paths):
                 inter.append((x,y))
             
     return inter
-
-def fuse_weight(list_dico_weidgh):
-    l=list_dico_weidgh[0].copy()
-    
-    #fusionner avec tout les keys
-    for lis in list_dico_weidgh:
-        l.update(lis)
-    #additionner les valeurs
-    for cle in l.keys():
-        l[cle]=0
-        for lis in list_dico_weidgh:
-            if(lis.get(cle) != None):
-                l[cle]+=lis[cle]
-    return l
 
 
 def path_by_retriction(map, label, ltuple_rest):
