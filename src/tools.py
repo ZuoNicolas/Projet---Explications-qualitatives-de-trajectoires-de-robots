@@ -251,26 +251,34 @@ def path_by_retriction(map, label, ltuple_rest, lobjet=[]):
         paths(list(list(tuple))) : la lists des chemins possible avec comme premier chemin le pcch 
         scores(list(tuple(int))) : score optenu pour chaque chemin (dist, danger, danger_max)
     """
-    print("lobj = ", lobjet)
     start, end = get_start_end(map, label)
     wall = get_wall(map, label)
     weight = get_weight(map, label)
-
-    path, score = PCCH.a_start(start, end, len(map), len(map[0]), wall)
-    paths = [path] * len(ltuple_rest)
-    path_weight = [0 if weight.get(pos) == None else weight.get(pos) for pos in path]
-    
     val_attract = 7
 
+    path, score = PCCH.a_start(start, end, len(map), len(map[0]), wall)
+    path2, score2 = PCCH.a_start(start, end, len(map), len(map[0]), wall,weight)
+    paths = [path] * len(ltuple_rest) +[path2] * len(ltuple_rest)
+    path_weight = [0 if weight.get(pos) == None else weight.get(pos) for pos in path]
+    path_weight2 = [0 if weight.get(pos) == None else weight.get(pos) for pos in path]
+    
+    
+
     lsomme_attract = []
+    lsomme_attract2 = []
     for restriction in ltuple_rest:
         weight_attract = get_weight_attract(map, label, lobjet, 1, restriction[2] * val_attract)
         path_weight_atrract = [0 if weight_attract.get(pos) == None else weight_attract.get(pos) for pos in path]
         lsomme_attract.append(np.sum(path_weight_atrract))
+        path_weight_atrract2 = [0 if weight_attract.get(pos) == None else weight_attract.get(pos) for pos in path2]
+        lsomme_attract2.append(np.sum(path_weight_atrract2))
 
 
     somme, taille, maxi = np.sum(path_weight),len(path), np.max(path_weight)
+    somme2, taille2, maxi2 = np.sum(path_weight2),len(path2), np.max(path_weight2)
     scores = [(score * ltuple_rest[i][0] + somme * ltuple_rest[i][1] + lsomme_attract[i] * ltuple_rest[i][2], somme, taille, lsomme_attract[i]) for i in range(len(ltuple_rest))]
+    scores += [(score2 * ltuple_rest[i][0] + somme2 * ltuple_rest[i][1] + lsomme_attract2[i] * ltuple_rest[i][2], somme2, taille2, lsomme_attract2[i]) for i in range(len(ltuple_rest))]
+    
     for restriction in ltuple_rest:
         weight_secu = get_weight(map, label, restriction[1])
         weight_dist = get_weight_dist(map, label, restriction[0])
