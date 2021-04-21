@@ -44,9 +44,9 @@ def get_weight(map,label,alpha=1):
                             # si on ne sort pas de la map
                             if x_tmp >= 0 and y_tmp >= 0 and x_tmp < len(map[x]) and y_tmp < len(map[x]): 
                                 if res.get((x_tmp, y_tmp)) == None:
-                                    res[(x_tmp, y_tmp)] = (radius - sqrt(radius_tmp))*alpha
+                                    res[(x_tmp, y_tmp)] = (radius - sqrt(radius_tmp) + 1)*alpha
                                 else:
-                                    res[(x_tmp, y_tmp)] +=(radius - sqrt(radius_tmp))*alpha
+                                    res[(x_tmp, y_tmp)] +=(radius - sqrt(radius_tmp) + 1)*alpha
     return res
 
 def get_weight_attract(map, label, lobjet, radius = 6, alpha=1):
@@ -65,9 +65,9 @@ def get_weight_attract(map, label, lobjet, radius = 6, alpha=1):
                             # si on ne sort pas de la map
                             if x_tmp >= 0 and y_tmp >= 0 and x_tmp < len(map[x]) and y_tmp < len(map[x]):
                                 if res.get((x_tmp, y_tmp)) == None:
-                                    res[(x_tmp, y_tmp)] = -(radius - sqrt(radius_tmp))*alpha
+                                    res[(x_tmp, y_tmp)] = -(radius - sqrt(radius_tmp) + 1)*alpha
                                 else:
-                                    res[(x_tmp, y_tmp)] += -(radius - sqrt(radius_tmp))*alpha
+                                    res[(x_tmp, y_tmp)] += -(radius - sqrt(radius_tmp) + 1)*alpha
     return res
 
 
@@ -260,11 +260,11 @@ def path_by_retriction(map, label, ltuple_rest, lobjet=[]):
     paths = [path] * len(ltuple_rest)
     path_weight = [0 if weight.get(pos) == None else weight.get(pos) for pos in path]
     
-    value_attract = 1
+    val_attract = 7
 
     lsomme_attract = []
     for restriction in ltuple_rest:
-        weight_attract = get_weight_attract(map, label, lobjet, 2, restriction[2] * value_attract)
+        weight_attract = get_weight_attract(map, label, lobjet, 1, restriction[2] * val_attract)
         path_weight_atrract = [0 if weight_attract.get(pos) == None else weight_attract.get(pos) for pos in path]
         lsomme_attract.append(np.sum(path_weight_atrract))
 
@@ -276,17 +276,21 @@ def path_by_retriction(map, label, ltuple_rest, lobjet=[]):
         weight_dist = get_weight_dist(map, label, restriction[0])
         weight_rest = fuse_weight([weight_dist, weight_secu])
         
-        weight_attract = get_weight_attract(map, label, lobjet, 2, restriction[2] * value_attract)
+        weight_attract = get_weight_attract(map, label, lobjet, 1, restriction[2] * val_attract)
         weight_rest = fuse_weight([weight_rest, weight_attract])
         
-        val_min = np.min(list(weight_rest.values()))
+        """val_min = np.min(list(weight_rest.values()))
         for cle in weight_rest.keys():
-            weight_rest[cle] += val_min
+            weight_rest[cle] += np.abs(val_min)"""
 
         path, score = PCCH.a_start(start, end, len(map), len(map[0]), wall, weight_rest)
         paths.append(path)
 
         path_weight_attract = [0 if weight_attract.get(pos) == None else weight_attract.get(pos) for pos in path]
+        print(path)
+        print(weight_attract)
+        print(path_weight_attract)
+
         path_weight = [0 if weight.get(pos) == None else weight.get(pos) for pos in path]
         scores.append((score, np.sum(path_weight), len(path), np.sum(path_weight_attract)))
     return paths, scores
