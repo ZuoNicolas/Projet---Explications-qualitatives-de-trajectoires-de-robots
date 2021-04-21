@@ -49,12 +49,12 @@ def get_weight(map,label,alpha=1):
                                     res[(x_tmp, y_tmp)] +=(radius - sqrt(radius_tmp))*alpha
     return res
 
-def get_weight_attract(map, label, objet, radius = 6, alpha=1):
+def get_weight_attract(map, label, lobjet, radius = 6, alpha=1):
     res = dict()
     for x in range(len(map)):
         for y in range(len(map[x])):
             name = label.get(map[x][y]).get('name')
-            if name != objet:
+            if name in lobjet:
                 for x2 in range(-radius,radius+1):
                     for y2 in range(-radius,radius+1):
                         x_tmp = x + x2
@@ -63,7 +63,7 @@ def get_weight_attract(map, label, objet, radius = 6, alpha=1):
                         #si on est dans la zone
                         if radius_tmp <= radius**2: 
                             # si on ne sort pas de la map
-                            if x_tmp >= 0 and y_tmp >= 0 and x_tmp < len(map[x]) and y_tmp < len(map[x]): 
+                            if x_tmp >= 0 and y_tmp >= 0 and x_tmp < len(map[x]) and y_tmp < len(map[x]):
                                 if res.get((x_tmp, y_tmp)) == None:
                                     res[(x_tmp, y_tmp)] = -(radius - sqrt(radius_tmp))*alpha
                                 else:
@@ -98,10 +98,8 @@ def fuse_weight(list_dico_weidgh):
         for lis in list_dico_weidgh:
             if(lis.get(cle) != None):
                 l[cle]+=lis[cle]
-    val_min = np.min(list(l.values())) + 1 #pour evité la valeur null
-    for cle in l.keys():
-        l[cle] += val_min
     return l
+    
 
 
 def affichage_console(map,path,label):
@@ -253,6 +251,7 @@ def path_by_retriction(map, label, ltuple_rest, lobjet=[]):
         paths(list(list(tuple))) : la lists des chemins possible avec comme premier chemin le pcch 
         scores(list(tuple(int))) : score optenu pour chaque chemin (dist, danger, danger_max)
     """
+    print("lobj = ", lobjet)
     start, end = get_start_end(map, label)
     wall = get_wall(map, label)
     weight = get_weight(map, label)
@@ -260,20 +259,36 @@ def path_by_retriction(map, label, ltuple_rest, lobjet=[]):
     path, score = PCCH.a_start(start, end, len(map), len(map[0]), wall)
     paths = [path] * len(ltuple_rest)
     path_weight = [0 if weight.get(pos) == None else weight.get(pos) for pos in path]
+    
+    value_attract = 1
+
+    lsomme_attract = []
+    for restriction in ltuple_rest:
+        weight_attract = get_weight_attract(map, label, lobjet, 2, restriction[2] * value_attract)
+        path_weight_atrract = [0 if weight_attract.get(pos) == None else weight_attract.get(pos) for pos in path]
+        lsomme_attract.append(np.sum(path_weight_atrract))
+
+
     somme, taille, maxi = np.sum(path_weight),len(path), np.max(path_weight)
-    scores = [(score * rest[0] + somme * rest[1], somme, taille, maxi) for rest in ltuple_rest]
+    scores = [(score * ltuple_rest[i][0] + somme * ltuple_rest[i][1] + lsomme_attract[i] * ltuple_rest[i][2], somme, taille, lsomme_attract[i]) for i in range(len(ltuple_rest))]
     for restriction in ltuple_rest:
         weight_secu = get_weight(map, label, restriction[1])
         weight_dist = get_weight_dist(map, label, restriction[0])
         weight_rest = fuse_weight([weight_dist, weight_secu])
-        if len(lobjet) !=0: #cas attractif
-            for i in range(len(lobjet)):
-                weight_attract = get_weight_attract(map, label, lobjet[i], 1,restriction[2])
-                weight_rest = fuse_weight([weight_rest, weight_attract])
+        
+        weight_attract = get_weight_attract(map, label, lobjet, 2, restriction[2] * value_attract)
+        weight_rest = fuse_weight([weight_rest, weight_attract])
+        
+        val_min = np.min(list(weight_rest.values()))
+        for cle in weight_rest.keys():
+            weight_rest[cle] += val_min
+
         path, score = PCCH.a_start(start, end, len(map), len(map[0]), wall, weight_rest)
         paths.append(path)
+
+        path_weight_attract = [0 if weight_attract.get(pos) == None else weight_attract.get(pos) for pos in path]
         path_weight = [0 if weight.get(pos) == None else weight.get(pos) for pos in path]
-        scores.append((score, np.sum(path_weight), len(path), np.max(path_weight)))
+        scores.append((score, np.sum(path_weight), len(path), np.sum(path_weight_attract)))
     return paths, scores
 
 def Bellman_Ford(map, label, weight):
