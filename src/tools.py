@@ -276,8 +276,8 @@ def path_by_retriction(map, label, ltuple_rest, lobjet=[]):
 
     somme, taille, maxi = np.sum(path_weight),len(path), np.max(path_weight)
     somme2, taille2, maxi2 = np.sum(path_weight2),len(path2), np.max(path_weight2)
-    scores = [(score * ltuple_rest[i][0] + somme * ltuple_rest[i][1] + lsomme_attract[i] * ltuple_rest[i][2], somme, taille, lsomme_attract[i]) for i in range(len(ltuple_rest))]
-    scores += [(score2 * ltuple_rest[i][0] + somme2 * ltuple_rest[i][1] + lsomme_attract2[i] * ltuple_rest[i][2], somme2, taille2, lsomme_attract2[i]) for i in range(len(ltuple_rest))]
+    scores = [(taille * ltuple_rest[i][0] + somme * ltuple_rest[i][1] + lsomme_attract[i] * ltuple_rest[i][2], somme, taille, lsomme_attract[i]) for i in range(len(ltuple_rest))]
+    scores += [(taille2 * ltuple_rest[i][0] + somme2 * ltuple_rest[i][1] + lsomme_attract2[i] * ltuple_rest[i][2], somme2, taille2, lsomme_attract2[i]) for i in range(len(ltuple_rest))]
     
     for restriction in ltuple_rest:
         weight_secu = get_weight(map, label, restriction[1])
@@ -297,7 +297,9 @@ def path_by_retriction(map, label, ltuple_rest, lobjet=[]):
         print(path_weight_attract)
 
         path_weight = [0 if weight.get(pos) == None else weight.get(pos) for pos in path]
-        scores.append((score, np.sum(path_weight), len(path), np.sum(path_weight_attract)))
+        somme = np.sum(path_weight) # somme des poids
+        somme_attract = np.sum(path_weight_attract)
+        scores.append((len(path) * restriction[0] + somme * restriction[1] + somme_attract * restriction[2], somme, len(path), somme_attract))
     return paths, scores
 
 def Bellman_Ford(map, label, weight):

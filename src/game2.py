@@ -113,6 +113,36 @@ class Game(object):
 
         #clock.tick(speed.val)
 
+    def drawpath(self):
+        x = self.weight-(self.tool_width/2)
+        y = 0
+        self.button('my path', x, y, 90, 40, green,bright_green, self.one_step)
+        pygame.display.update()
+
+    def func_drawpath(self):
+        path = []
+        self.drawingpath = []
+        while self.drawingpath == []:
+            event_list = pygame.event.get()
+            for event in event_list:
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    quit()
+                elif event.type == pygame.MOUSEBUTTONDOWN:
+                    pos = pygame.mouse.get_pos()
+                    if pos[0] < self.width and pos[1] < self.height:
+                        x,y = pos
+                        x = x//16
+                        y = y//16
+                        path.append((x,y))
+                        s = pygame.Surface((16,16))  # the size of your rect
+                        s.set_alpha(50)                # alpha level
+                        s.fill(bright_red)           # this fills the entire surface
+                        self._display_surf.blit(s,(x*16,y*16))
+                self.drawingpath = blue_path2(self.map, self.label, path)
+        
+                        
+
     def list_objets(self):
         list_obj=[]
         for x in range(len(self.map)):
@@ -163,6 +193,7 @@ class Game(object):
         #print('my path',self.dt.path)
         self.chemin()
         self.construction()
+
     def chemin(self):
         if self.on_init() == False:
             self._running = False
@@ -304,6 +335,7 @@ class Game(object):
         if self.on_init() == False:
             self._running = False
         self.slider()
+        self.drawpath()
         #self.one_step()
         #if not self.done():
             #self.on_render()
