@@ -232,7 +232,7 @@ def find_path(map, label, path = [], path2 = []):
             path2 = []
             for point in points:
                 path_tmp = path_tmp.copy()
-                res_tmp = blue_path2(map, label, path, path_tmp + [point])
+                res_tmp = find_path(map, label, path, path_tmp + [point])
                 for res in res_tmp:
                     path2.append(res)
             return path2
