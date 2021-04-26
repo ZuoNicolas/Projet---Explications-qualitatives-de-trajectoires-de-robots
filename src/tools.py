@@ -178,7 +178,6 @@ def blue_path2(map, label, path = []):
     tx = len(map)
     ty = len(map[0])
     
-    new_path = False
 
     while not path[-1] == end:
         points= []
@@ -207,6 +206,45 @@ def blue_path2(map, label, path = []):
     if path[-1] == end:
         return [path]
     return []
+
+
+def find_path(map, label, path = [], path2 = []):
+    start, end = get_start_end(map,label)
+    if len(path2)== 0: 
+        path2=[start]
+    x, y = path2[-1]
+    tx = len(map)
+    ty = len(map[0])
+    
+
+    while not path2[-1] == end:
+        points= []
+        if x+1 < tx and ((x+1,y) in path or (x+1,y) == start or (x+1,y) == end) and (x+1,y) not in path2:
+            points.append((x+1,y))
+        if x-1 >= 0 and ((x-1,y) in path or (x-1,y) == start or (x-1,y) == end) and (x-1,y) not in path2:
+            points.append((x-1,y))
+        if y+1 < ty and ((x,y+1) in path or (x,y+1) == start or (x,y+1) == end) and (x,y+1) not in path2:
+            points.append((x,y+1))
+        if y-1 >= 0 and ((x,y-1) in path or (x,y-1) == start or (x,y-1) == end) and (x,y-1) not in path2:
+            points.append((x,y-1))
+        if len(points) > 1:
+            path_tmp = path2.copy()
+            path2 = []
+            for point in points:
+                path_tmp = path_tmp.copy()
+                res_tmp = blue_path2(map, label, path, path_tmp + [point])
+                for res in res_tmp:
+                    path2.append(res)
+            return path2
+        elif len(points) == 1:
+            x, y = points[0]
+            path2.append(points[0])
+        else:
+            break
+    if path2[-1] == end:
+        return [path]
+    return []
+
 
 def transform_wall(map,label, path):
     wall=[]
