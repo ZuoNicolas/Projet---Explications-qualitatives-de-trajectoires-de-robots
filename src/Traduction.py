@@ -11,6 +11,7 @@ def Description_to_Txt2(list_desc, label):
     for descriptions in list_desc:
         msg = ''
         list_obj = []
+        explication = False
         for description in descriptions:
             msg_tmp = ''
             
@@ -25,34 +26,62 @@ def Description_to_Txt2(list_desc, label):
                 continue
                 
             if type(description) == list: #Quand il y a une explication d'un choix de chemin
-                msg_tmp += str(myEnum.Description.EXPLICATION.value)+' '
                 secu_bonne = ''
                 secu_mauvaise = ''
                 rapi_bonne = ''
                 rapi_mauvaise = ''
+                pref_bonne = ''
+                pref_mauvaise = ''
+                
                 for desc in description:
+                    if type(desc) == tuple:
+                        msg_tmp += str(myEnum.Description.EXPLICATION.value)+' '
+                        explication = True
+                        continue
+                    
                     value = desc.value
+                    #Definition de la securité
                     if desc in [myEnum.Description.BEAUCOUP_MOINS_SECURITE, myEnum.Description.MOINS_SECURITE]:
                         secu_mauvaise = value
                     elif desc in [myEnum.Description.PLUS_SECURITE, myEnum.Description.BEAUCOUP_PLUS_SECURITE,myEnum.Description.SECURITE]:
                         secu_bonne = value
+                     #Definition de la rapidité  
                     elif desc in  [myEnum.Description.BEAUCOUP_MOINS_RAPIDE, myEnum.Description.MOINS_RAPIDE]:
                         rapi_mauvaise = value
                     elif desc in [myEnum.Description.PLUS_RAPIDE, myEnum.Description.BEAUCOUP_PLUS_RAPIDE, myEnum.Description.RAPIDE]:
                         rapi_bonne = value
+                    #Definition de la préférence
+                    elif desc in  [myEnum.Description.BEAUCOUP_MOINS_PREFERE, myEnum.Description.MOINS_PREFERE]:
+                        pref_mauvaise = value
+                    elif desc in [myEnum.Description.PLUS_PREFERE, myEnum.Description.BEAUCOUP_PLUS_PREFERE, myEnum.Description.PREFERE]:
+                        pref_bonne = value
                     else:  
-                        msg_tmp += ' '+str(value)
+                        print('Erreur dans la traduction de l\'explication -> '+str(desc)+' | '+str(value))
+                        msg_tmp += ' Erreur dans la traduction de l\'explication -> '+str(desc)+' | '+str(value)
                 
                 if secu_bonne != '':
                     if rapi_mauvaise != '':
-                        msg_tmp += secu_bonne+', mais '+rapi_mauvaise
-                    else:
-                        msg_tmp += 'bug1'
+                        if pref_mauvaise != '':
+                            msg_tmp += secu_bonne+', mais '+rapi_mauvaise+' et '+pref_mauvaise
+                        else:
+                            msg_tmp += secu_bonne+' et '+pref_bonne+', mais '+rapi_mauvaise
+                    else :
+                        if pref_mauvaise != '':
+                            msg_tmp += secu_bonne+' et '+rapi_bonne+', mais '+pref_mauvaise
+                        else :
+                            msg_tmp += 'BUG_1 <tout les paramères sont Bonne>'
+                            
                 elif secu_mauvaise != '':
                     if rapi_bonne != '':
-                        msg_tmp += rapi_bonne+' en terme de distance, mais en terme de sécurité on est '+secu_mauvaise
+                        if pref_mauvaise != '':
+                            msg_tmp += rapi_bonne+', mais '+secu_mauvaise+' et '+pref_mauvaise
+                        else:
+                            msg_tmp += rapi_bonne+' et '+pref_bonne+', mais '+secu_mauvaise
                     else:
-                        msg_tmp +='bug2'  
+                        if pref_mauvaise != '':
+                            msg_tmp += 'BUG_2 <tout les paramères sont Mauvaise>' 
+                        else:
+                            msg_tmp += pref_bonne+', mais '+secu_mauvaise+' et '+rapi_mauvaise
             else:
                 
                 value = description.value  
@@ -66,25 +95,27 @@ def Description_to_Txt2(list_desc, label):
                 msg_tmp += str(value)
                 
             msg += msg_tmp+' '
-
-        for id, valeur in list_obj:
-
-            if myEnum.Description.GAUCHE.value+' '+valeur in msg:
-                msg = re.sub(' '+myEnum.Description.PASSE.value+' '+myEnum.Description.GAUCHE.value+' '+valeur,'', msg)
-                if myEnum.Description.DROITE.value+' '+valeur in msg:
-                    msg = re.sub(' '+myEnum.Description.PASSE.value+' '+myEnum.Description.DROITE.value+' '+valeur,'', msg)
-                    msg += ' '+myEnum.Description.PASSE.value+' '+myEnum.Description.ENTRE.value+' les '+valeur+'(s)'
-                else:
-                    msg += ' '+myEnum.Description.PASSE.value+' '+myEnum.Description.GAUCHE.value+' '+de(id, valeur, label)+valeur
-                    
-            elif myEnum.Description.DROITE.value+' '+valeur in msg:
-                msg = re.sub(' '+myEnum.Description.PASSE.value+' '+myEnum.Description.DROITE.value+' '+valeur,'', msg)
-                
+        
+        #S'il y a une explication, ne pas affiché les descriptions simple (non pertinent)
+        if not explication :
+            for id, valeur in list_obj:
+    
                 if myEnum.Description.GAUCHE.value+' '+valeur in msg:
                     msg = re.sub(' '+myEnum.Description.PASSE.value+' '+myEnum.Description.GAUCHE.value+' '+valeur,'', msg)
-                    msg += ' '+myEnum.Description.PASSE.value+' '+myEnum.Description.ENTRE.value+' les '+valeur+'(s)'
-                else:
-                    msg += ' '+myEnum.Description.PASSE.value+' '+myEnum.Description.DROITE.value+' '+de(id, valeur, label)+valeur
+                    if myEnum.Description.DROITE.value+' '+valeur in msg:
+                        msg = re.sub(' '+myEnum.Description.PASSE.value+' '+myEnum.Description.DROITE.value+' '+valeur,'', msg)
+                        msg += ' '+myEnum.Description.PASSE.value+' '+myEnum.Description.ENTRE.value+' les '+valeur+'(s)'
+                    else:
+                        msg += ' '+myEnum.Description.PASSE.value+' '+myEnum.Description.GAUCHE.value+' '+de(id, valeur, label)+valeur
+                        
+                elif myEnum.Description.DROITE.value+' '+valeur in msg:
+                    msg = re.sub(' '+myEnum.Description.PASSE.value+' '+myEnum.Description.DROITE.value+' '+valeur,'', msg)
+                    
+                    if myEnum.Description.GAUCHE.value+' '+valeur in msg:
+                        msg = re.sub(' '+myEnum.Description.PASSE.value+' '+myEnum.Description.GAUCHE.value+' '+valeur,'', msg)
+                        msg += ' '+myEnum.Description.PASSE.value+' '+myEnum.Description.ENTRE.value+' les '+valeur+'(s)'
+                    else:
+                        msg += ' '+myEnum.Description.PASSE.value+' '+myEnum.Description.DROITE.value+' '+de(id, valeur, label)+valeur
     
         list_msg.append(msg)
 

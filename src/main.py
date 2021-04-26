@@ -15,11 +15,11 @@ import Traduction
 from tools import *    
 def main():
     
-    file = '../ressource/zone_a_danger(rocher).tmx'
+    file = '../ressource/exemple1.tmx'
     map = readfile.read_map_tmx(file)
     label = readfile.read_desc_xml('../ressource/descripteur.tsx')
     path = blue_path(map, label)
-    #print("Path Blue :", path)
+    print("Path Blue :", path)
     dt = descriptionTrajectoire2.DescriptionTrajectoire(map, path, label)
     
     description_list = dt.descriptiontTrajectoirePlusExplication(2)

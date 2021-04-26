@@ -13,6 +13,8 @@ class DescriptionTrajectoire():
             self.list_tout_les_chemins = []
             self.list_tout_les_inter = []
             self.list_score_tout_les_chemins = []
+            self.list_name_tout_les_chemins = []
+            self.chemins = []
             
     def descriptiontTrajectoireSimple(self, agent_rayon=None):
         """ list(list(int)) * list(int) * dict{int:dict{str:str}}
@@ -104,10 +106,11 @@ class DescriptionTrajectoire():
         self.clearParameters()
 
         # fonction.getScore
-        paths, score = tools.path_by_retriction(self.map, self.label,  ltuple_rest,lobjet)
+        self.list_name_tout_les_chemins = ['Le plus rapide', 'Le plus sécurisé', 'Le plus préféré']
+        paths, score, path_donner = tools.path_by_retriction(self.map, self.label,  ltuple_rest,lobjet)
         argmin = np.argmin(np.array(score)[:,0])
         self.path = paths[argmin] #Le meilleu path
-        _, path_securiter, path_rapide, path_secu_max = score[argmin] 
+        _, path_securiter, path_rapide, path_prefere = score[argmin] 
         self.list_tout_les_inter = tools.find_intercection(self.map, self.label, paths)
         # print("meilleur path\n", self.path)
         # print("les chemins\n",paths)
@@ -117,7 +120,9 @@ class DescriptionTrajectoire():
         # print(argmin)
         del paths[argmin]
         del score[argmin]
+        del self.list_name_tout_les_chemins[argmin]
         self.list_tout_les_chemins = paths
+        self.chemins = paths.copy()
         
         self.list_score_tout_les_chemins = score
         
@@ -162,11 +167,7 @@ class DescriptionTrajectoire():
             if  old != orientation:
                 description_temp += [self.myDescription.TOURNE, self.message_orientation(old, orientation) ]#Ajout du bon message en fonction des orientations
                 orienter = True
-            if self.path[i] in self.list_tout_les_inter:
-                if orienter:
-                    description_temp += [self.myDescription.AVANCE]
-                description_temp += [self.myDescription.JUSQU_A,self.myDescription.INTERSECTION]
-                description_temp += self.explication_intersection(self.path[i], i+1, self.path, path_rapide, path_securiter)
+                
             #Si il y a un événement sur la case
             if map_local[i] != [] :
                 
@@ -184,6 +185,13 @@ class DescriptionTrajectoire():
                         old_res = res
                         anti_spam=0
                         
+            #Parti Explication
+            if self.path[i] in self.list_tout_les_inter:
+                if orienter:
+                    description_temp += [self.myDescription.AVANCE]
+                
+                description_temp += self.explication_intersection(self.path[i], i+1, self.path, path_rapide, path_securiter, path_prefere)
+                
             old = orientation
             
             if description_temp == sauvegarde: #Si il n'y a aucun changement on incrémente l'anti-spam
@@ -199,6 +207,7 @@ class DescriptionTrajectoire():
         description_temp += [self.myDescription.AVANCE, self.myDescription.JUSQU_A, self.myDescription.ARRIVER]
         
         self.description.append(description_temp)
+
         return self.description
             
     def local_map(self, agent_rayon=None):
@@ -350,26 +359,27 @@ class DescriptionTrajectoire():
                 return self.myDescription.A_GAUCHE
     
     
-    def explication_intersection(self, case_actuelle, id_case_suivante, path_choisi, path_rapide, path_securiter):
+    def explication_intersection(self, case_actuelle, id_case_suivante, path_choisi, path_rapide, path_securiter, path_prefere):
         
         x, y = case_actuelle; #(ligne, colonne)
         
         msg = []
         i = 0
-        for chemin in self.list_tout_les_chemins :
+        for chemin in self.chemins :
             #Pour enlever les chemin qui vont dans la meme direction
             if id_case_suivante < len(chemin)  and chemin[id_case_suivante] != path_choisi[id_case_suivante]:
                 if (x+1, y) == chemin[id_case_suivante] or (x-1, y) == chemin[id_case_suivante] or \
                     (x, y+1) == chemin[id_case_suivante] or (x, y-1) == chemin[id_case_suivante] :
                     #case_actuelle = une intersection
                     if case_actuelle in chemin:
-                        _, securiter, rapide, _ = self.list_score_tout_les_chemins[i]
+                        _, securiter, rapide, prefere = self.list_score_tout_les_chemins[i]
                         
-                        msg.append(('CHEMIN', i))
                         tmp_msg = []
+                        tmp_msg.append(('CHEMIN', self.list_name_tout_les_chemins[i]))
                         
                         ratio_rapide = rapide/path_rapide
                         ratio_securiter = securiter/path_securiter
+                        ratio_prefere = prefere/path_prefere
                         
                         if path_rapide == 0 :
                             ratio_rapide = rapide-path_rapide
@@ -381,6 +391,10 @@ class DescriptionTrajectoire():
                             if securiter == 0 :
                                 ratio_securiter = 1
                                 
+                        if path_prefere == 0 :
+                            ratio_prefere = prefere-path_prefere
+                            if prefere == 0 :
+                                ratio_prefere = 1
                         
                         
                         if ratio_rapide >= 1.7:
@@ -413,10 +427,31 @@ class DescriptionTrajectoire():
                             
                         else:
                             tmp_msg.append(self.myDescription.BEAUCOUP_PLUS_SECURITE)
+                            
+                        if ratio_prefere <= 0.4 :
+                            tmp_msg.append(self.myDescription.BEAUCOUP_MOINS_PREFERE)
+                            
+                        elif ratio_prefere < 1 :
+                            tmp_msg.append(self.myDescription.MOINS_PREFERE)
+                            
+                        elif ratio_prefere == 1 :
+                            tmp_msg.append(self.myDescription.PREFERE)
+                            
+                        elif ratio_prefere <= 1.7 :
+                            tmp_msg.append(self.myDescription.PLUS_PREFERE)
+                            
+                        else:
+                            tmp_msg.append(self.myDescription.BEAUCOUP_PLUS_PREFERE)
                         
                         msg.append(tmp_msg)
-                        # print(path_securiter, '-', securiter,'=',securiter-path_securiter,'\n',path_rapide, '-', rapide,'=',rapide-path_rapide)
+                        self.chemins.remove(chemin)
+                        print("Securité :",path_securiter, '/', securiter,'=',ratio_securiter)
+                        print("Rapidité :",path_rapide, '/', rapide,'=',ratio_rapide)
+                        print("Préféré :",path_prefere, '/', prefere,'=',ratio_prefere)
             i+=1
+            
+        if msg != []:
+            return [self.myDescription.JUSQU_A,self.myDescription.INTERSECTION]+msg
         
         return msg
         
@@ -427,7 +462,8 @@ class DescriptionTrajectoire():
         self.list_tout_les_chemins = []
         self.list_tout_les_inter = []
         self.list_score_tout_les_chemins = []
-        
+        self.list_name_tout_les_chemins = []
+        self.chemins = []
         
         
         

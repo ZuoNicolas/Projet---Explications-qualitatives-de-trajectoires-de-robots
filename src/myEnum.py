@@ -41,19 +41,25 @@ class Description(Enum):
     _DERRIERE = 'derrière'
     
     #Explication Intersection
-    EXPLICATION = 'j\'ai pris ce chemin, car les autres chemins sont'
+    EXPLICATION = 'j\'ai pris ce chemin, car les autres chemins sont :'
     
-    BEAUCOUP_MOINS_SECURITE = 'très peu sûr'
-    MOINS_SECURITE = 'un peu moins sûr'
-    SECURITE = 'aussi sûr'
-    PLUS_SECURITE = 'un peu plus sûr'
-    BEAUCOUP_PLUS_SECURITE = 'beaucoup plus sûr'
+    BEAUCOUP_MOINS_SECURITE = 'très peu sûr en terme de sécurité'
+    MOINS_SECURITE = 'un peu moins sûr en terme de sécurité'
+    SECURITE = 'aussi sûr en terme de sécurité'
+    PLUS_SECURITE = 'un peu plus sûr en terme de sécurité'
+    BEAUCOUP_PLUS_SECURITE = 'beaucoup plus sûr en terme de sécurité'
     
-    BEAUCOUP_MOINS_RAPIDE = 'très long'
-    MOINS_RAPIDE = 'un peu plus long'
-    RAPIDE = 'aussi court'
-    PLUS_RAPIDE = 'un peu plus court'
-    BEAUCOUP_PLUS_RAPIDE = 'beaucoup plus court'
+    BEAUCOUP_MOINS_RAPIDE = 'très long en terme de distance'
+    MOINS_RAPIDE = 'un peu plus long en terme de distance'
+    RAPIDE = 'aussi court en terme de distance'
+    PLUS_RAPIDE = 'un peu plus court en terme de distance'
+    BEAUCOUP_PLUS_RAPIDE = 'beaucoup plus court en terme de distance'
+    
+    BEAUCOUP_MOINS_PREFERE = 'la préférence n\'est pas du tout assez au goût de l\'utilisateur'
+    MOINS_PREFERE = 'la préférence est un peu moins élevée au goût de l\'utilisateur'
+    PREFERE = 'la préférence est à la même niveau'
+    PLUS_PREFERE = 'la préférence est un peu plus élevée au goût de l\'utilisateur'
+    BEAUCOUP_PLUS_PREFERE = 'la préférence est beaucoup plus élevée au goût de l\'utilisateur'
     
     #Objet 
     OBJECT = 'Objet'
