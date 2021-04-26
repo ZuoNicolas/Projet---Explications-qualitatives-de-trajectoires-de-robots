@@ -14,7 +14,7 @@ TRANS = (1, 1, 1)
 
 class OptionBox():
 
-    def __init__(self, x, y, w, h, color, highlight_color, font, option_list, selected = 0):
+    def __init__(self, x, y, w, h, color, highlight_color, font, option_list, selected = 0,multiselection=True):
         self.color = color
         self.highlight_color = highlight_color
         self.rect = pygame.Rect(x, y, w, h)
@@ -26,14 +26,18 @@ class OptionBox():
         self.active_option = -1
         self.selections=[]
         self.list_sel=[]
+        self.multiselection=multiselection
     def draw(self, surf):
         pygame.draw.rect(surf, self.highlight_color if self.menu_active else self.color, self.rect)
         pygame.draw.rect(surf, (0, 0, 0), self.rect, 2)
         m=""
         self.list_sel=[]
-        for i in self.selections:
-            m=m+self.option_list[i]+' '
-            self.list_sel.append(self.option_list[i])
+        if(self.multiselection==True):
+            for i in self.selections:
+                m=m+self.option_list[i]+' '
+                self.list_sel.append(self.option_list[i])
+        else:
+            m=self.option_list[self.selected]
         msg = self.font.render(m, 1, (0, 0, 0))
         surf.blit(msg, msg.get_rect(center = self.rect.center))
 
