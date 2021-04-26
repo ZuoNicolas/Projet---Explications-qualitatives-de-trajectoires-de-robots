@@ -165,12 +165,12 @@ class Game(object):
                     quit()
                 elif event.type == pygame.MOUSEBUTTONDOWN:
                     pos = pygame.mouse.get_pos()
-                    if pos[0] < self.weight and pos[1] < self.height:
+                    if pos[0] < self.weight - self.tool_width and pos[1] < self.height - self.discription_height:
                         x,y = pos
                         x = x//16
                         y = y//16
                         print(self.drawingpath, path)
-                        if (y,x) not in path:
+                        if (y,x) not in path and self.label.get(self.map[y][x]).get('canPass'):
                             path.append((y,x))
                         for y, x in path:
                             s = pygame.Surface((16,16))  # the size of your rect
@@ -245,8 +245,6 @@ class Game(object):
         self.construction()
 
     def chemin(self):
-        if self.on_init() == False:
-            self._running = False
  
         while( not self.done() ):
             self.forward = False
