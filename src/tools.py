@@ -46,7 +46,7 @@ def get_weight(map,label,alpha=1):
                                 if res.get((x_tmp, y_tmp)) == None:
                                     res[(x_tmp, y_tmp)] = (radius - sqrt(radius_tmp) + 1)*alpha
                                 else:
-                                    res[(x_tmp, y_tmp)] +=(radius - sqrt(radius_tmp) + 1)*alpha
+                                    res[(x_tmp, y_tmp)] = max(res[(x_tmp, y_tmp)], (radius - sqrt(radius_tmp) + 1)*alpha)
     return res
 
 def get_weight_attract(map, label, lobjet, radius = 6, alpha=1):
