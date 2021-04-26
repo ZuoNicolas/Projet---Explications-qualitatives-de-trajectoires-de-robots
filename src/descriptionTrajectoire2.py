@@ -98,7 +98,7 @@ class DescriptionTrajectoire():
         
         return self.description
     
-    def descriptiontTrajectoirePlusExplication(self, agent_rayon=None, ltuple_rest=[(0.1,0.9)],lobjet=[]):
+    def descriptiontTrajectoirePlusExplication(self, agent_rayon=None, ltuple_rest=[(0.1,0.9)],lobjet=[], path_donner=[]):
         """ list(list(int)) * list(int) * dict{int:dict{str:str}}
         Parcours le chemin path en regardant les objets au alentours,
         pour retourner la description contruite"""
@@ -107,20 +107,30 @@ class DescriptionTrajectoire():
 
         # fonction.getScore
         self.list_name_tout_les_chemins = ['Le plus rapide', 'Le plus sécurisé', 'Le plus préféré']
-        paths, score, path_donner = tools.path_by_retriction(self.map, self.label,  ltuple_rest,lobjet)
-        argmin = np.argmin(np.array(score)[:,0])
-        self.path = paths[argmin] #Le meilleu path
-        _, path_securiter, path_rapide, path_prefere = score[argmin] 
-        self.list_tout_les_inter = tools.find_intercection(self.map, self.label, paths)
+        paths, score, score_donner = tools.path_by_retriction(self.map, self.label,  ltuple_rest,lobjet, lpath = path_donner)
+        print("..",score_donner)
+        print("++",score)
+        if path_donner != []:
+            argmin = np.argmin(np.array(score_donner)[:,0])
+            self.path = path_donner[argmin] #Le meilleu path
+            _, path_securiter, path_rapide, path_prefere = score_donner[argmin] 
+        else:
+            argmin = np.argmin(np.array(score)[:,0])
+            self.path = paths[argmin] #Le meilleu path
+            _, path_securiter, path_rapide, path_prefere = score[argmin] 
+            
+        self.list_tout_les_inter = tools.find_intercection(self.map, self.label, paths+path_donner)
         # print("meilleur path\n", self.path)
         # print("les chemins\n",paths)
         # print("==\n",paths[0]==paths[1])
         print("Score des différents chemin : (Score Global, Score de sécurité, Score de rapidité)\n",score)     
         # print("Intersection\n",self.list_tout_les_inter)
         # print(argmin)
-        del paths[argmin]
-        del score[argmin]
-        del self.list_name_tout_les_chemins[argmin]
+        if path_donner == []:
+            del paths[argmin]
+            del score[argmin]
+            del self.list_name_tout_les_chemins[argmin]
+            
         self.list_tout_les_chemins = paths
         self.chemins = paths.copy()
         
@@ -392,7 +402,7 @@ class DescriptionTrajectoire():
                                 ratio_securiter = 1
                                 
                         if path_prefere == 0 :
-                            ratio_prefere = prefere-path_prefere
+                            ratio_prefere = path_prefere-prefere
                             if prefere == 0 :
                                 ratio_prefere = 1
                         

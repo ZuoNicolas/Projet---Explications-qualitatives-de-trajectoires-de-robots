@@ -69,7 +69,7 @@ def Description_to_Txt2(list_desc, label):
                         if pref_mauvaise != '':
                             msg_tmp += secu_bonne+' et '+rapi_bonne+', mais '+pref_mauvaise
                         else :
-                            msg_tmp += 'BUG_1 <tout les paramères sont Bonne>'
+                            msg_tmp = re.sub(str(myEnum.Description.EXPLICATION.value)+' ','j\'ai pris ce chemin, car j\'y suis obligé par l\'utilisateur, mais en terme de rapidité, sécurité et préférence, tout est moins bon que le chemin choisi',msg_tmp)
                             
                 elif secu_mauvaise != '':
                     if rapi_bonne != '':
@@ -79,7 +79,7 @@ def Description_to_Txt2(list_desc, label):
                             msg_tmp += rapi_bonne+' et '+pref_bonne+', mais '+secu_mauvaise
                     else:
                         if pref_mauvaise != '':
-                            msg_tmp += 'BUG_2 <tout les paramères sont Mauvaise>' 
+                            msg_tmp = re.sub(str(myEnum.Description.EXPLICATION.value)+' ','j\'ai pris ce chemin, car le niveau de sécurité, rapidité et préférence, sont tous moins bon que ce choisi',msg_tmp) 
                         else:
                             msg_tmp += pref_bonne+', mais '+secu_mauvaise+' et '+rapi_mauvaise
             else:

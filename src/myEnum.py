@@ -41,7 +41,7 @@ class Description(Enum):
     _DERRIERE = 'derrière'
     
     #Explication Intersection
-    EXPLICATION = 'j\'ai pris ce chemin, car les autres chemins sont :'
+    EXPLICATION = 'j\'ai pris ce chemin, car les autres chemins sont'
     
     BEAUCOUP_MOINS_SECURITE = 'très peu sûr en terme de sécurité'
     MOINS_SECURITE = 'un peu moins sûr en terme de sécurité'
