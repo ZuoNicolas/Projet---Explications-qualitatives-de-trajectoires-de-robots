@@ -55,6 +55,12 @@ class OptionBox():
                 surf.blit(msg, msg.get_rect(center = rect.center))
             outer_rect = (self.rect.x, self.rect.y + self.rect.height, self.rect.width, self.rect.height * len(self.option_list))
             pygame.draw.rect(surf, (0, 0, 0), outer_rect, 2)
+        else:
+            outer_rect = (self.rect.x, self.rect.y + self.rect.height, self.rect.width, self.rect.height * len(self.option_list))
+            s=pygame.Surface((self.rect.width+10, self.rect.height * len(self.option_list)+10))
+            s.fill(WHITE)
+            surf.blit(s,outer_rect)
+
     def update(self, event_list):
         mpos = pygame.mouse.get_pos()
         self.menu_active = self.rect.collidepoint(mpos)
