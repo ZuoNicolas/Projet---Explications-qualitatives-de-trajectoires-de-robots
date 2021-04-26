@@ -161,11 +161,15 @@ class Game(object):
                         x,y = pos
                         x = x//16
                         y = y//16
-                        path.append((x,y))
-                        s = pygame.Surface((16,16))  # the size of your rect
-                        s.set_alpha(50)                # alpha level
-                        s.fill(bright_red)           # this fills the entire surface
-                        self._display_surf.blit(s,(x*16,y*16))
+                        print(self.drawingpath, path)
+                        if (y,x) not in path:
+                            path.append((y,x))
+                        for y, x in path:
+                            s = pygame.Surface((16,16))  # the size of your rect
+                            s.set_alpha(50)                # alpha level
+                            s.fill(bright_red)           # this fills the entire surface
+                            self._display_surf.blit(s,(x*16,y*16))
+                        pygame.display.update()
                 self.drawingpath = find_path(self.map, self.label, path)
         
                         
@@ -215,7 +219,12 @@ class Game(object):
             s.fill(bright_red)           # this fills the entire surface
             self._display_surf.blit(s,(x*16,y*16))
 
-        
+        for path in self.drawingpath:
+            for y, x in path:
+                s = pygame.Surface((16,16))  # the size of your rect
+                s.set_alpha(50)                # alpha level
+                s.fill(green)           # this fills the entire surface
+                self._display_surf.blit(s,(x*16,y*16))
         #print('list chemin',self.dt.list_tout_les_chemins)
         #print('my path',self.dt.path)
         self.chemin()
@@ -266,6 +275,14 @@ class Game(object):
             s.set_alpha(50)                # alpha level
             s.fill(bright_red)           # this fills the entire surface
             self._display_surf.blit(s,(x*16,y*16))
+
+        for path in self.drawingpath:
+            for y, x in path:
+                s = pygame.Surface((16,16))  # the size of your rect
+                s.set_alpha(50)                # alpha level
+                s.fill(green)           # this fills the entire surface
+                self._display_surf.blit(s,(x*16,y*16))
+        
         #affiche la discription
         self.set_discription(self._display_surf,msg)
 
