@@ -37,6 +37,7 @@ class Game(object):
         self.iteration = 0
         self.forward = True
         self.radius = radius
+        self.drawingpath = []
 
         self.restriction=[]
         self.choose=False
