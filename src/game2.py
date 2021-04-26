@@ -122,6 +122,7 @@ class Game(object):
                 if event.type == pygame.QUIT:
                     self.choose_image=False
                     self.choose_parametre=True
+                    self.drawingpath = []
                     
                 elif event.type == pygame.MOUSEBUTTONDOWN:
                     pos = pygame.mouse.get_pos()
