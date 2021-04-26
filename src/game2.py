@@ -32,30 +32,58 @@ class Game(object):
         self._running = True
         self._display_surf = None
         self.filename = filename
-
+        self.label=label
         self.path = []
         self.iteration = 0
         self.forward = True
         self.radius = radius
 
-        self.map=map
-        self.label=label
-        self.dt=DT.DescriptionTrajectoire(self.map,self.path,self.label)
-
         self.restriction=[]
+        self.choose=False
     def on_init(self):
         pygame.init()
-        
+        if(not self.choose):
+            self.choix_image()
+
+    def choix_image(self):
+        self.size=(600,800)
+        self.weight, self.height=600,800
+        self._display_surf = pygame.display.set_mode(self.size, pygame.RESIZABLE)
+        self._display_surf.fill(white)
+        list_image=["zone_non_carre2",'map1','zone_a_danger(rocher)']
+        font=pygame.font.SysFont("Verdana", 12)
+        self.images=slider.OptionBox(100,100,90,30,(150, 150, 150), (100, 200, 255),font,list_image,0,False)
+        while not self.choose:
+            self._display_surf.fill(white)
+            event_list = pygame.event.get()
+            for event in event_list:
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    quit()
+            
+            self.images.update(event_list)
+            
+            self.images.draw(self._display_surf)
+            self.button('loadimage', 0, 0, 90, 40, green,bright_green, self.func_choix_image)
+            pygame.display.update()
+    def func_choix_image(self):
+        self.choose=True
+        self.filename='../ressource/'+self.images.option_list[self.images.selected]+'.tmx'
+        self.begin()
+
+    def begin(self):
         root = ET.parse(self.filename).getroot()
+
+        self.map=readfile.read_map_tmx(self.filename)
+        self.dt=DT.DescriptionTrajectoire(self.map,self.path,self.label)
 
         self.tool_width=20*16 #toolbar a droite de fenetre
         self.discription_height=10*16 #discription en bas de fenetre
         self.size = self.weight, self.height = (int(root.get("width"))) * 16+self.tool_width, (int(root.get("height"))) * 16+self.discription_height #a changer
         #print(self.size)
         #zone d'affichage
-        self._display_surf = pygame.display.set_mode(self.size, pygame.HWSURFACE | pygame.DOUBLEBUF)
+        self._display_surf = pygame.display.set_mode(self.size, pygame.RESIZABLE)
         self._display_surf.fill(white)
-
         #self.zone_button=pygame.Surface((10*16,self.height))
         #self.zone_button.fill(block_color)
 
