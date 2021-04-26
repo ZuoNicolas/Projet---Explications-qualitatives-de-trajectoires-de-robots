@@ -167,8 +167,7 @@ class Game(object):
                             path.append((y,x))
                         for y, x in path:
                             s = pygame.Surface((16,16))  # the size of your rect
-                            s.set_alpha(50)                # alpha level
-                            s.fill(bright_red)           # this fills the entire surface
+                            s.fill(BLUE)           # this fills the entire surface
                             self._display_surf.blit(s,(x*16,y*16))
                         pygame.display.update()
                 self.drawingpath = find_path(self.map, self.label, path)
@@ -194,6 +193,12 @@ class Game(object):
         for x, y, image in self.layer.tiles():
             self._display_surf.blit(image,(x*16,y*16))
         y, x = start
+        for path in self.drawingpath:
+            for y_tmp, x_tmp in path:
+                s = pygame.Surface((16,16))  # the size of your rect
+                s.set_alpha(50)                # alpha level
+                s.fill(green)           # this fills the entire surface
+                self._display_surf.blit(s,(x_tmp*16,y_tmp*16))
         self.draw_circle_alpha( self._display_surf, (255,0,0), ((x+0.5)*16,(y+0.5)*16), self.radius*16)
         
         self._display_surf.blit(self.robot,(x*16,y*16))
@@ -228,6 +233,7 @@ class Game(object):
                 self._display_surf.blit(s,(x*16,y*16))
         #print('list chemin',self.dt.list_tout_les_chemins)
         #print('my path',self.dt.path)
+        pygame.display.update()
         self.chemin()
         self.construction()
 
