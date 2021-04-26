@@ -106,18 +106,17 @@ class Game(object):
             for s in self.slides:
                 s.draw(self._display_surf)
             self.button('confirm',self.weight-(self.tool_width/2),240,90,40,green,bright_green,self.one_step)
-
+            self.drawpath()
             self.option.update(event_list)
             self.option.draw(self._display_surf)
             pygame.display.update()
-
         #clock.tick(speed.val)
 
     def drawpath(self):
         x = self.weight-(self.tool_width/2)
         y = 0
-        self.button('my path', x, y, 90, 40, green,bright_green, self.one_step)
-        pygame.display.update()
+        self.button('my path', x, y, 90, 40, green,bright_green, self.func_drawpath)
+        
 
     def func_drawpath(self):
         path = []
@@ -130,7 +129,7 @@ class Game(object):
                     quit()
                 elif event.type == pygame.MOUSEBUTTONDOWN:
                     pos = pygame.mouse.get_pos()
-                    if pos[0] < self.width and pos[1] < self.height:
+                    if pos[0] < self.weight and pos[1] < self.height:
                         x,y = pos
                         x = x//16
                         y = y//16
@@ -139,7 +138,7 @@ class Game(object):
                         s.set_alpha(50)                # alpha level
                         s.fill(bright_red)           # this fills the entire surface
                         self._display_surf.blit(s,(x*16,y*16))
-                self.drawingpath = blue_path2(self.map, self.label, path)
+                self.drawingpath = find_path(self.map, self.label, path)
         
                         
 
