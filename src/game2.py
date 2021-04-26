@@ -44,41 +44,58 @@ class Game(object):
         self.choose_parametre=False
     def on_init(self):
         pygame.init()
-        self.loadimage()
-        list_image=["zone_non_carre2",'map1','zone_a_danger(rocher)']
-        font=pygame.font.SysFont("Verdana", 12)
-        self.images=slider.OptionBox(self.weight-(self.tool_width),0,120,30,(150, 150, 150), (100, 200, 255),font,list_image,0,False)
-        while(not self.choose_image):
-            self.choix_image()
-    def choix_image(self):
-        if(self.choose_parametre==True):
-            self._display_surf.fill(white)
-            self.loadimage()
 
+        self.loadimage()
+        list_image=["zone_non_carre2",'map1','zone_a_danger(rocher)','exemple1']
+        font=pygame.font.SysFont("Verdana", 12)
+        self.images=slider.OptionBox(self.weight-(self.tool_width),0,150,30,(150, 150, 150), (100, 200, 255),font,list_image,0,False)
+        self.choix_image()
+    def choix_image(self):
         while not self.choose_image:
             event_list = pygame.event.get()
             for event in event_list:
                 if event.type == pygame.QUIT:
                     pygame.quit()
                     quit()
-            self.images.set_rect(self.weight-(self.tool_width),0,120,30)
+
+                elif event.type == pygame.MOUSEBUTTONDOWN:
+                    pos = pygame.mouse.get_pos()
+                    for s in self.slides:
+                        if s.button_rect.collidepoint(pos):
+                            s.hit = True
+                elif event.type == pygame.MOUSEBUTTONUP:
+                    for s in self.slides:
+                        s.hit = False
+            # Move slides
+            for s in self.slides:
+                if s.hit:
+                    s.move()
+            self.option.update(event_list)
+            self.option.draw(self._display_surf)
+            self.images.set_rect(self.weight-(self.tool_width),0,150,30)
             self.images.update(event_list)
-            
             self.images.draw(self._display_surf)
-            self.button('loadimage', self.weight-(self.tool_width/2),60, 90, 40, green,bright_green, self.func_choix_image)
-            self.button('confirm', self.weight-(self.tool_width/2), 120, 90, 40, green,bright_green, self.set_choose)
-            pygame.display.update()
-        self.choose_parametre=False
-        self.choix_parametre()
-    def set_choose(self):
-        self.choose_image=True
-        self.loadimage()
+
+            for s in self.slides:
+                s.draw(self._display_surf)
+
+            self.button('loadimage', self.weight-(self.tool_width/2),0, 90, 40, green,bright_green, self.func_choix_image)
+            self.button('confirm',self.weight-(self.tool_width/2),120,90,40,green,bright_green,self.one_step)
+            self.button('my path', self.weight-(self.tool_width/2),180, 90, 40, green,bright_green, self.func_drawpath)
+
+            if(self.option.draw_menu):
+                self.option.draw(self._display_surf)
+            if(self.images.draw_menu):
+                self.images.draw(self._display_surf)
+
+            pygame.display.flip()
     def func_choix_image(self):
         self.filename='../ressource/'+self.images.option_list[self.images.selected]+'.tmx'
         self.loadimage()
+        pygame.display.update()
     def loadimage(self):
-        root = ET.parse(self.filename).getroot()
 
+        root = ET.parse(self.filename).getroot()
         self.map=readfile.read_map_tmx(self.filename)
         self.dt=DT.DescriptionTrajectoire(self.map,self.path,self.label)
 
@@ -104,50 +121,13 @@ class Game(object):
 
         self.image_dict = dict()
         self.construction()
-
-    def choix_parametre(self):
-        self.secu = slider.Slider("sécurité", 0, 150, 10, self.weight-self.tool_width,0)
-        self.rapid=slider.Slider("rapidité",0,150,10,self.weight-self.tool_width,60)
-        self.preference=slider.Slider("préférence",0,150,10,self.weight-self.tool_width,120)
-        self.slides=[self.secu,self.rapid,self.preference]
-
         list_obj=self.list_objets()
         font=pygame.font.SysFont("Verdana", 12)
-        self.option=slider.OptionBox(self.weight-self.tool_width,180,90,30,(150, 150, 150), (100, 200, 255),font,list_obj)
-        while (self.choose_parametre==False):
-            self._display_surf.fill(white)
-            self.construction()
-            event_list = pygame.event.get()
-            for event in event_list:
-                if event.type == pygame.QUIT:
-                    self.choose_image=False
-                    self.choose_parametre=True
-                    self.drawingpath = []
-                    
-                elif event.type == pygame.MOUSEBUTTONDOWN:
-                    pos = pygame.mouse.get_pos()
-                    for s in self.slides:
-                        if s.button_rect.collidepoint(pos):
-                            s.hit = True
-                elif event.type == pygame.MOUSEBUTTONUP:
-                    for s in self.slides:
-                        s.hit = False
-            # Move slides
-            if(self.choose_parametre==True):
-                break
-
-            for s in self.slides:
-                if s.hit:
-                    s.move()
-            
-            for s in self.slides:
-                s.draw(self._display_surf)
-            self.button('confirm',self.weight-(self.tool_width/2),240,90,40,green,bright_green,self.one_step)
-            self.drawpath()
-            self.option.update(event_list)
-            self.option.draw(self._display_surf)
-            pygame.display.update()
-        #clock.tick(speed.val)
+        self.option=slider.OptionBox(self.weight-self.tool_width/2,60,90,30,(150, 150, 150), (100, 200, 255),font,list_obj)
+        self.secu = slider.Slider("sécurité", 0, 150, 10, self.weight-self.tool_width,60)
+        self.rapid=slider.Slider("rapidité",0,150,10,self.weight-self.tool_width,120)
+        self.preference=slider.Slider("préférence",0,150,10,self.weight-self.tool_width,180)
+        self.slides=[self.secu,self.rapid,self.preference]
 
     def drawpath(self):
         x = self.weight-(self.tool_width/2)
