@@ -318,7 +318,7 @@ def path_by_retriction(map, label, ltuple_rest, lobjet=[], lpath = []):
         score_lpath = None
     else:
         for p in lpath:
-            score_lpath += get_score(map, label, lobjet, p, weight, ltuple_rest))
+            score_lpath += get_score(map, label, lobjet, p, weight, ltuple_rest)
 
     for restriction in ltuple_rest:
         weight_secu = get_weight(map, label, restriction[1])
