@@ -171,8 +171,12 @@ class Game(object):
                         x = x//16
                         y = y//16
                         print(self.drawingpath, path)
-                        if (y,x) not in path and self.label.get(self.map[y][x]).get('canPass'):
-                            path.append((y,x))
+                        if self.label.get(self.map[y][x]).get('canPass'):
+                            if (y,x) not in path:
+                                path.append((y,x))
+                            else:
+                                path.remove((y,x))
+                        self.construction()
                         for y, x in path:
                             s = pygame.Surface((16,16))  # the size of your rect
                             s.fill(BLUE)           # this fills the entire surface
