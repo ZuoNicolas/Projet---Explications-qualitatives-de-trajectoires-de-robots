@@ -74,7 +74,7 @@ def get_weight_attract(map, label, lobjet, radius = 6, alpha=1):
 def get_weight_dist(map, label, alpha=1):
     """
     Attr: 
-        alpha : coeff entre 0.01 et 1 donnant l'importance de la distance en %
+        alpha : coeff entre 0 et 1 donnant l'importance de la distance en %
     Return:
         paths(list(list(tuple))) : la lists des chemins possible avec comme premier chemin le pcch 
         scores(list(tuple(int))) : score optenu pour chaque chemin (dist, danger, danger_max)
@@ -242,7 +242,7 @@ def find_path(map, label, path = [], path2 = []):
         else:
             break
     if path2[-1] == end:
-        return [path]
+        return [path2]
     return []
 
 
@@ -279,7 +279,19 @@ def find_intercection(map, label, paths):
     return inter
 
 
-def path_by_retriction(map, label, ltuple_rest, lobjet=[]):
+def get_score(map, label, lobjet, path, weight, ltuple_rest, val_attract = 7):
+    path_weight = [0 if weight.get(pos) == None else weight.get(pos) for pos in path]
+    lsomme_attract = []
+    for restriction in ltuple_rest:
+        weight_attract = get_weight_attract(map, label, lobjet, 1, restriction[2] * val_attract)
+        path_weight_atrract = [0 if weight_attract.get(pos) == None else weight_attract.get(pos) for pos in path]
+        lsomme_attract.append(np.sum(path_weight_atrract))
+
+
+    somme, taille = np.sum(path_weight), len(path)
+    return [(taille * ltuple_rest[i][0] + somme * ltuple_rest[i][1] + lsomme_attract[i] * ltuple_rest[i][2], somme, taille, lsomme_attract[i]) for i in range(len(ltuple_rest))]
+
+def path_by_retriction(map, label, ltuple_rest, lobjet=[], lpath = []):
     """
     Attr: 
         map : la carte 
@@ -287,7 +299,7 @@ def path_by_retriction(map, label, ltuple_rest, lobjet=[]):
         tuple_rest(list(tuple)) : list avec les tuples des restriction (dist, danger)
     Return:
         paths(list(list(tuple))) : la lists des chemins possible avec comme premier chemin le pcch 
-        scores(list(tuple(int))) : score optenu pour chaque chemin (dist, danger, danger_max)
+        scores(list(tuple(int))) : score optenu pour chaque chemin (general, dist, danger, danger_max)
     """
     start, end = get_start_end(map, label)
     wall = get_wall(map, label)
@@ -297,48 +309,27 @@ def path_by_retriction(map, label, ltuple_rest, lobjet=[]):
     path, score = PCCH.a_start(start, end, len(map), len(map[0]), wall)
     path2, score2 = PCCH.a_start(start, end, len(map), len(map[0]), wall, weight)
     paths = [path] * len(ltuple_rest) + [path2] * len(ltuple_rest)
-    path_weight = [0 if weight.get(pos) == None else weight.get(pos) for pos in path]
-    path_weight2 = [0 if weight.get(pos) == None else weight.get(pos) for pos in path2]
-    
-    
 
-    lsomme_attract = []
-    lsomme_attract2 = []
-    for restriction in ltuple_rest:
-        weight_attract = get_weight_attract(map, label, lobjet, 1, restriction[2] * val_attract)
-        path_weight_atrract = [0 if weight_attract.get(pos) == None else weight_attract.get(pos) for pos in path]
-        lsomme_attract.append(np.sum(path_weight_atrract))
-        path_weight_atrract2 = [0 if weight_attract.get(pos) == None else weight_attract.get(pos) for pos in path2]
-        lsomme_attract2.append(np.sum(path_weight_atrract2))
+    scores = get_score(map, label, lobjet, path, weight, ltuple_rest)
+    scores += get_score(map, label, lobjet, path2, weight, ltuple_rest)
 
+    score_lpath = []
+    if len(lpath) == 0:
+        score_lpath = None
+    else:
+        for p in lpath:
+            score_lpath += get_score(map, label, lobjet, p, weight, ltuple_rest))
 
-    somme, taille, maxi = np.sum(path_weight),len(path), np.max(path_weight)
-    somme2, taille2, maxi2 = np.sum(path_weight2),len(path2), np.max(path_weight2)
-    scores = [(taille * ltuple_rest[i][0] + somme * ltuple_rest[i][1] + lsomme_attract[i] * ltuple_rest[i][2], somme, taille, lsomme_attract[i]) for i in range(len(ltuple_rest))]
-    scores += [(taille2 * ltuple_rest[i][0] + somme2 * ltuple_rest[i][1] + lsomme_attract2[i] * ltuple_rest[i][2], somme2, taille2, lsomme_attract2[i]) for i in range(len(ltuple_rest))]
-    
     for restriction in ltuple_rest:
         weight_secu = get_weight(map, label, restriction[1])
         weight_dist = get_weight_dist(map, label, restriction[0])
-        weight_rest = fuse_weight([weight_dist, weight_secu])
-        
         weight_attract = get_weight_attract(map, label, lobjet, 1, restriction[2] * val_attract)
-        weight_rest = fuse_weight([weight_rest, weight_attract])
-        
+        weight_rest = fuse_weight([weight_dist, weight_secu, weight_attract])
 
         path, score = PCCH.a_start(start, end, len(map), len(map[0]), wall, weight_rest)
         paths.append(path)
-
-        path_weight_attract = [0 if weight_attract.get(pos) == None else weight_attract.get(pos) for pos in path]
-        print(path)
-        print(weight_attract)
-        print(path_weight_attract)
-
-        path_weight = [0 if weight.get(pos) == None else weight.get(pos) for pos in path]
-        somme = np.sum(path_weight) # somme des poids
-        somme_attract = np.sum(path_weight_attract)
-        scores.append((len(path) * restriction[0] + somme * restriction[1] + somme_attract * restriction[2], somme, len(path), somme_attract))
-    return paths, scores
+        scores += get_score(map, label, lobjet, path, weight, [restriction])
+    return paths, scores, score_lpath
 
 def Bellman_Ford(map, label, weight):
     start, end = get_start_end(map, label)
