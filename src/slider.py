@@ -27,12 +27,14 @@ class OptionBox():
         self.selections=[]
         self.list_sel=[]
         self.multiselection=multiselection
+    def set_rect(self,x,y,w,h):
+        self.rect = pygame.Rect(x, y, w, h)
     def draw(self, surf):
         pygame.draw.rect(surf, self.highlight_color if self.menu_active else self.color, self.rect)
         pygame.draw.rect(surf, (0, 0, 0), self.rect, 2)
         m=""
         self.list_sel=[]
-        if(self.multiselection==True):
+        if(self.multiselection):
             for i in self.selections:
                 m=m+self.option_list[i]+' '
                 self.list_sel.append(self.option_list[i])
@@ -45,7 +47,10 @@ class OptionBox():
             for i, text in enumerate(self.option_list):
                 rect = self.rect.copy()
                 rect.y += (i+1) * self.rect.height
-                pygame.draw.rect(surf, self.highlight_color if i in self.selections else self.color, rect)
+                if(self.multiselection):
+                    pygame.draw.rect(surf, self.highlight_color if i in self.selections else self.color, rect)
+                else:
+                    pygame.draw.rect(surf, self.highlight_color if i==self.selected else self.color, rect)
                 msg = self.font.render(text, 1, (0, 0, 0))
                 surf.blit(msg, msg.get_rect(center = rect.center))
             outer_rect = (self.rect.x, self.rect.y + self.rect.height, self.rect.width, self.rect.height * len(self.option_list))
@@ -78,6 +83,8 @@ class OptionBox():
                     self.draw_menu = False
                     return self.active_option
         return -1
+
+
 
 
 class Slider():

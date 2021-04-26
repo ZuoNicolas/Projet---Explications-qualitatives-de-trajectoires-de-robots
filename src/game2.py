@@ -40,39 +40,43 @@ class Game(object):
         self.drawingpath = []
 
         self.restriction=[]
-        self.choose=False
+        self.choose_image=False
+        self.choose_parametre=False
     def on_init(self):
         pygame.init()
-        if(not self.choose):
-            self.choix_image()
-
-    def choix_image(self):
-        self.size=(600,800)
-        self.weight, self.height=600,800
-        self._display_surf = pygame.display.set_mode(self.size, pygame.RESIZABLE)
-        self._display_surf.fill(white)
+        self.loadimage()
         list_image=["zone_non_carre2",'map1','zone_a_danger(rocher)']
         font=pygame.font.SysFont("Verdana", 12)
-        self.images=slider.OptionBox(100,100,90,30,(150, 150, 150), (100, 200, 255),font,list_image,0,False)
-        while not self.choose:
+        self.images=slider.OptionBox(self.weight-(self.tool_width),0,120,30,(150, 150, 150), (100, 200, 255),font,list_image,0,False)
+        while(not self.choose_image):
+            self.choix_image()
+    def choix_image(self):
+        if(self.choose_parametre==True):
             self._display_surf.fill(white)
+            self.loadimage()
+
+        while not self.choose_image:
             event_list = pygame.event.get()
             for event in event_list:
                 if event.type == pygame.QUIT:
                     pygame.quit()
                     quit()
-            
+            self.images.set_rect(self.weight-(self.tool_width),0,120,30)
             self.images.update(event_list)
             
             self.images.draw(self._display_surf)
-            self.button('loadimage', 0, 0, 90, 40, green,bright_green, self.func_choix_image)
+            self.button('loadimage', self.weight-(self.tool_width/2),60, 90, 40, green,bright_green, self.func_choix_image)
+            self.button('confirm', self.weight-(self.tool_width/2), 120, 90, 40, green,bright_green, self.set_choose)
             pygame.display.update()
+        self.choose_parametre=False
+        self.choix_parametre()
+    def set_choose(self):
+        self.choose_image=True
+        self.loadimage()
     def func_choix_image(self):
-        self.choose=True
         self.filename='../ressource/'+self.images.option_list[self.images.selected]+'.tmx'
-        self.begin()
-
-    def begin(self):
+        self.loadimage()
+    def loadimage(self):
         root = ET.parse(self.filename).getroot()
 
         self.map=readfile.read_map_tmx(self.filename)
@@ -101,7 +105,7 @@ class Game(object):
         self.image_dict = dict()
         self.construction()
 
-    def slider(self):
+    def choix_parametre(self):
         self.secu = slider.Slider("sécurité", 0, 150, 10, self.weight-self.tool_width,0)
         self.rapid=slider.Slider("rapidité",0,150,10,self.weight-self.tool_width,60)
         self.preference=slider.Slider("préférence",0,150,10,self.weight-self.tool_width,120)
@@ -110,14 +114,14 @@ class Game(object):
         list_obj=self.list_objets()
         font=pygame.font.SysFont("Verdana", 12)
         self.option=slider.OptionBox(self.weight-self.tool_width,180,90,30,(150, 150, 150), (100, 200, 255),font,list_obj)
-        while True:
+        while (self.choose_parametre==False):
             self._display_surf.fill(white)
             self.construction()
             event_list = pygame.event.get()
             for event in event_list:
                 if event.type == pygame.QUIT:
-                    pygame.quit()
-                    quit()
+                    self.choose_image=False
+                    self.choose_parametre=True
                     
                 elif event.type == pygame.MOUSEBUTTONDOWN:
                     pos = pygame.mouse.get_pos()
@@ -128,6 +132,9 @@ class Game(object):
                     for s in self.slides:
                         s.hit = False
             # Move slides
+            if(self.choose_parametre==True):
+                break
+
             for s in self.slides:
                 if s.hit:
                     s.move()
@@ -385,8 +392,6 @@ class Game(object):
     def on_execute(self):
         if self.on_init() == False:
             self._running = False
-        self.slider()
-        self.drawpath()
         #self.one_step()
         #if not self.done():
             #self.on_render()
