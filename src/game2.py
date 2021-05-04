@@ -80,8 +80,8 @@ class Game(object):
                 s.draw(self._display_surf)
 
             self.button('loadimage', self.weight-(self.tool_width/2),0, 90, 40, green,bright_green, self.func_choix_image)
-            self.button('confirm',self.weight-(self.tool_width/2),120,90,40,green,bright_green,self.one_step)
-            self.button('my path', self.weight-(self.tool_width/2),180, 90, 40, green,bright_green, self.func_drawpath)
+            self.button('confirm',self.weight-(self.tool_width),self.height-self.discription_height+90,90,40,green,bright_green,self.one_step)
+            self.button('my path', self.weight-(self.tool_width),self.height-self.discription_height, 90, 40, green,bright_green, self.func_drawpath)
 
             if(self.option.draw_menu):
                 self.option.draw(self._display_surf)
@@ -195,8 +195,9 @@ class Game(object):
         self.draw_circle_alpha( self._display_surf, (255,0,0), ((x+0.5)*16,(y+0.5)*16), self.radius*16)
         
         self._display_surf.blit(self.robot,(x*16,y*16))
-        discp_surf=pygame.Surface((self.weight,self.discription_height))
-        discp_surf.fill(block_color)
+        discp_surf=pygame.Surface((self.weight-self.tool_width,self.discription_height))
+        discp_surf.fill(GREY)
+
         self._display_surf.blit(discp_surf,((0,self.height-self.discription_height)))
     
     def one_step(self):
@@ -316,21 +317,23 @@ class Game(object):
         self._display_surf.blit(textSurf, textRect)
 
     def set_discription(self,surface,discription):
-        discp_surf=pygame.Surface((self.weight,self.discription_height))
-        discp_surf.fill(block_color)
-        font=pygame.font.SysFont('Times', 12)
+        discp_surf=pygame.Surface((self.weight-self.tool_width,self.discription_height))
+        discp_surf.fill(GREY)
+        
+        font=pygame.font.SysFont('Times', 18)
         discrip=discription.split(" ")
-        y=0
+        y=16
         x=0
         for word in discrip:
 
-            text = font.render(word+" ", True, (0,0,0), (255,255,255))
+            text = font.render(word+" ", True, (0,0,0), GREY)
             text_w, text_h = text.get_size()
             discp_surf.blit(text, (x, y))
             x=x+text_w
-            if(x>=self.weight):
+            if(x>(self.weight-self.tool_width-90)):
                 x=0
                 y=y+text_h
+            
         self._display_surf.blit(discp_surf,((0,self.height-self.discription_height)))
 
 
