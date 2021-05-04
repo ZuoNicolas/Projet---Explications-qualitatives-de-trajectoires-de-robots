@@ -46,7 +46,7 @@ class Game(object):
         pygame.init()
 
         self.loadimage()
-        list_image=["zone_non_carre2",'map1','zone_a_danger(rocher)','exemple1']
+        list_image=["zone_non_carre2",'zone_a_danger(rocher)']
         font=pygame.font.SysFont("Verdana", 12)
         self.images=slider.OptionBox(self.weight-(self.tool_width),0,150,30,(150, 150, 150), (100, 200, 255),font,list_image,0,False)
         self.choix_image()
@@ -88,7 +88,7 @@ class Game(object):
             if(self.images.draw_menu):
                 self.images.draw(self._display_surf)
 
-            pygame.display.flip()
+            pygame.display.update()
     def func_choix_image(self):
         self.filename='../ressource/'+self.images.option_list[self.images.selected]+'.tmx'
         self.loadimage()
@@ -106,6 +106,7 @@ class Game(object):
         #zone d'affichage
         self._display_surf = pygame.display.set_mode(self.size, pygame.RESIZABLE)
         self._display_surf.fill(white)
+        self.drawingpath = []
         #self.zone_button=pygame.Surface((10*16,self.height))
         #self.zone_button.fill(block_color)
 
