@@ -15,6 +15,8 @@ class DescriptionTrajectoire():
             self.list_score_tout_les_chemins = []
             self.list_name_tout_les_chemins = []
             self.chemins = []
+            self.parameters = []
+            self.precision = 1
             
     def descriptiontTrajectoireSimple(self, agent_rayon=None):
         """ list(list(int)) * list(int) * dict{int:dict{str:str}}
@@ -98,19 +100,28 @@ class DescriptionTrajectoire():
         
         return self.description
     
-    def descriptiontTrajectoirePlusExplication(self, agent_rayon=None, ltuple_rest=[(0.1,0.9)],lobjet=[], path_donner=[]):
+    def descriptiontTrajectoirePlusExplication(self, agent_rayon=None, ltuple_rest=[(0.1,0.9)],lobjet=[], path_donner=[], precision = 1):
         """ list(list(int)) * list(int) * dict{int:dict{str:str}}
         Parcours le chemin path en regardant les objets au alentours,
-        pour retourner la description contruite"""
+        pour retourner la description contruite
+        precision -> {0:description simple sans explication 
+                      1:description avec explication des informations essentiel
+                      2:description avec une explication le plus détailler possible
+                      }
+        
+        """
         
         self.clearParameters()
-
+        
         # fonction.getScore
         self.list_name_tout_les_chemins = ['Le plus rapide', 'Le plus sécurisé', 'Le plus préféré']
+        self.parameters = ltuple_rest
+        self.precision = precision
         paths, score, score_donner = tools.path_by_retriction(self.map, self.label,  ltuple_rest,lobjet, lpath = path_donner)
-        print("..",score_donner)
-        print("++",score)
+        
+        
         if path_donner != []:
+            print("Score du Path donner :\n",score_donner)
             argmin = np.argmin(np.array(score_donner)[:,0])
             self.path = path_donner[argmin] #Le meilleu path
             _, path_securiter, path_rapide, path_prefere = score_donner[argmin] 
@@ -196,7 +207,7 @@ class DescriptionTrajectoire():
                         anti_spam=0
                         
             #Parti Explication
-            if self.path[i] in self.list_tout_les_inter:
+            if self.path[i] in self.list_tout_les_inter and precision!=0 :
                 if orienter:
                     description_temp += [self.myDescription.AVANCE]
                 
@@ -375,6 +386,7 @@ class DescriptionTrajectoire():
         
         msg = []
         i = 0
+        print("Chemin :",self.chemins)
         for chemin in self.chemins :
             #Pour enlever les chemin qui vont dans la meme direction
             if id_case_suivante < len(chemin)  and chemin[id_case_suivante] != path_choisi[id_case_suivante]:
@@ -402,59 +414,68 @@ class DescriptionTrajectoire():
                                 ratio_securiter = 1
                                 
                         if path_prefere == 0 :
-                            ratio_prefere = path_prefere-prefere
+                            ratio_prefere = prefere
                             if prefere == 0 :
                                 ratio_prefere = 1
                         
                         
                         if ratio_rapide >= 1.7:
-                            tmp_msg.append(self.myDescription.BEAUCOUP_MOINS_RAPIDE)
+                                tmp_msg.append(self.myDescription.BEAUCOUP_MOINS_RAPIDE)
                             
-                        elif ratio_rapide > 1 :
-                            tmp_msg.append(self.myDescription.MOINS_RAPIDE)
+                        elif ratio_rapide > 1:
+                                tmp_msg.append(self.myDescription.MOINS_RAPIDE)
                             
-                        elif ratio_rapide == 1 :
-                            tmp_msg.append(self.myDescription.RAPIDE)
+                        elif ratio_rapide == 1:
+                            if self.precision==2:
+                                tmp_msg.append(self.myDescription.RAPIDE)
                             
                         elif ratio_rapide >= 0.5 :
-                            tmp_msg.append(self.myDescription.PLUS_RAPIDE)
+                            if self.precision==2:
+                                tmp_msg.append(self.myDescription.PLUS_RAPIDE)
                             
                         else:
-                            tmp_msg.append(self.myDescription.BEAUCOUP_PLUS_RAPIDE)
+                            if self.precision==2:
+                                tmp_msg.append(self.myDescription.BEAUCOUP_PLUS_RAPIDE)
                             
                             
-                        if ratio_securiter >= 1.7 :
-                            tmp_msg.append(self.myDescription.BEAUCOUP_MOINS_SECURITE)
+                        if ratio_securiter >= 1.7:
+                                tmp_msg.append(self.myDescription.BEAUCOUP_MOINS_SECURITE)
                             
-                        elif ratio_securiter > 1 :
-                            tmp_msg.append(self.myDescription.MOINS_SECURITE)
+                        elif ratio_securiter > 1:
+                                tmp_msg.append(self.myDescription.MOINS_SECURITE)
                             
-                        elif ratio_securiter == 1 :
-                            tmp_msg.append(self.myDescription.SECURITE)
+                        elif ratio_securiter == 1:
+                                tmp_msg.append(self.myDescription.SECURITE)
                             
                         elif ratio_securiter > 0.5 :
-                            tmp_msg.append(self.myDescription.PLUS_SECURITE)
+                            if self.precision==2:
+                                tmp_msg.append(self.myDescription.PLUS_SECURITE)
                             
                         else:
-                            tmp_msg.append(self.myDescription.BEAUCOUP_PLUS_SECURITE)
+                            if self.precision==2:
+                                tmp_msg.append(self.myDescription.BEAUCOUP_PLUS_SECURITE)
                             
-                        if ratio_prefere <= 0.4 :
-                            tmp_msg.append(self.myDescription.BEAUCOUP_MOINS_PREFERE)
+                        if ratio_prefere <= 0.4:
+                                tmp_msg.append(self.myDescription.BEAUCOUP_MOINS_PREFERE)
                             
-                        elif ratio_prefere < 1 :
-                            tmp_msg.append(self.myDescription.MOINS_PREFERE)
+                        elif ratio_prefere < 1:
+                                tmp_msg.append(self.myDescription.MOINS_PREFERE)
                             
-                        elif ratio_prefere == 1 :
-                            tmp_msg.append(self.myDescription.PREFERE)
+                        elif ratio_prefere == 1:
+                            if self.precision==2:
+                                tmp_msg.append(self.myDescription.PREFERE)
                             
                         elif ratio_prefere <= 1.7 :
-                            tmp_msg.append(self.myDescription.PLUS_PREFERE)
+                            if self.precision==2:
+                                tmp_msg.append(self.myDescription.PLUS_PREFERE)
                             
                         else:
-                            tmp_msg.append(self.myDescription.BEAUCOUP_PLUS_PREFERE)
+                            if self.precision==2:
+                                tmp_msg.append(self.myDescription.BEAUCOUP_PLUS_PREFERE)
                         
                         msg.append(tmp_msg)
                         self.chemins.remove(chemin)
+                        del self.list_score_tout_les_chemins[i]
                         print("Securité :",path_securiter, '/', securiter,'=',ratio_securiter)
                         print("Rapidité :",path_rapide, '/', rapide,'=',ratio_rapide)
                         print("Préféré :",path_prefere, '/', prefere,'=',ratio_prefere)
@@ -474,7 +495,8 @@ class DescriptionTrajectoire():
         self.list_score_tout_les_chemins = []
         self.list_name_tout_les_chemins = []
         self.chemins = []
-        
+        self.parameters = []
+        self.precision = 1
         
         
         
