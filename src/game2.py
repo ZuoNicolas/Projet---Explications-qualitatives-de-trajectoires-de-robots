@@ -247,6 +247,7 @@ class Game(object):
                 self._display_surf.blit(s,(x*16,y*16))
         #print('list chemin',self.dt.list_tout_les_chemins)
         #print('my path',self.dt.path)
+        self.on_render()
         pygame.display.update()
         self.chemin()
         self.construction()
