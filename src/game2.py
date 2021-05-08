@@ -410,7 +410,9 @@ class Game(object):
     def on_rbutton_up(self, event):
         pass
     def on_lbutton_down(self, event):
-        self.forward = True
+        pos = pygame.mouse.get_pos()
+        if pos[0] < self.weight - self.tool_width and pos[1] < self.height - self.discription_height:
+            self.forward = True
     def on_mbutton_down(self, event):
         pass
     def on_rbutton_down(self, event):
