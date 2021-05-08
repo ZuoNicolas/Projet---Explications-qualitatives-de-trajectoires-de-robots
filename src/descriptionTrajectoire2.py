@@ -100,7 +100,7 @@ class DescriptionTrajectoire():
         
         return self.description
     
-    def descriptiontTrajectoirePlusExplication(self, agent_rayon=None, ltuple_rest=[(0.1,0.9,0.5)],lobjet=[], path_donner=[], precision = 1):
+    def descriptiontTrajectoirePlusExplication(self, agent_rayon=None, ltuple_rest=[(0.1,0.9,0.5)],lobjet=[], path_donners=[], precision = 1):
         """
         Parcours le chemin path en regardant les objets au alentours, pour retourner une liste de description, 
         qu'on pourra le traduire avec Description_to_Txt dans Traduction.py.
@@ -124,13 +124,14 @@ class DescriptionTrajectoire():
         self.list_name_tout_les_chemins = ['Le_plus_rapide', 'Le_plus_sécurisé', 'Le_plus_préféré']
         self.parameters = ltuple_rest
         self.precision = precision
-        paths, score, score_donner = tools.path_by_retriction(self.map, self.label,  ltuple_rest,lobjet, lpath = path_donner)
+        paths, score, score_donner = tools.path_by_retriction(self.map, self.label,  ltuple_rest,lobjet, lpath = path_donners)
         
         #utilisé dans l'affichage game2.py
         self.dict_des_chemins = {'Le_plus_rapide': paths[0],
                                  'Le_plus_sécurisé': paths[1],
                                  'Le_plus_préféré': paths[2]}
         
+        path_donner = path_donners.copy()
         #Récupération du chemin donner s'il y en a, sinon récupère le chemin avec le meilleur score globale
         if path_donner != []:
             print("Score du Path donner :\n",score_donner)
@@ -258,6 +259,7 @@ class DescriptionTrajectoire():
         
         self.description.append(description_temp)
 
+        print(self.description)
         return self.description
             
     def local_map(self, agent_rayon=None):
@@ -427,7 +429,6 @@ class DescriptionTrajectoire():
         #print("Chemin :",self.chemins)
         for chemin in copy_chemins:
             #Pour enlever les chemin qui vont dans la meme direction
-            print(len(copy_chemins))
             if id_case_suivante < len(chemin)  and chemin[id_case_suivante] != path_choisi[id_case_suivante]:
                 if (x+1, y) == chemin[id_case_suivante] or (x-1, y) == chemin[id_case_suivante] or \
                     (x, y+1) == chemin[id_case_suivante] or (x, y-1) == chemin[id_case_suivante] :
@@ -436,7 +437,6 @@ class DescriptionTrajectoire():
                         _, rapide, securiter, prefere = self.copy_score[j]
                         
                         tmp_msg = []
-                        print("**",self.copy_name,j)
                         tmp_msg.append(('CHEMIN', self.copy_name[j]))
                         
                         if path_rapide == 0 :
@@ -519,9 +519,9 @@ class DescriptionTrajectoire():
                         del self.copy_name[j]
                         del self.copy_score[j]
 
-                        print("Securité :",securiter, '/', path_securiter,'=',ratio_securiter)
-                        print("Rapidité :",rapide, '/', path_rapide,'=',ratio_rapide)
-                        print("Préféré :",prefere, '/', path_prefere,'=',ratio_prefere)
+                        # print("Securité :",securiter, '/', path_securiter,'=',ratio_securiter)
+                        # print("Rapidité :",rapide, '/', path_rapide,'=',ratio_rapide)
+                        # print("Préféré :",prefere, '/', path_prefere,'=',ratio_prefere)
             else:
                 j+=1
          
