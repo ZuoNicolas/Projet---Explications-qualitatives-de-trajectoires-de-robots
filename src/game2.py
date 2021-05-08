@@ -342,19 +342,23 @@ class Game(object):
         discp_surf.fill(GREY)
         
         font=pygame.font.SysFont('Times', 18)
-        discrip=discription.split(" ")
+        discrip1=discription.split("[NewLine]")
         y=16
         x=0
-        for word in discrip:
+        text_w, text_h = 0,0
+        for discription_tmp in discrip1:
+            discrip=discription_tmp.split(" ")
+            for word in discrip:
 
-            text = font.render(word+" ", True, (0,0,0), GREY)
-            text_w, text_h = text.get_size()
-            discp_surf.blit(text, (x, y))
-            x=x+text_w
-            if(x>(self.weight-self.tool_width-90)):
-                x=0
-                y=y+text_h
-            
+                text = font.render(word+" ", True, (0,0,0), GREY)
+                text_w, text_h = text.get_size()
+                discp_surf.blit(text, (x, y))
+                x=x+text_w
+                if(x>(self.weight-self.tool_width-90)):
+                    x=0
+                    y=y+text_h
+            x=0
+            y=y+text_h
         self._display_surf.blit(discp_surf,((0,self.height-self.discription_height)))
 
 
