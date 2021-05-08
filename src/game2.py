@@ -346,10 +346,17 @@ class Game(object):
         y=16
         x=0
         text_w, text_h = 0,0
+        i = 0
         for discription_tmp in discrip1:
+
             discrip=discription_tmp.split(" ")
             for word in discrip:
-
+                if len(word) > 0 and word[0] == '[':
+                    for y_tmp, x_tmp in self.dt.dict_des_chemins[word[1:-1]]:
+                        s = pygame.Surface((16,16))    # the size of your rect
+                        s.set_alpha(50)                # alpha level
+                        s.fill(MAGENTA)                # this fills the entire surface
+                        self._display_surf.blit(s,(x_tmp*16,y_tmp*16))
                 text = font.render(word+" ", True, (0,0,0), GREY)
                 text_w, text_h = text.get_size()
                 discp_surf.blit(text, (x, y))
@@ -359,6 +366,7 @@ class Game(object):
                     y=y+text_h
             x=0
             y=y+text_h
+            i = i+1
         self._display_surf.blit(discp_surf,((0,self.height-self.discription_height)))
 
 

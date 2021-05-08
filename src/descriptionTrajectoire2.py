@@ -121,15 +121,15 @@ class DescriptionTrajectoire():
         
         
         # fonction.getScore
-        self.list_name_tout_les_chemins = ['Le plus rapide', 'Le plus sécurisé', 'Le plus préféré']
+        self.list_name_tout_les_chemins = ['Le_plus_rapide', 'Le_plus_sécurisé', 'Le_plus_préféré']
         self.parameters = ltuple_rest
         self.precision = precision
         paths, score, score_donner = tools.path_by_retriction(self.map, self.label,  ltuple_rest,lobjet, lpath = path_donner)
         
         #utilisé dans l'affichage game2.py
-        self.dict_des_chemins = {'Le plus rapide': paths[0],
-                                 'Le plus sécurisé': paths[1],
-                                 'Le plus préféré': paths[2]}
+        self.dict_des_chemins = {'Le_plus_rapide': paths[0],
+                                 'Le_plus_sécurisé': paths[1],
+                                 'Le_plus_préféré': paths[2]}
         
         #Récupération du chemin donner s'il y en a, sinon récupère le chemin avec le meilleur score globale
         if path_donner != []:
