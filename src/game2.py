@@ -127,7 +127,7 @@ class Game(object):
         self.option=slider.OptionBox(self.weight-self.tool_width/2,60,90,30,(150, 150, 150), (100, 200, 255),font,list_obj)
         self.secu = slider.Slider("sécurité", 0, 150, 10, self.weight-self.tool_width,60)
         self.rapid=slider.Slider("rapidité",0,150,10,self.weight-self.tool_width,120)
-        self.preference=slider.Slider("préférence",0,150,10,self.weight-self.tool_width,180)
+        self.preference=slider.Slider("point d'interêt",0,150,10,self.weight-self.tool_width,180)
         self.slides=[self.secu,self.rapid,self.preference]
 
     def drawpath(self):
