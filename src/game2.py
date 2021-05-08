@@ -32,9 +32,9 @@ LIST_COLOR = [MAGENTA, RED, YELLOW, white]
 ALPHA = 70
 
 DICO_ACCURACY = {
-    'description' : 1,
-    'description + comparaison' : 2,
-    'tout' : 3
+    'description' : 0,
+    'description + comparaison' : 1,
+    'tout' : 2
 }
 
 class Game(object):
@@ -242,7 +242,7 @@ class Game(object):
         print("Liste de restriction :\n",self.restriction)
         #print(self.option.selections)
         print("lvl secu =>",DICO_ACCURACY[self.accuracy.option_list[self.accuracy.selected]])
-        self.discription=self.dt.descriptiontTrajectoirePlusExplication(agent_rayon=self.radius, ltuple_rest=self.restriction,lobjet=self.option.list_sel, path_donners=self.drawingpath)
+        self.discription=self.dt.descriptiontTrajectoirePlusExplication(agent_rayon=self.radius, ltuple_rest=self.restriction,lobjet=self.option.list_sel, path_donners=self.drawingpath, precision = DICO_ACCURACY[self.accuracy.option_list[self.accuracy.selected]])
         self.list_msg = Traduction.Description_to_Txt2(self.discription, self.label)
         for path in self.dt.list_tout_les_chemins:
             for y, x in path:
