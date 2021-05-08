@@ -400,6 +400,8 @@ class DescriptionTrajectoire():
         x, y = case_actuelle; #(ligne, colonne)
         
         copy_chemins = self.chemins.copy()
+        if self.copy_name==None:
+            self.copy_name = self.list_name_tout_les_chemins.copy()
         msg = []
         i = 0
         #print("Chemin :",self.chemins)
@@ -413,7 +415,7 @@ class DescriptionTrajectoire():
                         _, securiter, rapide, prefere = self.list_score_tout_les_chemins[i]
                         
                         tmp_msg = []
-                        tmp_msg.append(('CHEMIN', self.list_name_tout_les_chemins[i]))
+                        tmp_msg.append(('CHEMIN', self.copy_name[i]))
                         
                         if path_rapide == 0 :
                             ratio_rapide = rapide-path_rapide
@@ -492,6 +494,7 @@ class DescriptionTrajectoire():
                         
                         msg.append(tmp_msg)
                         self.chemins.remove(chemin)
+                        del self.copy_name[i]
 
                         # print("Securité :",securiter, '/', path_securiter,'=',ratio_securiter)
                         # print("Rapidité :",rapide, '/', path_,'=',ratio_rapide)
@@ -514,6 +517,7 @@ class DescriptionTrajectoire():
         self.list_name_tout_les_chemins = []
         self.chemins = []
         self.parameters = []
+        self.copy_name=None
         self.precision = 1
         
         
