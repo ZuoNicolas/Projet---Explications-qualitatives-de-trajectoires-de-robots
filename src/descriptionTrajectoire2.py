@@ -404,6 +404,7 @@ class DescriptionTrajectoire():
             self.copy_name = self.list_name_tout_les_chemins.copy()
         msg = []
         i = 0
+        j = 0
         #print("Chemin :",self.chemins)
         for chemin in copy_chemins:
             #Pour enlever les chemin qui vont dans la meme direction
@@ -415,7 +416,8 @@ class DescriptionTrajectoire():
                         _, securiter, rapide, prefere = self.list_score_tout_les_chemins[i]
                         
                         tmp_msg = []
-                        tmp_msg.append(('CHEMIN', self.copy_name[i]))
+                        print("**",self.copy_name,j)
+                        tmp_msg.append(('CHEMIN', self.copy_name[j]))
                         
                         if path_rapide == 0 :
                             ratio_rapide = rapide-path_rapide
@@ -494,12 +496,13 @@ class DescriptionTrajectoire():
                         
                         msg.append(tmp_msg)
                         self.chemins.remove(chemin)
-                        del self.copy_name[i]
+                        del self.copy_name[j]
 
                         # print("Securité :",securiter, '/', path_securiter,'=',ratio_securiter)
                         # print("Rapidité :",rapide, '/', path_,'=',ratio_rapide)
                         # print("Préféré :",prefere, '/', path_prefere,'=',ratio_prefere)
-                        
+            else:
+                j+=1
             i+=1
             
         if msg != []:
