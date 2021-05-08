@@ -19,7 +19,7 @@ class Description(Enum):
     JUSQU_A = 'jusqu\'à'
     
     #Description Avancer
-    INTERSECTION = 'l\'intersection'
+    INTERSECTION = 'l\'intersection :'
     ARRIVER = 'l\'arriver'
     
     #Precision Distance

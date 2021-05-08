@@ -34,8 +34,9 @@ def Description_to_Txt2(list_desc, label):
                 pref_mauvaise = ''
                 
                 for desc in description:
+                    print(desc)
                     if type(desc) == tuple: #Début d'une explication
-                        msg_tmp += ':[NewLine]['+desc[1]+'] -'+str(myEnum.Description.EXPLICATION.value)+': '
+                        msg_tmp += '[NewLine]['+desc[1]+'] -'+str(myEnum.Description.EXPLICATION.value)+': '
                         explication = True
                         continue
                     
@@ -82,7 +83,7 @@ def Description_to_Txt2(list_desc, label):
                             if pref_mauvaise !='':
                                 msg_tmp += pref_mauvaise
                             else:
-                                msg_tmp += re.sub(str(myEnum.Description.EXPLICATION.value)+' ','j\'ai pris ce chemin, car c\'est le chemin choisi par l\'utilisateur, mais tout est moins bon sur ce chemin choisi',msg_tmp)
+                                msg_tmp = re.sub(str(myEnum.Description.EXPLICATION.value)+': ','j\'ai pris ce chemin, car c\'est un des chemins choisi par l\'utilisateur, mais le chemin choisis n\'est pas meilleur en tout point avec le chemin comparer',msg_tmp)
                
                 #Le cas où on a une explication complète(precision=2)                
                 else:
@@ -96,7 +97,7 @@ def Description_to_Txt2(list_desc, label):
                             if pref_mauvaise != '':
                                 msg_tmp += secu_bonne+' et '+rapi_bonne+', mais '+pref_mauvaise
                             else :
-                                msg_tmp = re.sub(str(myEnum.Description.EXPLICATION.value)+' ','j\'ai pris ce chemin, car j\'y suis obligé par l\'utilisateur, mais en terme de rapidité, sécurité et point d\'interêt, tout est moins bon que le chemin choisi',msg_tmp)
+                                msg_tmp = re.sub(str(myEnum.Description.EXPLICATION.value)+' ','j\'ai pris ce chemin, car j\'y suis obligé par l\'utilisateur, mais en terme de rapidité, sécurité et point d\'interêt, tout est moins bon ou équivalent que le chemin choisi',msg_tmp)
                                 
                     elif secu_mauvaise != '':
                         if rapi_bonne != '':
@@ -106,7 +107,7 @@ def Description_to_Txt2(list_desc, label):
                                 msg_tmp += rapi_bonne+' et '+pref_bonne+', mais '+secu_mauvaise
                         else:
                             if pref_mauvaise != '':
-                                msg_tmp = re.sub(str(myEnum.Description.EXPLICATION.value)+' ','j\'ai pris ce chemin, car le niveau de sécurité, rapidité et point d\'interêt, sont tous moins bon que le chemin choisi',msg_tmp) 
+                                msg_tmp = re.sub(str(myEnum.Description.EXPLICATION.value)+' ','j\'ai pris ce chemin, car le niveau de sécurité, rapidité et point d\'interêt, sont tous moins bon ou équivalent que le chemin choisi',msg_tmp) 
                             else:
                                 msg_tmp += pref_bonne+', mais '+secu_mauvaise+' et '+rapi_mauvaise
             
