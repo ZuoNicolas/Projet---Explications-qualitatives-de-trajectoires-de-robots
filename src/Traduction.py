@@ -35,7 +35,7 @@ def Description_to_Txt2(list_desc, label):
                 
                 for desc in description:
                     if type(desc) == tuple: #Début d'une explication
-                        msg_tmp += ':[NewLine]['+desc[1]+']-'+str(myEnum.Description.EXPLICATION.value)+': '
+                        msg_tmp += ':[NewLine]['+desc[1]+'] -'+str(myEnum.Description.EXPLICATION.value)+': '
                         explication = True
                         continue
                     
