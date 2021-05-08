@@ -141,7 +141,7 @@ class Game(object):
         list_obj=self.list_objets()
         font=pygame.font.SysFont("Verdana", 12)
         self.option=slider.OptionBox(self.weight-self.tool_width/2,60,90,30,(150, 150, 150), (100, 200, 255),font,list_obj)
-        self.accuracy = slider.OptionBox(self.weight-self.tool_width/2,self.height-self.discription_height,90,30,(150, 150, 150), (100, 200, 255),font,list(DICO_ACCURACY.keys()), 0, False)
+        self.accuracy = slider.OptionBox(self.weight-self.tool_width/2,self.height-self.discription_height,140,30,(150, 150, 150), (100, 200, 255),font,list(DICO_ACCURACY.keys()), 0, False)
         self.secu = slider.Slider("sécurité", 0, 150, 10, self.weight-self.tool_width,60)
         self.rapid=slider.Slider("rapidité",0,150,10,self.weight-self.tool_width,120)
         self.preference=slider.Slider("point d'interêt",0,150,10,self.weight-self.tool_width,180)
@@ -241,6 +241,7 @@ class Game(object):
         self.restriction=[(self.rapid.value,self.secu.value,self.preference.value)]
         print("Liste de restriction :\n",self.restriction)
         #print(self.option.selections)
+        print("lvl secu =>",DICO_ACCURACY[self.accuracy.option_list[self.accuracy.selected]])
         self.discription=self.dt.descriptiontTrajectoirePlusExplication(agent_rayon=self.radius, ltuple_rest=self.restriction,lobjet=self.option.list_sel, path_donners=self.drawingpath)
         self.list_msg = Traduction.Description_to_Txt2(self.discription, self.label)
         for path in self.dt.list_tout_les_chemins:
