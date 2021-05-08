@@ -402,8 +402,9 @@ class DescriptionTrajectoire():
         copy_chemins = self.chemins.copy()
         if self.copy_name==None:
             self.copy_name = self.list_name_tout_les_chemins.copy()
+        if self.copy_score==None:
+            self.copy_score = self.list_score_tout_les_chemins
         msg = []
-        i = 0
         j = 0
         #print("Chemin :",self.chemins)
         for chemin in copy_chemins:
@@ -413,7 +414,7 @@ class DescriptionTrajectoire():
                     (x, y+1) == chemin[id_case_suivante] or (x, y-1) == chemin[id_case_suivante] :
                     #case_actuelle = une intersection
                     if case_actuelle in chemin:
-                        _, securiter, rapide, prefere = self.list_score_tout_les_chemins[i]
+                        _, securiter, rapide, prefere = self.copy_score[j]
                         
                         tmp_msg = []
                         print("**",self.copy_name,j)
@@ -503,8 +504,7 @@ class DescriptionTrajectoire():
                         # print("Préféré :",prefere, '/', path_prefere,'=',ratio_prefere)
             else:
                 j+=1
-            i+=1
-            
+         
         if msg != []:
             return [self.myDescription.JUSQU_A,self.myDescription.INTERSECTION]+msg
         
@@ -521,6 +521,7 @@ class DescriptionTrajectoire():
         self.chemins = []
         self.parameters = []
         self.copy_name=None
+        self.copy_score=None
         self.precision = 1
         
         
