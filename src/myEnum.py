@@ -1,7 +1,9 @@
 from enum import Enum
 
 class Description(Enum):
-    
+    """
+    Description de nos phrases
+    """
     #Orientation
     NORD = 'nord'
     EST = 'est'
