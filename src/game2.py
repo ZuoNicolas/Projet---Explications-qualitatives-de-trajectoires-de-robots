@@ -32,7 +32,7 @@ LIST_COLOR = [MAGENTA, RED, YELLOW, white]
 ALPHA = 70
 
 DICO_ACCURACY = {
-    'simple sans explication' : 1,
+    'sans comparaison' : 1,
     'avec explication des informations essentiel' : 2,
     'avec une explication le plus détailler possible' : 3
 }
@@ -239,7 +239,7 @@ class Game(object):
     
     def one_step(self):
         self.restriction=[(self.rapid.value,self.secu.value,self.preference.value)]
-        #print("Liste de restriction :\n",self.restriction)
+        print("Liste de restriction :\n",self.restriction)
         #print(self.option.selections)
         self.discription=self.dt.descriptiontTrajectoirePlusExplication(agent_rayon=self.radius, ltuple_rest=self.restriction,lobjet=self.option.list_sel, path_donner=self.drawingpath)
         self.list_msg = Traduction.Description_to_Txt2(self.discription, self.label)

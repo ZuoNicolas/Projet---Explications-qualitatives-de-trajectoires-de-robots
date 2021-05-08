@@ -373,7 +373,7 @@ def get_score(map, label, lobjet, path, weight, ltuple_rest, val_attract = 7):
         tuple_rest(list(tuple)) : list avec les tuples des restriction (dist, danger, point d'interêt)
         val_attract (int) : valeur a donner au case autour des point d'interêt
     Return:
-        scores(list(tuple(int))) : score optenu pour le chemin pour chache tuple de restriction (general, dist, danger, danger_max)
+        scores(list(tuple(int))) : score optenu pour le chemin pour chache tuple de restriction (general, dist, danger, préférence)
     """
     path_weight = [0 if weight.get(pos) == None else weight.get(pos) for pos in path]
     lsomme_attract = []
@@ -384,7 +384,7 @@ def get_score(map, label, lobjet, path, weight, ltuple_rest, val_attract = 7):
 
 
     somme, taille = np.sum(path_weight), len(path)
-    return [(taille * ltuple_rest[i][0] + somme * ltuple_rest[i][1] + lsomme_attract[i] * ltuple_rest[i][2], somme, taille, lsomme_attract[i]) for i in range(len(ltuple_rest))]
+    return [(taille * ltuple_rest[i][0] + somme * ltuple_rest[i][1] + lsomme_attract[i] * ltuple_rest[i][2], taille, somme, lsomme_attract[i]) for i in range(len(ltuple_rest))]
 
 def path_by_retriction(map, label, ltuple_rest, lobjet=[], lpath = []):
     """
@@ -396,7 +396,7 @@ def path_by_retriction(map, label, ltuple_rest, lobjet=[], lpath = []):
         lpath(list(list(str)))) : la liste des chemins dessiner à l'avance.
     Return:
         paths(list(list(tuple))) : la lists des chemins possible avec comme premier chemin le pcch 
-        scores(list(tuple(int))) : score optenu pour chaque chemin (general, dist, danger, danger_max)
+        scores(list(tuple(int))) : score optenu pour chaque chemin (general, dist, danger, préférence)
     """
     start, end = get_start_end(map, label)
     wall = get_wall(map, label)
