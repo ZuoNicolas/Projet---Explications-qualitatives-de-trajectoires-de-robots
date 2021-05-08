@@ -486,6 +486,7 @@ class DescriptionTrajectoire():
                                 tmp_msg.append(self.myDescription.MOINS_SECURITE)
                             
                         elif ratio_securiter == self.myDescription.RATIO_SECURITE.value:
+                            if self.precision==2:
                                 tmp_msg.append(self.myDescription.SECURITE)
                             
                         elif ratio_securiter > self.myDescription.RATIO_PLUS_SECURITE.value :
@@ -519,9 +520,9 @@ class DescriptionTrajectoire():
                         del self.copy_name[j]
                         del self.copy_score[j]
 
-                        # print("Securité :",securiter, '/', path_securiter,'=',ratio_securiter)
-                        # print("Rapidité :",rapide, '/', path_rapide,'=',ratio_rapide)
-                        # print("Préféré :",prefere, '/', path_prefere,'=',ratio_prefere)
+                        print("Securité :",securiter, '/', path_securiter,'=',ratio_securiter)
+                        print("Rapidité :",rapide, '/', path_rapide,'=',ratio_rapide)
+                        print("Préféré :",prefere, '/', path_prefere,'=',ratio_prefere)
             else:
                 j+=1
          
