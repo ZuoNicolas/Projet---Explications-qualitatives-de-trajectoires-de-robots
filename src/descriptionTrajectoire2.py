@@ -136,7 +136,7 @@ class DescriptionTrajectoire():
             print("Score du Path donner :\n",score_donner)
             argmin = np.argmin(np.array(score_donner)[:,0])
             self.path = path_donner[argmin] #Le meilleu path
-            _, path_securiter, path_rapide, path_prefere = score_donner[argmin] 
+            _, path_rapide, path_securiter, path_prefere = score_donner[argmin] 
             
             #récupération de la liste des intersections pour lancer les explications a chaque intersections
             self.list_tout_les_inter = tools.find_intercection(self.map, self.label, paths + path_donner)
@@ -153,7 +153,7 @@ class DescriptionTrajectoire():
         else:
             argmin = np.argmin(np.array(score)[:,0])
             self.path = paths[argmin] #Le meilleu path
-            _, path_securiter, path_rapide, path_prefere = score[argmin] 
+            _, path_rapide, path_securiter,  path_prefere = score[argmin] 
             
             #récupération de la liste des intersections pour lancer les explications a chaque intersections
             self.list_tout_les_inter = tools.find_intercection(self.map, self.label, paths)
@@ -433,7 +433,7 @@ class DescriptionTrajectoire():
                     (x, y+1) == chemin[id_case_suivante] or (x, y-1) == chemin[id_case_suivante] :
                     #case_actuelle = une intersection
                     if case_actuelle in chemin:
-                        _, securiter, rapide, prefere = self.copy_score[j]
+                        _, rapide, securiter, prefere = self.copy_score[j]
                         
                         tmp_msg = []
                         print("**",self.copy_name,j)
@@ -517,10 +517,11 @@ class DescriptionTrajectoire():
                         msg.append(tmp_msg)
                         self.chemins.remove(chemin)
                         del self.copy_name[j]
+                        del self.copy_score[j]
 
-                        # print("Securité :",securiter, '/', path_securiter,'=',ratio_securiter)
-                        # print("Rapidité :",rapide, '/', path_,'=',ratio_rapide)
-                        # print("Préféré :",prefere, '/', path_prefere,'=',ratio_prefere)
+                        print("Securité :",securiter, '/', path_securiter,'=',ratio_securiter)
+                        print("Rapidité :",rapide, '/', path_rapide,'=',ratio_rapide)
+                        print("Préféré :",prefere, '/', path_prefere,'=',ratio_prefere)
             else:
                 j+=1
          
