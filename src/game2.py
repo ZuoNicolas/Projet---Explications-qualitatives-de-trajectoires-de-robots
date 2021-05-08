@@ -31,6 +31,12 @@ LIST_COLOR = [MAGENTA, RED, YELLOW, white]
 
 ALPHA = 70
 
+DICO_ACCURACY = {
+    'simple sans explication' : 1,
+    'avec explication des informations essentiel' : 2,
+    'avec une explication le plus détailler possible' : 3
+}
+
 class Game(object):
 
     def __init__(self, filename, map, label, radius=5):
@@ -80,6 +86,8 @@ class Game(object):
             self.images.set_rect(self.weight-(self.tool_width),0,150,30)
             self.images.update(event_list)
             self.images.draw(self._display_surf)
+            self.accuracy.update(event_list)
+            self.accuracy.draw(self._display_surf)
 
             for s in self.slides:
                 s.draw(self._display_surf)
@@ -92,6 +100,9 @@ class Game(object):
                 self.option.draw(self._display_surf)
             if(self.images.draw_menu):
                 self.images.draw(self._display_surf)
+            if(self.accuracy.draw_menu):
+                self.accuracy.draw(self._display_surf)
+            
 
             pygame.display.update()
     def func_choix_image(self):
@@ -130,6 +141,7 @@ class Game(object):
         list_obj=self.list_objets()
         font=pygame.font.SysFont("Verdana", 12)
         self.option=slider.OptionBox(self.weight-self.tool_width/2,60,90,30,(150, 150, 150), (100, 200, 255),font,list_obj)
+        self.accuracy = slider.OptionBox(self.weight-self.tool_width/2,self.height-self.discription_height,90,30,(150, 150, 150), (100, 200, 255),font,list(DICO_ACCURACY.keys()), 0, False)
         self.secu = slider.Slider("sécurité", 0, 150, 10, self.weight-self.tool_width,60)
         self.rapid=slider.Slider("rapidité",0,150,10,self.weight-self.tool_width,120)
         self.preference=slider.Slider("point d'interêt",0,150,10,self.weight-self.tool_width,180)
