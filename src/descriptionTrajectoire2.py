@@ -134,8 +134,8 @@ class DescriptionTrajectoire():
         # print("meilleur path\n", self.path)
         # print("les chemins\n",paths)
         # print("==\n",paths[0]==paths[1])
-        print("Score des différents chemin : (Score Global, Score de sécurité, Score de rapidité)\n",score)     
-        # print("Intersection\n",self.list_tout_les_inter)
+        print("Score des différents chemin : (Score Global, Score de sécurité, Score de rapidité, Score d'interêt'):\n",score)    
+        print("Intersection\n",self.list_tout_les_inter)
         # print(argmin)
         if path_donner == []:
             del paths[argmin]
@@ -143,7 +143,7 @@ class DescriptionTrajectoire():
             del self.list_name_tout_les_chemins[argmin]
             
         self.list_tout_les_chemins = paths
-        self.chemins = paths.copy()
+        self.chemins = paths.copy()#Utiliser dans la fonction explication, qu'on mise a jour a chaque explication
         
         self.list_score_tout_les_chemins = score
         
@@ -384,10 +384,11 @@ class DescriptionTrajectoire():
         
         x, y = case_actuelle; #(ligne, colonne)
         
+        copy_chemins = self.chemins.copy()
         msg = []
         i = 0
-        print("Chemin :",self.chemins)
-        for chemin in self.chemins :
+        #print("Chemin :",self.chemins)
+        for chemin in copy_chemins:
             #Pour enlever les chemin qui vont dans la meme direction
             if id_case_suivante < len(chemin)  and chemin[id_case_suivante] != path_choisi[id_case_suivante]:
                 if (x+1, y) == chemin[id_case_suivante] or (x-1, y) == chemin[id_case_suivante] or \
@@ -399,25 +400,26 @@ class DescriptionTrajectoire():
                         tmp_msg = []
                         tmp_msg.append(('CHEMIN', self.list_name_tout_les_chemins[i]))
                         
-                        ratio_rapide = rapide/path_rapide
-                        ratio_securiter = securiter/path_securiter
-                        ratio_prefere = prefere/path_prefere
-                        
                         if path_rapide == 0 :
                             ratio_rapide = rapide-path_rapide
                             if rapide == 0 :
                                 ratio_rapide = 1
-                        
+                        else:
+                            ratio_rapide = rapide/path_rapide
+                            
                         if path_securiter == 0 :
                             ratio_securiter = securiter-path_securiter
                             if securiter == 0 :
                                 ratio_securiter = 1
-                                
+                        else:
+                            ratio_securiter = securiter/path_securiter
                         if path_prefere == 0 :
-                            ratio_prefere = prefere
+                            ratio_prefere = prefere*-1
                             if prefere == 0 :
                                 ratio_prefere = 1
-                        
+                        else:
+                            ratio_prefere = prefere/path_prefere
+                            
                         
                         if ratio_rapide >= 1.7:
                                 tmp_msg.append(self.myDescription.BEAUCOUP_MOINS_RAPIDE)
@@ -475,10 +477,11 @@ class DescriptionTrajectoire():
                         
                         msg.append(tmp_msg)
                         self.chemins.remove(chemin)
-                        del self.list_score_tout_les_chemins[i]
-                        print("Securité :",path_securiter, '/', securiter,'=',ratio_securiter)
-                        print("Rapidité :",path_rapide, '/', rapide,'=',ratio_rapide)
-                        print("Préféré :",path_prefere, '/', prefere,'=',ratio_prefere)
+
+                        # print("Securité :",path_securiter, '/', securiter,'=',ratio_securiter)
+                        # print("Rapidité :",path_rapide, '/', rapide,'=',ratio_rapide)
+                        # print("Préféré :",path_prefere, '/', prefere,'=',ratio_prefere)
+                        
             i+=1
             
         if msg != []:

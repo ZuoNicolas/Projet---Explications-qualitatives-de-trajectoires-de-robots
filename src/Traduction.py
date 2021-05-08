@@ -35,7 +35,7 @@ def Description_to_Txt2(list_desc, label):
                 
                 for desc in description:
                     if type(desc) == tuple:
-                        msg_tmp += str(myEnum.Description.EXPLICATION.value)+':[NewLine] '
+                        msg_tmp += ':[NewLine]['+desc[1]+']-'+str(myEnum.Description.EXPLICATION.value)+': '
                         explication = True
                         continue
                     
@@ -193,7 +193,7 @@ def Description_to_Txt2(list_desc, label):
                 msg = re.sub(' '+myEnum.Description.PASSE.value+' '+myEnum.Description.GAUCHE.value+' '+valeur,'', msg)
 
         list_msg.append(msg)
-
+        print(msg)
     return list_msg
 
 def Description_to_Txt(list, label):

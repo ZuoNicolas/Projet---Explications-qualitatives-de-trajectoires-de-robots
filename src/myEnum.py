@@ -56,11 +56,11 @@ class Description(Enum):
     PLUS_RAPIDE = 'un peu plus court en terme de distance'
     BEAUCOUP_PLUS_RAPIDE = 'beaucoup plus court en terme de distance'
     
-    BEAUCOUP_MOINS_PREFERE = 'pas du tout assez au goût de l\'utilisateur'
-    MOINS_PREFERE = 'un peu moins élevée au goût de l\'utilisateur'
+    BEAUCOUP_MOINS_PREFERE = 'très peu au goût de l\'utilisateur'
+    MOINS_PREFERE = 'un peu moins au goût de l\'utilisateur'
     PREFERE = 'à la même niveau en terme d\'interêt de l\'utilisateur'
-    PLUS_PREFERE = 'un peu plus élevée au goût de l\'utilisateur'
-    BEAUCOUP_PLUS_PREFERE = 'beaucoup plus élevée au goût de l\'utilisateur'
+    PLUS_PREFERE = 'un peu plus au goût de l\'utilisateur'
+    BEAUCOUP_PLUS_PREFERE = 'beaucoup plus au goût de l\'utilisateur'
     
     MSG_NULL=''
     
