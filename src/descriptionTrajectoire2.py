@@ -100,10 +100,16 @@ class DescriptionTrajectoire():
         
         return self.description
     
-    def descriptiontTrajectoirePlusExplication(self, agent_rayon=None, ltuple_rest=[(0.1,0.9)],lobjet=[], path_donner=[], precision = 1):
-        """ list(list(int)) * list(int) * dict{int:dict{str:str}}
-        Parcours le chemin path en regardant les objets au alentours,
-        pour retourner la description contruite
+    def descriptiontTrajectoirePlusExplication(self, agent_rayon=None, ltuple_rest=[(0.1,0.9,0.5)],lobjet=[], path_donner=[], precision = 1):
+        """
+        Parcours le chemin path en regardant les objets au alentours, pour retourner une liste de description, 
+        qu'on pourra le traduire avec Description_to_Txt dans Traduction.py.
+        
+        
+        agent_rayon -> le rayon d'intéraction du robot autour de lui
+        ltuple_rest -> (pourcentage de sécurité, pourcentage de rapidité, pourcentage d'interêt')
+        lobjet -> liste de tout les objects sur la carte
+        path_donner -> le chemin donner par l'utilisateur en dessinant sur la carte
         precision -> {0:description simple sans explication 
                       1:description avec explication des informations essentiel
                       2:description avec une explication le plus détailler possible
@@ -113,13 +119,14 @@ class DescriptionTrajectoire():
         
         self.clearParameters()
         
+        
         # fonction.getScore
         self.list_name_tout_les_chemins = ['Le plus rapide', 'Le plus sécurisé', 'Le plus préféré']
         self.parameters = ltuple_rest
         self.precision = precision
         paths, score, score_donner = tools.path_by_retriction(self.map, self.label,  ltuple_rest,lobjet, lpath = path_donner)
         
-        
+        #Récupération du chemin donner s'il y en a, sinon récupère le chemin avec le meilleur score globale
         if path_donner != []:
             print("Score du Path donner :\n",score_donner)
             argmin = np.argmin(np.array(score_donner)[:,0])
@@ -129,14 +136,14 @@ class DescriptionTrajectoire():
             argmin = np.argmin(np.array(score)[:,0])
             self.path = paths[argmin] #Le meilleu path
             _, path_securiter, path_rapide, path_prefere = score[argmin] 
-            
+          
+        #récupération de la liste des intersections pour lancer les explications a chaque intersections
         self.list_tout_les_inter = tools.find_intercection(self.map, self.label, paths+path_donner)
-        # print("meilleur path\n", self.path)
-        # print("les chemins\n",paths)
-        # print("==\n",paths[0]==paths[1])
+
         print("Score des différents chemin : (Score Global, Score de sécurité, Score de rapidité, Score d'interêt'):\n",score)    
         print("Intersection\n",self.list_tout_les_inter)
-        # print(argmin)
+        
+        #On enlève le chemin choisi des liste a comparer
         if path_donner == []:
             del paths[argmin]
             del score[argmin]
@@ -149,11 +156,10 @@ class DescriptionTrajectoire():
         
         
         if len(self.path) == 0:
-            print("Erreur path vide dans descriptiontrajectoireSimple")
+            print("Erreur path vide dans descriptiontTrajectoirePlusExplication")
             return -1
         #créer une liste qui décris chaque case du path où les objets sont a porter d'intéraction de la case en question
         map_local = self.local_map(agent_rayon)
-        #print(map_local)
 
         old = None #Sauvegarde de l'ancienne orientation
         n_case = -1 #Compteur du nombre de case parcourus avant un événement
@@ -232,8 +238,8 @@ class DescriptionTrajectoire():
         return self.description
             
     def local_map(self, agent_rayon=None):
-        """Retourne une liste de liste ou chaque indice correspond au case,*
-        Chaque sous liste contient toute les événements entre les objets"""
+        """Retourne une liste de liste où chaque indice correspond au case du path choisi,
+        Chaque sous liste contient toute les événements avec les objets"""
         
         path_area = [ [] for x in range(len(self.path)) ]
         
@@ -381,7 +387,11 @@ class DescriptionTrajectoire():
     
     
     def explication_intersection(self, case_actuelle, id_case_suivante, path_choisi, path_rapide, path_securiter, path_prefere):
-        
+        """
+        On vérifie si notre le chemin qu'on emprunte se sépare d'un autre chemin et on lance le procédure d'explication,
+        en comparant les scores de notre chemin avec le score du chemin à comparer, avec des ratios pour définir les seuils'
+        Retourne une liste de description pour la parti explication.
+        """
         x, y = case_actuelle; #(ligne, colonne)
         
         copy_chemins = self.chemins.copy()
@@ -478,9 +488,9 @@ class DescriptionTrajectoire():
                         msg.append(tmp_msg)
                         self.chemins.remove(chemin)
 
-                        # print("Securité :",path_securiter, '/', securiter,'=',ratio_securiter)
-                        # print("Rapidité :",path_rapide, '/', rapide,'=',ratio_rapide)
-                        # print("Préféré :",path_prefere, '/', prefere,'=',ratio_prefere)
+                        # print("Securité :",securiter, '/', path_securiter,'=',ratio_securiter)
+                        # print("Rapidité :",rapide, '/', path_,'=',ratio_rapide)
+                        # print("Préféré :",prefere, '/', path_prefere,'=',ratio_prefere)
                         
             i+=1
             
