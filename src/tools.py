@@ -50,6 +50,14 @@ def get_weight(map,label,alpha=1):
     return res
 
 def get_weight_attract(map, label, lobjet, radius = 6, alpha=1):
+    """ met un poid des points d'interet pour toutes les cases
+    Attr: 
+        map : la carte 
+        label : les labels
+        alpha : coeff entre 0 et 1 donnant l'importance de la distance en %
+    Return:
+        res (dict(str, int)) : les poid des cases.
+    """
     res = dict()
     for x in range(len(map)):
         for y in range(len(map[x])):
@@ -72,13 +80,13 @@ def get_weight_attract(map, label, lobjet, radius = 6, alpha=1):
 
 
 def get_weight_dist(map, label, alpha=1):
-    """
+    """ met un poid de distance pour toutes les cases
     Attr: 
+        map : la carte 
+        label : les labels
         alpha : coeff entre 0 et 1 donnant l'importance de la distance en %
     Return:
-        paths(list(list(tuple))) : la lists des chemins possible avec comme premier chemin le pcch 
-        scores(list(tuple(int))) : score optenu pour chaque chemin (dist, danger, danger_max)
-    
+        res (dict(str, int)) : les poid des cases.
     """
     res = dict()
     for x in range(len(map)):
@@ -103,7 +111,14 @@ def fuse_weight(list_dico_weidgh):
 
 
 def affichage_console(map,path,label):
-    
+    """ affiche sur la console la carte avec le chemin.
+    Attr: 
+        map : la carte 
+        path(list(str)) : le tracé.
+        label : les labels
+    Return:
+        NoneType
+    """
     print('S = start    E = End     str = mur     chemin = *')
     for x in range(len(map)):
         print('[',end='')
@@ -133,7 +148,14 @@ def affichage_console(map,path,label):
         print(']')
         
 def affichage_des_walls(wall,x,y):
-    
+    """ affiche sur la console les zone mur(0) et non mur(1)
+    Attr: 
+        map : la carte 
+        x(int) = longueur
+        y(int) = hauteur
+    Return:
+        NoneType
+    """
     for i in range(x):
         for j in range(y):
             if (i,j) in wall:
@@ -143,6 +165,13 @@ def affichage_des_walls(wall,x,y):
         print()
         
 def blue_path(map,label):
+    """ trouve toules chemin posible pour un tracé dessiner à l'avance sur la carte
+    Attr: 
+        map : la carte 
+        label : les labels
+    Return:
+        path(list(list(str))) : les chemins.
+    """
     start, end = get_start_end(map,label)
     x, y = start
     point =()
@@ -171,6 +200,14 @@ def blue_path(map,label):
 
 
 def blue_path2(map, label, path = []):
+    """ trouve toules chemin posible pour un tracé dessiner à l'avance sur la carte
+    Attr: 
+        map : la carte 
+        label : les labels
+        path(list(list(str))) : les chemins retenu.
+    Return:
+        path(list(list(str))) : les chemins.
+    """
     start, end = get_start_end(map,label)
     if len(path)== 0: 
         path=[start]
@@ -209,6 +246,15 @@ def blue_path2(map, label, path = []):
 
 
 def find_path(map, label, path = [], path2 = []):
+    """ trouve toules chemin posible pour un tracé
+    Attr: 
+        map : la carte 
+        label : les labels
+        path(list(str)) : le tracé.
+        path2(list(list(str))) : les chemins retenu.
+    Return:
+        path2(list(list(str))) : les chemins.
+    """
     start, end = get_start_end(map,label)
     if len(path2)== 0: 
         path2=[start]
@@ -247,6 +293,14 @@ def find_path(map, label, path = [], path2 = []):
 
 
 def transform_wall(map,label, path):
+    """ transforme un chemin en mur
+    Attr: 
+        map : la carte 
+        label : les labels
+        path(list(str)) : le chemin.
+    Return:
+        wall(list(str)) : liste des murs 
+    """
     wall=[]
     path = [elem for e in path for elem in e]
     for x in range(len(map)):
@@ -258,6 +312,14 @@ def transform_wall(map,label, path):
 
 
 def find_intercection(map, label, paths):
+    """ trouve les intercections des chemins
+    Attr: 
+        map : la carte 
+        label : les labels
+        paths(list(list(str))) : les chemins.
+    Return:
+        inter(list(str)) : liste des intercection des chemins 
+    """
     inter = []
     start, end = get_start_end(map,label)
     tx = len(map)
@@ -273,13 +335,25 @@ def find_intercection(map, label, paths):
                 tmp+=1
             if any((x,y-1) in sublist for sublist in paths) or (x,y-1) == start or (x,y-1) == end:
                 tmp+=1
-            if tmp >= 3 and (x,y) not in inter:
+            if (tmp >= 3 or ((x,y) == start and tmp >= 2)) and (x,y) not in inter:
                 inter.append((x,y))
             
     return inter
 
 
 def get_score(map, label, lobjet, path, weight, ltuple_rest, val_attract = 7):
+    """ calcul le score pour un pour chaque tuple de restriction
+    Attr: 
+        map : la carte 
+        label : les labels
+        lobjet(list(str)) : la liste des point d'interêt
+        path(list(str)))) : chemins sur lequel on fait les calcul.
+        weight (dict(str,int)) : les poid des case sur la carte
+        tuple_rest(list(tuple)) : list avec les tuples des restriction (dist, danger, point d'interêt)
+        val_attract (int) : valeur a donner au case autour des point d'interêt
+    Return:
+        scores(list(tuple(int))) : score optenu pour le chemin pour chache tuple de restriction (general, dist, danger, danger_max)
+    """
     path_weight = [0 if weight.get(pos) == None else weight.get(pos) for pos in path]
     lsomme_attract = []
     for restriction in ltuple_rest:
@@ -296,7 +370,9 @@ def path_by_retriction(map, label, ltuple_rest, lobjet=[], lpath = []):
     Attr: 
         map : la carte 
         label : les labels
-        tuple_rest(list(tuple)) : list avec les tuples des restriction (dist, danger)
+        tuple_rest(list(tuple)) : list avec les tuples des restriction (dist, danger, point d'interêt)
+        lobjet(list(str)) : la liste des point d'interêt
+        lpath(list(list(str)))) : la liste des chemins dessiner à l'avance.
     Return:
         paths(list(list(tuple))) : la lists des chemins possible avec comme premier chemin le pcch 
         scores(list(tuple(int))) : score optenu pour chaque chemin (general, dist, danger, danger_max)
