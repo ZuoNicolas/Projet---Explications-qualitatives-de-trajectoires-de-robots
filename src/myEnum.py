@@ -62,6 +62,24 @@ class Description(Enum):
     PLUS_PREFERE = 'un peu plus au goût de l\'utilisateur'
     BEAUCOUP_PLUS_PREFERE = 'beaucoup plus au goût de l\'utilisateur'
     
+    # ratio sécurité > X
+    RATIO_BEAUCOUP_MOINS_SECURITE = 3
+    RATIO_MOINS_SECURITE = 1
+    RATIO_SECURITE = 1 # ratio sécurité == X
+    RATIO_PLUS_SECURITE = 0.4
+    
+    # ratio radidité > X
+    RATIO_BEAUCOUP_MOINS_RAPIDE = 3
+    RATIO_MOINS_RAPIDE = 1
+    RATIO_RAPIDE = 1# ratio radidité == X
+    RATIO_PLUS_RAPIDE = 0.4 
+    
+    # ratio préférence < X
+    RATIO_BEAUCOUP_MOINS_PREFERE = 0.4
+    RATIO_MOINS_PREFERE = 1
+    RATIO_PREFERE = 1# ratio préférence == X
+    RATIO_PLUS_PREFERE = 2 
+
     MSG_NULL=''
     
     #Objet 

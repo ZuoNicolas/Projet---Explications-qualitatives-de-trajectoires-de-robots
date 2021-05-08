@@ -421,17 +421,17 @@ class DescriptionTrajectoire():
                             ratio_prefere = prefere/path_prefere
                             
                         
-                        if ratio_rapide >= 1.7:
+                        if ratio_rapide >= self.myDescription.RATIO_BEAUCOUP_MOINS_RAPIDE.value:
                                 tmp_msg.append(self.myDescription.BEAUCOUP_MOINS_RAPIDE)
                             
-                        elif ratio_rapide > 1:
+                        elif ratio_rapide > self.myDescription.RATIO_MOINS_RAPIDE.value:
                                 tmp_msg.append(self.myDescription.MOINS_RAPIDE)
                             
-                        elif ratio_rapide == 1:
+                        elif ratio_rapide == self.myDescription.RATIO_RAPIDE.value:
                             if self.precision==2:
                                 tmp_msg.append(self.myDescription.RAPIDE)
                             
-                        elif ratio_rapide >= 0.5 :
+                        elif ratio_rapide >= self.myDescription.RATIO_PLUS_RAPIDE.value :
                             if self.precision==2:
                                 tmp_msg.append(self.myDescription.PLUS_RAPIDE)
                             
@@ -440,16 +440,16 @@ class DescriptionTrajectoire():
                                 tmp_msg.append(self.myDescription.BEAUCOUP_PLUS_RAPIDE)
                             
                             
-                        if ratio_securiter >= 1.7:
+                        if ratio_securiter >= self.myDescription.RATIO_BEAUCOUP_MOINS_SECURITE.value:
                                 tmp_msg.append(self.myDescription.BEAUCOUP_MOINS_SECURITE)
                             
-                        elif ratio_securiter > 1:
+                        elif ratio_securiter > self.myDescription.RATIO_MOINS_SECURITE.value:
                                 tmp_msg.append(self.myDescription.MOINS_SECURITE)
                             
-                        elif ratio_securiter == 1:
+                        elif ratio_securiter == self.myDescription.RATIO_SECURITE.value:
                                 tmp_msg.append(self.myDescription.SECURITE)
                             
-                        elif ratio_securiter > 0.5 :
+                        elif ratio_securiter > self.myDescription.RATIO_PLUS_SECURITE.value :
                             if self.precision==2:
                                 tmp_msg.append(self.myDescription.PLUS_SECURITE)
                             
@@ -457,17 +457,17 @@ class DescriptionTrajectoire():
                             if self.precision==2:
                                 tmp_msg.append(self.myDescription.BEAUCOUP_PLUS_SECURITE)
                             
-                        if ratio_prefere <= 0.4:
+                        if ratio_prefere < self.myDescription.RATIO_BEAUCOUP_MOINS_PREFERE.value:
                                 tmp_msg.append(self.myDescription.BEAUCOUP_MOINS_PREFERE)
                             
-                        elif ratio_prefere < 1:
+                        elif ratio_prefere < self.myDescription.RATIO_MOINS_PREFERE.value:
                                 tmp_msg.append(self.myDescription.MOINS_PREFERE)
                             
-                        elif ratio_prefere == 1:
+                        elif ratio_prefere == self.myDescription.RATIO_PREFERE.value:
                             if self.precision==2:
                                 tmp_msg.append(self.myDescription.PREFERE)
                             
-                        elif ratio_prefere <= 1.7 :
+                        elif ratio_prefere < self.myDescription.RATIO_PLUS_PREFERE.value :
                             if self.precision==2:
                                 tmp_msg.append(self.myDescription.PLUS_PREFERE)
                             
