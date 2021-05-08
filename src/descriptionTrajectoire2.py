@@ -137,22 +137,40 @@ class DescriptionTrajectoire():
             argmin = np.argmin(np.array(score_donner)[:,0])
             self.path = path_donner[argmin] #Le meilleu path
             _, path_securiter, path_rapide, path_prefere = score_donner[argmin] 
+            
+            #récupération de la liste des intersections pour lancer les explications a chaque intersections
+            self.list_tout_les_inter = tools.find_intercection(self.map, self.label, paths + path_donner)
+            
+            del path_donner[argmin]
+            del score_donner[argmin]
+            paths = paths + path_donner
+            score = score + score_donner
+            
+            for p in range(len(path_donner)):
+                self.dict_des_chemins['Chemin_dessiner_'+str(p+1)] = path_donner[p]
+                self.list_name_tout_les_chemins.append('Chemin_dessiner_'+str(p+1))
+
         else:
             argmin = np.argmin(np.array(score)[:,0])
             self.path = paths[argmin] #Le meilleu path
             _, path_securiter, path_rapide, path_prefere = score[argmin] 
+            
+            #récupération de la liste des intersections pour lancer les explications a chaque intersections
+            self.list_tout_les_inter = tools.find_intercection(self.map, self.label, paths)
+            
+            del paths[argmin]
+            del score[argmin]
+            del self.list_name_tout_les_chemins[argmin]
+            
+
           
-        #récupération de la liste des intersections pour lancer les explications a chaque intersections
-        self.list_tout_les_inter = tools.find_intercection(self.map, self.label, paths+path_donner)
+        
 
         print("Score des différents chemin : (Score Global, Score de sécurité, Score de rapidité, Score d'interêt'):\n",score)    
         print("Intersection\n",self.list_tout_les_inter)
         
         #On enlève le chemin choisi des liste a comparer
-        if path_donner == []:
-            del paths[argmin]
-            del score[argmin]
-            del self.list_name_tout_les_chemins[argmin]
+        
             
         self.list_tout_les_chemins = paths
         self.chemins = paths.copy()#Utiliser dans la fonction explication, qu'on mise a jour a chaque explication
@@ -409,6 +427,7 @@ class DescriptionTrajectoire():
         #print("Chemin :",self.chemins)
         for chemin in copy_chemins:
             #Pour enlever les chemin qui vont dans la meme direction
+            print(len(copy_chemins))
             if id_case_suivante < len(chemin)  and chemin[id_case_suivante] != path_choisi[id_case_suivante]:
                 if (x+1, y) == chemin[id_case_suivante] or (x-1, y) == chemin[id_case_suivante] or \
                     (x, y+1) == chemin[id_case_suivante] or (x, y-1) == chemin[id_case_suivante] :
