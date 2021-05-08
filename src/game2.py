@@ -32,9 +32,9 @@ LIST_COLOR = [MAGENTA, RED, YELLOW, white]
 ALPHA = 70
 
 DICO_ACCURACY = {
-    'sans comparaison' : 1,
-    'avec explication des informations essentiel' : 2,
-    'avec une explication le plus détailler possible' : 3
+    'description' : 1,
+    'description + comparaison' : 2,
+    'tout' : 3
 }
 
 class Game(object):
