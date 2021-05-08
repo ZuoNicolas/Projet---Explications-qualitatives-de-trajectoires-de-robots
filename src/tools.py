@@ -4,7 +4,14 @@ import PCCH
 from math import sqrt
 
 def get_start_end(map,label):
-
+    """ trouve le départ et la fin
+    Attr: 
+        map : la carte 
+        label : les labels
+    Return:
+        start(str) : la case de départ
+        end(str) : la case de fin
+    """
     for key in label.keys():
         if label.get(key).get('name')=='start':
             start = ( np.where(map==key)[0][0] ,
@@ -15,6 +22,13 @@ def get_start_end(map,label):
     return start, end
 
 def get_wall(map,label):
+    """ trouve tous les murs
+    Attr: 
+        map : la carte 
+        label : les labels
+    Return:
+        res (dict(str, int)) : les case qui sont des mur
+    """
     wall=[]
     
     for x in range(len(map)):
@@ -28,6 +42,13 @@ def get_wall(map,label):
     return wall
 
 def get_weight(map,label,alpha=1):
+    """ met un poid de dangerosité pour toutes les cases
+    Attr: 
+        map : la carte 
+        label : les labels
+    Return:
+        res (dict(str, int)) : les poid des cases.
+    """
     res = dict()
     for x in range(len(map)):
         for y in range(len(map[x])):
