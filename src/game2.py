@@ -21,10 +21,15 @@ YELLOW = (255, 255, 0)
 GREEN = (0, 255, 50)
 BLUE = (50, 50, 255)
 GREY = (200, 200, 200)
-ORANGE = (200, 100, 50)
+ORANGE = (250, 125, 64)
 CYAN = (0, 255, 255)
 MAGENTA = (255, 0, 255)
+RED = (255,0,0)
 TRANS = (1, 1, 1)
+
+LIST_COLOR = [MAGENTA, RED, YELLOW, white]
+
+ALPHA = 70
 
 class Game(object):
 
@@ -209,7 +214,7 @@ class Game(object):
         for path in self.drawingpath:
             for y_tmp, x_tmp in path:
                 s = pygame.Surface((16,16))  # the size of your rect
-                s.set_alpha(50)                # alpha level
+                s.set_alpha(ALPHA)                # alpha level
                 s.fill(green)           # this fills the entire surface
                 self._display_surf.blit(s,(x_tmp*16,y_tmp*16))
         self.draw_circle_alpha( self._display_surf, (255,0,0), ((x+0.5)*16,(y+0.5)*16), self.radius*16)
@@ -228,21 +233,21 @@ class Game(object):
         self.list_msg = Traduction.Description_to_Txt2(self.discription, self.label)
         for path in self.dt.list_tout_les_chemins:
             for y, x in path:
-                s = pygame.Surface((16,16))  # the size of your rect
-                s.set_alpha(50)                # alpha level
-                s.fill(BLUE)           # this fills the entire surface
-                self._display_surf.blit(s,(x*16,y*16))
-
+                if (y,x) not in self.dt.path:
+                    s = pygame.Surface((16,16))  # the size of your rect
+                    s.set_alpha(ALPHA)                # alpha level
+                    s.fill(BLUE)           # this fills the entire surface
+                    self._display_surf.blit(s,(x*16,y*16))
+        
         for y, x in self.dt.path:
             s = pygame.Surface((16,16))  # the size of your rect
-            s.set_alpha(50)                # alpha level
-            s.fill(bright_red)           # this fills the entire surface
+            s.set_alpha(ALPHA)                # alpha level
+            s.fill(green)           # this fills the entire surface
             self._display_surf.blit(s,(x*16,y*16))
-
         for path in self.drawingpath:
             for y, x in path:
                 s = pygame.Surface((16,16))  # the size of your rect
-                s.set_alpha(50)                # alpha level
+                s.set_alpha(ALPHA)                # alpha level
                 s.fill(green)           # this fills the entire surface
                 self._display_surf.blit(s,(x*16,y*16))
         #print('list chemin',self.dt.list_tout_les_chemins)
@@ -267,7 +272,7 @@ class Game(object):
     def on_loop(self):
         self.iteration +=1
         
-    def on_render(self):
+    def on_render(self, inter = False):
 
         for x, y, image in self.layer.tiles():
             self._display_surf.blit(image,(x*16,y*16))
@@ -282,29 +287,31 @@ class Game(object):
         #msg = dt.descriptiontTrajectoireActif(self.radius, saw=False, iterator=self.iteration)
         #print(self.iteration,':',msg)
         self._display_surf.blit(self.robot,(x*16,y*16))
-
-        for path in self.dt.list_tout_les_chemins:
-            for y, x in path:
-                s = pygame.Surface((16,16))  # the size of your rect
-                s.set_alpha(50)                # alpha level
-                s.fill(BLUE)           # this fills the entire surface
-                self._display_surf.blit(s,(x*16,y*16))
-
+        if not inter:
+            for path in self.dt.list_tout_les_chemins:
+                for y, x in path:
+                    if (y, x) not in self.dt.path:
+                        s = pygame.Surface((16,16))  # the size of your rect
+                        s.set_alpha(ALPHA)                # alpha level
+                        s.fill(BLUE)           # this fills the entire surface
+                        self._display_surf.blit(s,(x*16,y*16))
+        
         for y, x in self.dt.path:
             s = pygame.Surface((16,16))  # the size of your rect
-            s.set_alpha(50)                # alpha level
-            s.fill(bright_red)           # this fills the entire surface
+            s.set_alpha(ALPHA)                # alpha level
+            s.fill(green)           # this fills the entire surface
             self._display_surf.blit(s,(x*16,y*16))
 
         for path in self.drawingpath:
             for y, x in path:
                 s = pygame.Surface((16,16))  # the size of your rect
-                s.set_alpha(50)                # alpha level
+                s.set_alpha(ALPHA)                # alpha level
                 s.fill(green)           # this fills the entire surface
                 self._display_surf.blit(s,(x*16,y*16))
         
         #affiche la discription
-        self.set_discription(self._display_surf,msg)
+        if not inter:
+            self.set_discription(self._display_surf,msg)
 
         pygame.display.update()
         #clock.tick(15)
@@ -312,7 +319,7 @@ class Game(object):
     def draw_circle_alpha(self, surface, color, center, radius):
         target_rect = pygame.Rect(center, (0, 0)).inflate((radius * 2, radius * 2))
         shape_surf = pygame.Surface(target_rect.size, pygame.SRCALPHA)
-        shape_surf.set_alpha(50)
+        shape_surf.set_alpha(ALPHA)
         pygame.draw.circle(shape_surf, color, (radius, radius), radius)
         surface.blit(shape_surf, target_rect)
 
@@ -347,16 +354,29 @@ class Game(object):
         x=0
         text_w, text_h = 0,0
         i = 0
+        remove_blue = False
         for discription_tmp in discrip1:
 
             discrip=discription_tmp.split(" ")
             for word in discrip:
                 if len(word) > 0 and word[0] == '[':
+                    if not remove_blue:
+                        self.on_render(True)
+                        remove_blue = True
+                    color = LIST_COLOR[i%len(LIST_COLOR)]
                     for y_tmp, x_tmp in self.dt.dict_des_chemins[word[1:-1]]:
                         s = pygame.Surface((16,16))    # the size of your rect
-                        s.set_alpha(50)                # alpha level
-                        s.fill(MAGENTA)                # this fills the entire surface
+                        s.set_alpha(ALPHA)                # alpha level
+                        s.fill(color)# this fills the entire surface
                         self._display_surf.blit(s,(x_tmp*16,y_tmp*16))
+                    text = font.render("=>", True, color, GREY)
+                    text_w, text_h = text.get_size()
+                    discp_surf.blit(text, (x, y))
+                    x=x+text_w
+                    if(x>(self.weight-self.tool_width-90)):
+                        x=0
+                        y=y+text_h
+                    i = i+1
                 text = font.render(word+" ", True, (0,0,0), GREY)
                 text_w, text_h = text.get_size()
                 discp_surf.blit(text, (x, y))
@@ -366,7 +386,6 @@ class Game(object):
                     y=y+text_h
             x=0
             y=y+text_h
-            i = i+1
         self._display_surf.blit(discp_surf,((0,self.height-self.discription_height)))
 
 
