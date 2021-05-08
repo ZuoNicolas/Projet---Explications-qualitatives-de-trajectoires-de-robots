@@ -139,6 +139,7 @@ class Game(object):
     def func_drawpath(self):
         path = []
         self.drawingpath = []
+        push = False
         while self.drawingpath == []:
             event_list = pygame.event.get()
             for event in event_list:
@@ -146,6 +147,7 @@ class Game(object):
                     pygame.quit()
                     quit()
                 elif event.type == pygame.MOUSEBUTTONDOWN:
+                    push = True
                     pos = pygame.mouse.get_pos()
                     if pos[0] < self.weight - self.tool_width and pos[1] < self.height - self.discription_height:
                         x,y = pos
@@ -157,6 +159,24 @@ class Game(object):
                                 path.append((y,x))
                             else:
                                 path.remove((y,x))
+                        self.construction()
+                        for y, x in path:
+                            s = pygame.Surface((16,16))  # the size of your rect
+                            s.fill(BLUE)           # this fills the entire surface
+                            self._display_surf.blit(s,(x*16,y*16))
+                        pygame.display.update()
+                elif event.type == pygame.MOUSEBUTTONUP:
+                    push = False
+                elif event.type == pygame.MOUSEMOTION and push:
+                    pos = pygame.mouse.get_pos()
+                    if pos[0] < self.weight - self.tool_width and pos[1] < self.height - self.discription_height:
+                        x,y = pos
+                        x = x//16
+                        y = y//16
+                        print(self.drawingpath, path)
+                        if self.label.get(self.map[y][x]).get('canPass'):
+                            if (y,x) not in path:
+                                path.append((y,x))
                         self.construction()
                         for y, x in path:
                             s = pygame.Surface((16,16))  # the size of your rect
