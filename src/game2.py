@@ -363,6 +363,11 @@ class Game(object):
         
         font=pygame.font.SysFont('Times', 18)
         discrip1=discription.split("[NewLine]")
+
+
+        text_click = font.render("clicker pour voir la suite de la description.", True, (0,0,0), GREY)
+        text_click_w, text_click_h = text_click.get_size()
+
         y=16
         x=0
         text_w, text_h = 0,0
@@ -373,6 +378,7 @@ class Game(object):
             discrip=discription_tmp.split(" ")
             for word in discrip:
                 if len(word) > 0 and word[0] == '[':
+                    
                     if not remove_blue:
                         self.on_render(True)
                         remove_blue = True
@@ -384,6 +390,24 @@ class Game(object):
                         self._display_surf.blit(s,(x_tmp*16,y_tmp*16))
                     text = font.render("=>", True, color, GREY)
                     text_w, text_h = text.get_size()
+                    if(y>=self.discription_height - 2 * text_click_h):
+                        x=0
+                        y=y+text_click_h
+                        discp_surf.blit(text_click, (x, y))
+                        self._display_surf.blit(discp_surf,((0,self.height-self.discription_height)))
+                        pygame.display.update()
+                        push = False
+                        while (not push):
+                            event_list = pygame.event.get()
+                            for event in event_list:
+                                if event.type == pygame.QUIT:
+                                    pygame.quit()
+                                    quit()
+                                elif event.type == pygame.MOUSEBUTTONDOWN:
+                                    push = True
+                                    x=0
+                                    y=16
+                                    discp_surf.fill(GREY)
                     discp_surf.blit(text, (x, y))
                     x=x+text_w
                     if(x>(self.weight-self.tool_width-90)):
@@ -392,6 +416,24 @@ class Game(object):
                     i = i+1
                 text = font.render(word+" ", True, (0,0,0), GREY)
                 text_w, text_h = text.get_size()
+                if(y>=self.discription_height - 2 * text_click_h):
+                        x=0
+                        y=y+text_click_h
+                        discp_surf.blit(text_click, (x, y))
+                        self._display_surf.blit(discp_surf,((0,self.height-self.discription_height)))
+                        pygame.display.update()
+                        push = False
+                        while (not push):
+                            event_list = pygame.event.get()
+                            for event in event_list:
+                                if event.type == pygame.QUIT:
+                                    pygame.quit()
+                                    quit()
+                                elif event.type == pygame.MOUSEBUTTONDOWN:
+                                    push = True
+                                    x=0
+                                    y=16
+                                    discp_surf.fill(GREY)
                 discp_surf.blit(text, (x, y))
                 x=x+text_w
                 if(x>(self.weight-self.tool_width-90)):
