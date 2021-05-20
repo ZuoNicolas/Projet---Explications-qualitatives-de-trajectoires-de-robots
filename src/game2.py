@@ -314,13 +314,13 @@ class Game(object):
             s.set_alpha(ALPHA)                # alpha level
             s.fill(green)           # this fills the entire surface
             self._display_surf.blit(s,(x*16,y*16))
-
-        for path in self.drawingpath:
-            for y, x in path:
-                s = pygame.Surface((16,16))  # the size of your rect
-                s.set_alpha(ALPHA)                # alpha level
-                s.fill(green)           # this fills the entire surface
-                self._display_surf.blit(s,(x*16,y*16))
+        if not inter:
+            for path in self.drawingpath:
+                for y, x in path:
+                    s = pygame.Surface((16,16))  # the size of your rect
+                    s.set_alpha(ALPHA)                # alpha level
+                    s.fill(green)           # this fills the entire surface
+                    self._display_surf.blit(s,(x*16,y*16))
         
         #affiche la discription
         if not inter:
@@ -384,10 +384,11 @@ class Game(object):
                         remove_blue = True
                     color = LIST_COLOR[i%len(LIST_COLOR)]
                     for y_tmp, x_tmp in self.dt.dict_des_chemins[word[1:-1]]:
-                        s = pygame.Surface((16,16))    # the size of your rect
-                        s.set_alpha(ALPHA)                # alpha level
-                        s.fill(color)# this fills the entire surface
-                        self._display_surf.blit(s,(x_tmp*16,y_tmp*16))
+                        if (y_tmp, x_tmp) not in self.dt.path:
+                            s = pygame.Surface((16,16))    # the size of your rect
+                            s.set_alpha(ALPHA)                # alpha level
+                            s.fill(color)# this fills the entire surface
+                            self._display_surf.blit(s,(x_tmp*16,y_tmp*16))
                     text = font.render("=>", True, color, GREY)
                     text_w, text_h = text.get_size()
                     if(y>=self.discription_height - 2 * text_click_h):
