@@ -59,7 +59,7 @@ class Game(object):
         self.loadimage()
         list_image=["zone_non_carre2",'zone_a_danger(rocher)']
         font=pygame.font.SysFont("Verdana", 12)
-        self.images=slider.OptionBox(self.weight-(self.tool_width),0,150,30,(150, 150, 150), (100, 200, 255),font,list_image,0,False)
+        self.images=slider.OptionBox(self.width-(self.tool_width),0,150,30,(150, 150, 150), (100, 200, 255),font,list_image,0,False)
         self.choix_image()
     def choix_image(self):
         while not self.choose_image:
@@ -83,7 +83,7 @@ class Game(object):
                     s.move()
             self.option.update(event_list)
             self.option.draw(self._display_surf)
-            self.images.set_rect(self.weight-(self.tool_width),0,150,30)
+            self.images.set_rect(self.width-(self.tool_width),0,150,30)
             self.images.update(event_list)
             self.images.draw(self._display_surf)
             self.accuracy.update(event_list)
@@ -92,9 +92,9 @@ class Game(object):
             for s in self.slides:
                 s.draw(self._display_surf)
 
-            self.button('loadimage', self.weight-(self.tool_width/2),0, 90, 40, green,bright_green, self.func_choix_image)
-            self.button('confirm',self.weight-(self.tool_width),self.height-self.discription_height+90,90,40,green,bright_green,self.one_step)
-            self.button('my path', self.weight-(self.tool_width),self.height-self.discription_height, 90, 40, green,bright_green, self.func_drawpath)
+            self.button('loadimage', self.width-(self.tool_width*2/3),0, 90, 40, green,bright_green, self.func_choix_image)
+            self.button('confirm',self.width-(self.tool_width/4)+10,0,90,40,green,bright_green,self.one_step)
+            self.button('my path', self.width-(self.tool_width*1/2)+20,0, 90, 40, green,bright_green, self.func_drawpath)
 
             if(self.option.draw_menu):
                 self.option.draw(self._display_surf)
@@ -115,16 +115,15 @@ class Game(object):
         self.map=readfile.read_map_tmx(self.filename)
         self.dt=DT.DescriptionTrajectoire(self.map,self.path,self.label)
 
-        self.tool_width=20*16 #toolbar a droite de fenetre
+        self.tool_width=30*16 #toolbar a droite de fenetre
         self.discription_height=10*16 #discription en bas de fenetre
-        self.size = self.weight, self.height = (int(root.get("width"))) * 16+self.tool_width, (int(root.get("height"))) * 16+self.discription_height #a changer
-        #print(self.size)
+        self.size = self.width, self.height = (int(root.get("width"))) * 16+self.tool_width, (int(root.get("height"))) * 16+self.discription_height #a changer
+        
         #zone d'affichage
-        self._display_surf = pygame.display.set_mode(self.size, pygame.RESIZABLE)
+        self._display_surf = pygame.display.set_mode(self.size, pygame.HWSURFACE | pygame.DOUBLEBUF)
         self._display_surf.fill(white)
         self.drawingpath = []
-        #self.zone_button=pygame.Surface((10*16,self.height))
-        #self.zone_button.fill(block_color)
+
 
 
 
@@ -140,15 +139,16 @@ class Game(object):
         self.construction()
         list_obj=self.list_objets()
         font=pygame.font.SysFont("Verdana", 12)
-        self.option=slider.OptionBox(self.weight-self.tool_width/2,60,90,30,(150, 150, 150), (100, 200, 255),font,list_obj)
-        self.accuracy = slider.OptionBox(self.weight-self.tool_width/2,self.height-self.discription_height,140,30,(150, 150, 150), (100, 200, 255),font,list(DICO_ACCURACY.keys()), 0, False)
-        self.secu = slider.Slider("sécurité", 0, 150, 10, self.weight-self.tool_width,60)
-        self.rapid=slider.Slider("rapidité",0,150,10,self.weight-self.tool_width,120)
-        self.preference=slider.Slider("point d'interêt",0,150,10,self.weight-self.tool_width,180)
+        self.option=slider.OptionBox(self.width-(self.tool_width*2/3),60,90,30,(150, 150, 150), (100, 200, 255),font,list_obj)
+        self.accuracy = slider.OptionBox(self.width-(self.tool_width/3)-30,60,170,30,(150, 150, 150), (100, 200, 255),font,list(DICO_ACCURACY.keys()), 0, False)
+        self.preference=slider.Slider("point d'interêt",0,150,10,self.width-self.tool_width+10,40)
+        self.secu = slider.Slider("sécurité", 0, 150, 10, self.width-self.tool_width+10,100)
+        self.rapid=slider.Slider("rapidité",0,150,10,self.width-self.tool_width+10,160)
+        
         self.slides=[self.secu,self.rapid,self.preference]
 
     def drawpath(self):
-        x = self.weight-(self.tool_width/2)
+        x = self.width-(self.tool_width/2)
         y = 0
         self.button('my path', x, y, 90, 40, green,bright_green, self.func_drawpath)
         
@@ -166,7 +166,7 @@ class Game(object):
                 elif event.type == pygame.MOUSEBUTTONDOWN:
                     push = True
                     pos = pygame.mouse.get_pos()
-                    if pos[0] < self.weight - self.tool_width and pos[1] < self.height - self.discription_height:
+                    if pos[0] < self.width - self.tool_width and pos[1] < self.height - self.discription_height:
                         x,y = pos
                         x = x//16
                         y = y//16
@@ -186,7 +186,7 @@ class Game(object):
                     push = False
                 elif event.type == pygame.MOUSEMOTION and push:
                     pos = pygame.mouse.get_pos()
-                    if pos[0] < self.weight - self.tool_width and pos[1] < self.height - self.discription_height:
+                    if pos[0] < self.width - self.tool_width and pos[1] < self.height - self.discription_height:
                         x,y = pos
                         x = x//16
                         y = y//16
@@ -232,7 +232,7 @@ class Game(object):
         self.draw_circle_alpha( self._display_surf, (255,0,0), ((x+0.5)*16,(y+0.5)*16), self.radius*16)
         
         self._display_surf.blit(self.robot,(x*16,y*16))
-        discp_surf=pygame.Surface((self.weight-self.tool_width,self.discription_height))
+        discp_surf=pygame.Surface((self.width-self.tool_width,self.discription_height))
         discp_surf.fill(GREY)
 
         self._display_surf.blit(discp_surf,((0,self.height-self.discription_height)))
@@ -358,7 +358,7 @@ class Game(object):
         self._display_surf.blit(textSurf, textRect)
 
     def set_discription(self,surface,discription):
-        discp_surf=pygame.Surface((self.weight-self.tool_width,self.discription_height))
+        discp_surf=pygame.Surface((self.width-self.tool_width,self.discription_height))
         discp_surf.fill(GREY)
         
         font=pygame.font.SysFont('Times', 18)
@@ -411,7 +411,7 @@ class Game(object):
                                     discp_surf.fill(GREY)
                     discp_surf.blit(text, (x, y))
                     x=x+text_w
-                    if(x>(self.weight-self.tool_width-90)):
+                    if(x>(self.width-self.tool_width-90)):
                         x=0
                         y=y+text_h
                     i = i+1
@@ -437,7 +437,7 @@ class Game(object):
                                     discp_surf.fill(GREY)
                 discp_surf.blit(text, (x, y))
                 x=x+text_w
-                if(x>(self.weight-self.tool_width-90)):
+                if(x>(self.width-self.tool_width-90)):
                     x=0
                     y=y+text_h
             x=0
@@ -454,7 +454,7 @@ class Game(object):
         pass
     def on_lbutton_down(self, event):
         pos = pygame.mouse.get_pos()
-        if pos[0] < self.weight - self.tool_width and pos[1] < self.height - self.discription_height:
+        if pos[0] < self.width - self.tool_width and pos[1] < self.height - self.discription_height:
             self.forward = True
     def on_mbutton_down(self, event):
         pass
@@ -489,15 +489,5 @@ class Game(object):
     def on_execute(self):
         if self.on_init() == False:
             self._running = False
-        #self.one_step()
-        #if not self.done():
-            #self.on_render()
-        #while( not self.done() ):
-            #self.forward = False
-            #for event in pygame.event.get():
-                #self.on_event(event)
-            #if self.forward:
-                #self.on_loop()
-                #self.on_render()
 
         self.on_cleanup()

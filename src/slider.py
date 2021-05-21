@@ -40,8 +40,16 @@ class OptionBox():
                 self.list_sel.append(self.option_list[i])
         else:
             m=self.option_list[self.selected]
+        if(m==""):
+            m="no selections"
         msg = self.font.render(m, 1, (0, 0, 0))
-        surf.blit(msg, msg.get_rect(center = self.rect.center))
+        #quand il n a pas de place pour afficher tous les choix
+        if(msg.get_rect(center = self.rect.center).width>self.rect.width):
+            m2=self.option_list[self.selections[0]]+'...'
+            msg2=self.font.render(m2, 1, (0, 0, 0))
+            surf.blit(msg2, msg2.get_rect(center = self.rect.center))
+        else:
+            surf.blit(msg, msg.get_rect(center = self.rect.center))
 
         if self.draw_menu:
             for i, text in enumerate(self.option_list):
@@ -94,28 +102,27 @@ class OptionBox():
 
 
 class Slider():
-    def __init__(self, name, value, maxi, mini, pos,y_pos):
+    def __init__(self, name, value, maxi, mini, xpos,y_pos):
         self.value = value  # start value
         self.maxi = maxi  # maximum at slider position right
         self.mini = mini  # minimum at slider position left
-        self.xpos = pos  # x-location on screen
+        self.xpos = xpos  # x-location on screen
         self.ypos = y_pos
         self.val=(self.maxi-self.mini)*self.value+self.mini
         self.name=name
 
 
-        self.surf = pygame.surface.Surface((100, 50))
+        self.surf = pygame.surface.Surface((120, 50))
         #font = pygame.font.SysFont("Verdana", 12)
         self.hit = False  # the hit attribute indicates slider movement due to mouse interaction
         font = pygame.font.SysFont("Verdana", 12)
         self.txt_surf = font.render(name+':'+str(self.value), 1, BLACK)
-        self.txt_rect = self.txt_surf.get_rect(center=(50, 15))
-
+        self.txt_rect = self.txt_surf.get_rect(center=(60, 15))
         # Static graphics - slider background #
         self.surf.fill((100, 100, 100))
-        pygame.draw.rect(self.surf, GREY, [0, 0, 100, 50], 3)
-        pygame.draw.rect(self.surf, ORANGE, [10, 10, 80, 10], 0)
-        pygame.draw.rect(self.surf, WHITE, [10, 30, 80, 5], 0)
+        pygame.draw.rect(self.surf, GREY, [0, 0, 120, 50], 3)
+        #pygame.draw.rect(self.surf, ORANGE, [10, 10, 80, 10], 0)
+        pygame.draw.rect(self.surf, WHITE, [10, 30, 100, 5], 0)
 
         self.surf.blit(self.txt_surf, self.txt_rect)  # this surface never changes
 
@@ -136,7 +143,7 @@ class Slider():
         surf.blit(self.txt_surf,self.txt_rect)
         font = pygame.font.SysFont("Verdana", 12)
         self.txt_surf = font.render(self.name+':'+"%.2f"%self.value, 1, BLACK)
-        self.txt_rect = self.txt_surf.get_rect(center=(50, 15))
+        self.txt_rect = self.txt_surf.get_rect(center=(60, 15))
         surf.blit(self.txt_surf, self.txt_rect) 
         # dynamic
         pos = (10+int((self.val-self.mini)/(self.maxi-self.mini)*80), 33)
