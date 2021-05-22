@@ -13,6 +13,7 @@ class DescriptionTrajectoire():
             self.list_tout_les_chemins = []
             self.list_tout_les_inter = []
             self.list_score_tout_les_chemins = []
+            self.list_score_tout_les_chemins_affichage = []
             self.list_name_tout_les_chemins = []
             self.chemins = []
             self.parameters = []
@@ -141,11 +142,14 @@ class DescriptionTrajectoire():
             
             #récupération de la liste des intersections pour lancer les explications a chaque intersections
             self.list_tout_les_inter = tools.find_intercection(self.map, self.label, paths + path_donner)
+            self.list_score_tout_les_chemins_affichage = score + score_donner
             
             del path_donner[argmin]
             del score_donner[argmin]
             paths = paths + path_donner
             score = score + score_donner
+            
+            
             
             for p in range(len(path_donner)):
                 self.dict_des_chemins['Chemin_dessiner_'+str(p+1)] = path_donner[p]
@@ -159,6 +163,7 @@ class DescriptionTrajectoire():
             #récupération de la liste des intersections pour lancer les explications a chaque intersections
             self.list_tout_les_inter = tools.find_intercection(self.map, self.label, paths)
             
+            self.list_score_tout_les_chemins_affichage = score
             del paths[argmin]
             del score[argmin]
             del self.list_name_tout_les_chemins[argmin]
