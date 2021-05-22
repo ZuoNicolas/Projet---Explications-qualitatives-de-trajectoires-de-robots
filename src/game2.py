@@ -242,7 +242,8 @@ class Game(object):
         #scores(list(tuple(int))) : score optenu pour chaque chemin (general, dist, danger, préférence)
         #score: rapitite,securite,preference
         scores=self.dt.list_score_tout_les_chemins_affichage
-
+        
+        names_score = self.dt.list_name_tout_les_chemins_affichage
         names=self.dt.list_name_tout_les_chemins
         score_surf=pygame.Surface((self.tool_width-10,self.height-300))
         score_surf.fill(GREY)
@@ -250,7 +251,7 @@ class Game(object):
         smallText = pygame.font.SysFont("comicsansms",12)
         
         param=[" rapidité "," securité "," intérêt "," total "]
-        x,y=100,0
+        x,y=105,0
         #affiche la ligne param
         for i in range(len(param)):
             textSurf, textRect = self.text_objects(param[i], smallText)
@@ -264,10 +265,10 @@ class Game(object):
         for i in range(len(scores)):
             
             score=scores[i]
-            textSurf, textRect = self.text_objects(names[i], smallText)
+            textSurf, textRect = self.text_objects(names_score[i], smallText)
             textRect.left,textRect.top=(0,y)
             score_surf.blit(textSurf,textRect)
-            x=110
+            x=120
             for j in [1,2,3,0]:
                 textSurf, textRect = self.text_objects(str("%.2f"%score[j]), smallText)
                 textRect.left,textRect.top=(x,y)
@@ -409,6 +410,7 @@ class Game(object):
         for discription_tmp in discrip1:
 
             discrip=discription_tmp.split(" ")
+            print(discrip)
             for word in discrip:
                 if len(word) > 0 and word[0] == '[':
                     
