@@ -241,20 +241,41 @@ class Game(object):
     def update_score(self):
         #scores(list(tuple(int))) : score optenu pour chaque chemin (general, dist, danger, préférence)
         #score: rapitite,securite,preference
-        scores=self.dt.list_score_tout_les_chemins
+        scores=self.dt.list_score_tout_les_chemins_affichage
+
         names=self.dt.list_name_tout_les_chemins
-        score_surf=pygame.Surface((self.tool_width-10,self.height-220))
+        score_surf=pygame.Surface((self.tool_width-10,self.height-300))
         score_surf.fill(GREY)
         #self._display_surf.blit(score_surf,((self.width-self.tool_width+10,220)))
         smallText = pygame.font.SysFont("comicsansms",12)
-        x,y=0,0
+        
+        param=[" rapidité "," securité "," intérêt "," total "]
+        x,y=100,0
+        #affiche la ligne param
+        for i in range(len(param)):
+            textSurf, textRect = self.text_objects(param[i], smallText)
+            textRect.left,textRect.top=(x,0)
+            w,h=textRect.size
+            x+=w
+            y=h
+            score_surf.blit(textSurf, textRect)
+        
+        #affiche chaque score ligne par ligne
         for i in range(len(scores)):
-            msg=names[i]+": "+str(scores[i])
-            textSurf, textRect = self.text_objects(msg, smallText)
-            textRect.left,textRect.top=(x,y)
+            
+            score=scores[i]
+            textSurf, textRect = self.text_objects(names[i], smallText)
+            textRect.left,textRect.top=(0,y)
+            score_surf.blit(textSurf,textRect)
+            x=110
+            for j in [1,2,3,0]:
+                textSurf, textRect = self.text_objects(str("%.2f"%score[j]), smallText)
+                textRect.left,textRect.top=(x,y)
+                x+=50
+                score_surf.blit(textSurf,textRect) 
+
             y=y+textRect.height
-            score_surf.blit(textSurf,textRect) 
-        self._display_surf.blit(score_surf,((self.width-self.tool_width+10,220)))  
+        self._display_surf.blit(score_surf,((self.width-self.tool_width+10,self.height-self.discription_height)))  
     def one_step(self):
         self.restriction=[(self.rapid.value,self.secu.value,self.preference.value)]
         print("lvl secu =>",DICO_ACCURACY[self.accuracy.option_list[self.accuracy.selected]])
