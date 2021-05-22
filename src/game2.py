@@ -33,9 +33,9 @@ LIST_COLOR = [MAGENTA, RED, YELLOW, white]
 ALPHA = 70
 
 DICO_ACCURACY = {
-    'description' : 0,
-    'description + comparaison' : 1,
-    'tout' : 2
+    'description simple' : 0,
+    'comparaison simple' : 1,
+    'comparaison détaillée' : 2
 }
 
 class Game(object):
@@ -115,7 +115,6 @@ class Game(object):
         root = ET.parse(self.filename).getroot()
         self.map=readfile.read_map_tmx(self.filename)
         self.dt=DT.DescriptionTrajectoire(self.map,self.path,self.label)
-
         self.tool_width=30*16 #toolbar a droite de fenetre
         self.discription_height=10*16 #discription en bas de fenetre
         self.size = self.width, self.height = (int(root.get("width"))) * 16+self.tool_width, (int(root.get("height"))) * 16+self.discription_height #a changer
@@ -146,12 +145,15 @@ class Game(object):
         list_obj=self.list_objets()
         font=pygame.font.SysFont("Verdana", 12)
         self.option=slider.OptionBox(self.width-(self.tool_width*2/3),60,90,30,(150, 150, 150), (100, 200, 255),font,list_obj)
-        self.accuracy = slider.OptionBox(self.width-(self.tool_width/3)-30,60,170,30,(150, 150, 150), (100, 200, 255),font,list(DICO_ACCURACY.keys()), 0, False)
+        self.accuracy = slider.OptionBox(self.width-(self.tool_width/3)-30,60,170,30,(150, 150, 150), (100, 200, 255),font,list(DICO_ACCURACY.keys()), 1, False)
         self.preference=slider.Slider("point d'interêt",0,150,10,self.width-self.tool_width+10,40)
         self.secu = slider.Slider("sécurité", 0, 150, 10, self.width-self.tool_width+10,100)
         self.rapid=slider.Slider("rapidité",0,150,10,self.width-self.tool_width+10,160)
         
         self.slides=[self.secu,self.rapid,self.preference]
+
+        
+        self.update_score()
 
     def drawpath(self):
         x = self.width-(self.tool_width/2)
@@ -240,13 +242,49 @@ class Game(object):
         self._display_surf.blit(self.robot_dir[Description.SUD],(x*16,y*16))
         discp_surf=pygame.Surface((self.width-self.tool_width,self.discription_height))
         discp_surf.fill(GREY)
-
         self._display_surf.blit(discp_surf,((0,self.height-self.discription_height)))
-    
+
+    def update_score(self):
+        #scores(list(tuple(int))) : score optenu pour chaque chemin (general, dist, danger, préférence)
+        #score: rapitite,securite,preference
+        scores=self.dt.list_score_tout_les_chemins_affichage
+        
+        names_score = self.dt.list_name_tout_les_chemins_affichage
+        names=self.dt.list_name_tout_les_chemins
+        score_surf=pygame.Surface((self.tool_width-10,self.height-300))
+        score_surf.fill(GREY)
+        #self._display_surf.blit(score_surf,((self.width-self.tool_width+10,220)))
+        smallText = pygame.font.SysFont("comicsansms",12)
+        
+        param=[" rapidité "," securité "," intérêt "," total "]
+        x,y=105,0
+        #affiche la ligne param
+        for i in range(len(param)):
+            textSurf, textRect = self.text_objects(param[i], smallText)
+            textRect.left,textRect.top=(x,0)
+            w,h=textRect.size
+            x+=w
+            y=h
+            score_surf.blit(textSurf, textRect)
+        
+        #affiche chaque score ligne par ligne
+        for i in range(len(scores)):
+            
+            score=scores[i]
+            textSurf, textRect = self.text_objects(names_score[i], smallText)
+            textRect.left,textRect.top=(0,y)
+            score_surf.blit(textSurf,textRect)
+            x=120
+            for j in [1,2,3,0]:
+                textSurf, textRect = self.text_objects(str("%.2f"%score[j]), smallText)
+                textRect.left,textRect.top=(x,y)
+                x+=50
+                score_surf.blit(textSurf,textRect) 
+
+            y=y+textRect.height
+        self._display_surf.blit(score_surf,((self.width-self.tool_width+10,self.height-self.discription_height)))  
     def one_step(self):
         self.restriction=[(self.rapid.value,self.secu.value,self.preference.value)]
-        print("Liste de restriction :\n",self.restriction)
-        #print(self.option.selections)
         print("lvl secu =>",DICO_ACCURACY[self.accuracy.option_list[self.accuracy.selected]])
         self.discription=self.dt.descriptiontTrajectoirePlusExplication(agent_rayon=self.radius, ltuple_rest=self.restriction,lobjet=self.option.list_sel, path_donners=self.drawingpath, precision = DICO_ACCURACY[self.accuracy.option_list[self.accuracy.selected]])
         self.list_msg = Traduction.Description_to_Txt2(self.discription, self.label)
@@ -269,13 +307,11 @@ class Game(object):
                 s.set_alpha(ALPHA)                # alpha level
                 s.fill(green)           # this fills the entire surface
                 self._display_surf.blit(s,(x*16,y*16))
-        #print('list chemin',self.dt.list_tout_les_chemins)
-        #print('my path',self.dt.path)
-        self.on_render()
-        pygame.display.update()
+
+        #self.on_render()
+        #pygame.display.update()
         self.chemin()
         self.construction()
-
     def chemin(self):
  
         while( not self.done() ):
@@ -297,7 +333,7 @@ class Game(object):
             self._display_surf.blit(image,(x*16,y*16))
         y, x = self.dt.path[self.iteration]
         self.draw_circle_alpha( self._display_surf, (255,0,0), ((x+0.5)*16,(y+0.5)*16), self.radius*16)
-        
+        self.update_score()
         
         #description_list =dt.descriptiontTrajectoireSimple(2)
 
@@ -333,7 +369,6 @@ class Game(object):
             self.set_discription(self._display_surf,msg)
 
         pygame.display.update()
-        #clock.tick(15)
 
     def draw_circle_alpha(self, surface, color, center, radius):
         target_rect = pygame.Rect(center, (0, 0)).inflate((radius * 2, radius * 2))
@@ -341,7 +376,6 @@ class Game(object):
         shape_surf.set_alpha(ALPHA)
         pygame.draw.circle(shape_surf, color, (radius, radius), radius)
         surface.blit(shape_surf, target_rect)
-
     def text_objects(self,text, font):
         textSurface = font.render(text, True, black)
         return textSurface, textSurface.get_rect()
@@ -382,6 +416,7 @@ class Game(object):
         for discription_tmp in discrip1:
 
             discrip=discription_tmp.split(" ")
+            print(discrip)
             for word in discrip:
                 if len(word) > 0 and word[0] == '[':
                     

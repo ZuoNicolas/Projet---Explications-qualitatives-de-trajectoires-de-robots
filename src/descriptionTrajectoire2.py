@@ -13,9 +13,11 @@ class DescriptionTrajectoire():
             self.list_tout_les_chemins = []
             self.list_tout_les_inter = []
             self.list_score_tout_les_chemins = []
+            self.list_score_tout_les_chemins_affichage = []
             self.list_name_tout_les_chemins = []
             self.chemins = []
             self.parameters = []
+            self.list_name_tout_les_chemins_affichage = []
             self.precision = 1
             
     def descriptiontTrajectoireSimple(self, agent_rayon=None):
@@ -138,19 +140,27 @@ class DescriptionTrajectoire():
             argmin = np.argmin(np.array(score_donner)[:,0])
             self.path = path_donner[argmin] #Le meilleu path
             _, path_rapide, path_securiter, path_prefere = score_donner[argmin] 
+            tmp = score_donner[argmin]
             
             #récupération de la liste des intersections pour lancer les explications a chaque intersections
             self.list_tout_les_inter = tools.find_intercection(self.map, self.label, paths + path_donner)
             
             del path_donner[argmin]
             del score_donner[argmin]
+            
+            self.list_score_tout_les_chemins_affichage = score.copy() + score_donner.copy() + [tmp]
+            
             paths = paths + path_donner
             score = score + score_donner
+            
+            
             
             for p in range(len(path_donner)):
                 self.dict_des_chemins['Chemin_dessiner_'+str(p+1)] = path_donner[p]
                 self.list_name_tout_les_chemins.append('Chemin_dessiner_'+str(p+1))
-
+                
+            self.list_name_tout_les_chemins_affichage = self.list_name_tout_les_chemins.copy()
+            self.list_name_tout_les_chemins_affichage.append('Chemin_sélectionné')
         else:
             argmin = np.argmin(np.array(score)[:,0])
             self.path = paths[argmin] #Le meilleu path
@@ -159,13 +169,11 @@ class DescriptionTrajectoire():
             #récupération de la liste des intersections pour lancer les explications a chaque intersections
             self.list_tout_les_inter = tools.find_intercection(self.map, self.label, paths)
             
+            self.list_score_tout_les_chemins_affichage = score.copy()
+            self.list_name_tout_les_chemins_affichage = self.list_name_tout_les_chemins.copy()
             del paths[argmin]
             del score[argmin]
             del self.list_name_tout_les_chemins[argmin]
-            
-
-          
-        
 
         print("Score des différents chemin : (Score Global, Score de sécurité, Score de rapidité, Score d'interêt'):\n",score)    
         print("Intersection\n",self.list_tout_les_inter)
