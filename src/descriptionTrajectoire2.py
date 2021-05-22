@@ -142,7 +142,7 @@ class DescriptionTrajectoire():
             
             #récupération de la liste des intersections pour lancer les explications a chaque intersections
             self.list_tout_les_inter = tools.find_intercection(self.map, self.label, paths + path_donner)
-            self.list_score_tout_les_chemins_affichage = score + score_donner
+            self.list_score_tout_les_chemins_affichage = score.copy() + score_donner.copy()
             
             del path_donner[argmin]
             del score_donner[argmin]
@@ -163,13 +163,13 @@ class DescriptionTrajectoire():
             #récupération de la liste des intersections pour lancer les explications a chaque intersections
             self.list_tout_les_inter = tools.find_intercection(self.map, self.label, paths)
             
-            self.list_score_tout_les_chemins_affichage = score
+            self.list_score_tout_les_chemins_affichage = score.copy()
             del paths[argmin]
             del score[argmin]
             del self.list_name_tout_les_chemins[argmin]
             
 
-          
+        print(self.list_score_tout_les_chemins_affichage)
         
 
         print("Score des différents chemin : (Score Global, Score de sécurité, Score de rapidité, Score d'interêt'):\n",score)    
