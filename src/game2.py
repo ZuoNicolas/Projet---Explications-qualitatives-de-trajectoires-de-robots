@@ -54,6 +54,7 @@ class Game(object):
         self.restriction=[]
         self.choose_image=False
         self.choose_parametre=False
+
     def on_init(self):
         pygame.init()
 
@@ -62,7 +63,13 @@ class Game(object):
         font=pygame.font.SysFont("Verdana", 12)
         self.images=slider.OptionBox(self.width-(self.tool_width),0,150,30,(150, 150, 150), (100, 200, 255),font,list_image,0,False)
         self.choix_image()
+
     def choix_image(self):
+        """ permet de dessiner tous les boutons
+        Attr: 
+        Return:
+            None
+        """
         while not self.choose_image:
             event_list = pygame.event.get()
             for event in event_list:
@@ -106,11 +113,23 @@ class Game(object):
             
 
             pygame.display.update()
+
     def func_choix_image(self):
+        """ permet de charger la map selectionné
+        Attr: 
+        Return:
+            None
+        """
         self.filename='../ressource/'+self.images.option_list[self.images.selected]+'.tmx'
         self.loadimage()
         pygame.display.update()
+
     def loadimage(self):
+        """ permet de charger toute les images necessaire pour le logiciel
+        Attr: 
+        Return:
+            None
+        """
 
         root = ET.parse(self.filename).getroot()
         self.map=readfile.read_map_tmx(self.filename)
@@ -156,12 +175,22 @@ class Game(object):
         self.update_score()
 
     def drawpath(self):
+        """ place le bouton lier au dessin de chemins
+        Attr: 
+        Return:
+            None
+        """
         x = self.width-(self.tool_width/2)
         y = 0
         self.button('my path', x, y, 90, 40, green,bright_green, self.func_drawpath)
         
 
     def func_drawpath(self):
+        """ permet de dessiner le chemin a la min sur la carte tant qu'un chemin n'est pas valide
+        Attr: 
+        Return:
+            None
+        """
         path = []
         self.drawingpath = []
         push = False
@@ -213,6 +242,11 @@ class Game(object):
                         
 
     def list_objets(self):
+        """ renvoi la liste des objets de la map selectionné
+        Attr: 
+        Return:
+            list_obj(list[str]) : liste des objets present sur la carte
+        """
         list_obj=[]
         for x in range(len(self.map)):
             for y in range(len(self.map[0])):
@@ -226,6 +260,11 @@ class Game(object):
 
 
     def construction(self):
+        """ dessine les element pour pour l'intant présent
+        Attr: 
+        Return:
+            None
+        """
         start,end=get_start_end(self.map,self.label)
         self._display_surf.fill(white)
         for x, y, image in self.layer.tiles():
@@ -245,6 +284,11 @@ class Game(object):
         self._display_surf.blit(discp_surf,((0,self.height-self.discription_height)))
 
     def update_score(self):
+        """ affiche le tableau de score
+        Attr: 
+        Return:
+            None
+        """
         #scores(list(tuple(int))) : score optenu pour chaque chemin (general, dist, danger, préférence)
         #score: rapitite,securite,preference
         scores=self.dt.list_score_tout_les_chemins_affichage
@@ -283,6 +327,7 @@ class Game(object):
 
             y=y+textRect.height
         self._display_surf.blit(score_surf,((self.width-self.tool_width+10,self.height-self.discription_height)))  
+
     def one_step(self):
         self.restriction=[(self.rapid.value,self.secu.value,self.preference.value)]
         print("lvl secu =>",DICO_ACCURACY[self.accuracy.option_list[self.accuracy.selected]])
@@ -312,6 +357,7 @@ class Game(object):
         #pygame.display.update()
         self.chemin()
         self.construction()
+
     def chemin(self):
  
         while( not self.done() ):
@@ -371,11 +417,21 @@ class Game(object):
         pygame.display.update()
 
     def draw_circle_alpha(self, surface, color, center, radius):
+        """ dessine un cercle avec la couleur et le rayon souaité
+        Attr: 
+            surface : la surface où faire le dessin
+            color : la couleur du cercle au format (R,G,B)
+            center : le centre du cercle
+            radius : le rayon
+        Return:
+            None
+        """
         target_rect = pygame.Rect(center, (0, 0)).inflate((radius * 2, radius * 2))
         shape_surf = pygame.Surface(target_rect.size, pygame.SRCALPHA)
         shape_surf.set_alpha(ALPHA)
         pygame.draw.circle(shape_surf, color, (radius, radius), radius)
         surface.blit(shape_surf, target_rect)
+
     def text_objects(self,text, font):
         textSurface = font.render(text, True, black)
         return textSurface, textSurface.get_rect()
@@ -398,6 +454,13 @@ class Game(object):
         self._display_surf.blit(textSurf, textRect)
 
     def set_discription(self,surface,discription):
+        """ dessine la zone de description et affiche le text l'intant présent
+        Attr: 
+            surface : la surface où faire le dessin
+            discription : la classe description qui permet de recuperer les description celon le chemin
+        Return:
+            None
+        """
         discp_surf=pygame.Surface((self.width-self.tool_width,self.discription_height))
         discp_surf.fill(GREY)
         
