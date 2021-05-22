@@ -41,7 +41,7 @@ class OptionBox():
         else:
             m=self.option_list[self.selected]
         if(m==""):
-            m="no selections"
+            m="intérêt"
         msg = self.font.render(m, 1, (0, 0, 0))
         #quand il n a pas de place pour afficher tous les choix
         if(msg.get_rect(center = self.rect.center).width>self.rect.width):
