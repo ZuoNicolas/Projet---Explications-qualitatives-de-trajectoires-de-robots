@@ -7,6 +7,7 @@ import readfile
 import Traduction
 import slider 
 from tools import *
+from myEnum import *
 
 #clock = pygame.time.Clock()
 black = (0,0,0)
@@ -134,6 +135,11 @@ class Game(object):
         self.layer = tm.get_layer_by_name(root.find('layer').get("name"))
         #image de robot
         self.robot = pygame.image.load("../ressource/robot16.png").convert()
+        self.robot_dir = {Description.EST : pygame.image.load("../ressource/robot16Est.png").convert(),
+                          Description.NORD : pygame.image.load("../ressource/robot16Nord.png").convert(),
+                          Description.OUEST : pygame.image.load("../ressource/robot16West.png").convert(),
+                          Description.SUD : pygame.image.load("../ressource/robot16Sud.png").convert()}
+        
 
         self.image_dict = dict()
         self.construction()
@@ -226,12 +232,12 @@ class Game(object):
         for path in self.drawingpath:
             for y_tmp, x_tmp in path:
                 s = pygame.Surface((16,16))  # the size of your rect
-                s.set_alpha(ALPHA)                # alpha level
-                s.fill(green)           # this fills the entire surface
+                s.set_alpha(ALPHA)           # alpha level
+                s.fill(green)                # this fills the entire surface
                 self._display_surf.blit(s,(x_tmp*16,y_tmp*16))
         self.draw_circle_alpha( self._display_surf, (255,0,0), ((x+0.5)*16,(y+0.5)*16), self.radius*16)
         
-        self._display_surf.blit(self.robot,(x*16,y*16))
+        self._display_surf.blit(self.robot_dir[Description.SUD],(x*16,y*16))
         discp_surf=pygame.Surface((self.width-self.tool_width,self.discription_height))
         discp_surf.fill(GREY)
 
@@ -299,7 +305,7 @@ class Game(object):
 
         #msg = dt.descriptiontTrajectoireActif(self.radius, saw=False, iterator=self.iteration)
         #print(self.iteration,':',msg)
-        self._display_surf.blit(self.robot,(x*16,y*16))
+        self._display_surf.blit(self.robot_dir[self.discription[self.iteration][0]],(x*16,y*16))
         if not inter:
             for path in self.dt.list_tout_les_chemins:
                 for y, x in path:
