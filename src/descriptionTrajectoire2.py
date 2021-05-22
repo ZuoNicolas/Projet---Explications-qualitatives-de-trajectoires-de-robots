@@ -139,13 +139,16 @@ class DescriptionTrajectoire():
             argmin = np.argmin(np.array(score_donner)[:,0])
             self.path = path_donner[argmin] #Le meilleu path
             _, path_rapide, path_securiter, path_prefere = score_donner[argmin] 
+            tmp = score_donner[argmin]
             
             #récupération de la liste des intersections pour lancer les explications a chaque intersections
             self.list_tout_les_inter = tools.find_intercection(self.map, self.label, paths + path_donner)
-            self.list_score_tout_les_chemins_affichage = score.copy() + score_donner.copy()
             
             del path_donner[argmin]
             del score_donner[argmin]
+            
+            self.list_score_tout_les_chemins_affichage = score.copy() + path_donner.copy() + [tmp]
+            
             paths = paths + path_donner
             score = score + score_donner
             
@@ -154,7 +157,8 @@ class DescriptionTrajectoire():
             for p in range(len(path_donner)):
                 self.dict_des_chemins['Chemin_dessiner_'+str(p+1)] = path_donner[p]
                 self.list_name_tout_les_chemins.append('Chemin_dessiner_'+str(p+1))
-
+            self.dict_des_chemins['Chemin_sélectionné'] = paths
+            self.list_name_tout_les_chemins.append('Chemin_sélectionné')
         else:
             argmin = np.argmin(np.array(score)[:,0])
             self.path = paths[argmin] #Le meilleu path
@@ -166,7 +170,6 @@ class DescriptionTrajectoire():
             self.list_score_tout_les_chemins_affichage = score.copy()
             del paths[argmin]
             del score[argmin]
-            del self.list_name_tout_les_chemins[argmin]
             
 
         print(self.list_score_tout_les_chemins_affichage)
