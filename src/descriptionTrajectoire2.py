@@ -423,7 +423,7 @@ class DescriptionTrajectoire():
         if self.copy_name==None:
             self.copy_name = self.list_name_tout_les_chemins.copy()
         if self.copy_score==None:
-            self.copy_score = self.list_score_tout_les_chemins
+            self.copy_score = self.list_score_tout_les_chemins.copy()
         msg = []
         j = 0
         #print("Chemin :",self.chemins)

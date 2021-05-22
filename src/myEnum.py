@@ -43,6 +43,11 @@ class Description(Enum):
     A_DROITE = 'à droite'
     _DERRIERE = 'derrière'
     
+    MAIS = 'mais'
+    ET = 'et'
+    LES = 'les'
+    DES = 'des'
+    
     #Explication Intersection
     EXPLICATION = 'j\'ai pris ce chemin, car les autres chemins sont'
     
@@ -64,6 +69,9 @@ class Description(Enum):
     PLUS_PREFERE = 'un peu plus au goût de l\'utilisateur'
     BEAUCOUP_PLUS_PREFERE = 'beaucoup plus au goût de l\'utilisateur'
     
+    TOUT_EST_MOIN_BON = "moins bon en terme de distance, sécurité et point d'interêt"
+    TOUT_EST_MOIN_BON_USER = 'j\'ai pris ce chemin, car c\'est un des chemins choisi par l\'utilisateur, mais le chemin choisis n\'est pas meilleur en tout point avec le chemin comparer'
+    
     # ratio sécurité > X
     RATIO_BEAUCOUP_MOINS_SECURITE = 3
     RATIO_MOINS_SECURITE = 1
@@ -81,9 +89,12 @@ class Description(Enum):
     RATIO_MOINS_PREFERE = 1
     RATIO_PREFERE = 1# ratio préférence == X
     RATIO_PLUS_PREFERE = 2 
+    
 
     MSG_NULL=''
     
     #Objet 
     OBJECT = 'Objet'
-
+    def describe(self):
+         # self is the member here
+         return self.name, self.value

@@ -65,51 +65,51 @@ def Description_to_Txt2(list_desc, label):
                     if rapi_mauvaise!='':
                         if secu_mauvaise!='':
                             if pref_mauvaise !='':
-                                msg_tmp += "moins bon en terme de distance, sécurité et point d'interêt"
+                                msg_tmp += myEnum.Description.TOUT_EST_MOIN_BON_USER.value
                             else:
-                                msg_tmp += rapi_mauvaise+' et '+secu_mauvaise
+                                msg_tmp += rapi_mauvaise+' '+myEnum.Description.ET.value+' '+secu_mauvaise
                         else:
                             if pref_mauvaise !='':
-                                msg_tmp += rapi_mauvaise+' et '+pref_mauvaise
+                                msg_tmp += rapi_mauvaise+' '+myEnum.Description.ET.value+' '+pref_mauvaise
                             else:
                                 msg_tmp += rapi_mauvaise
                     else:
                         if secu_mauvaise!='':
                             if pref_mauvaise !='':
-                                msg_tmp += secu_mauvaise+' et '+pref_mauvaise
+                                msg_tmp += secu_mauvaise+' '+myEnum.Description.ET.value+' '+pref_mauvaise
                             else:
                                 msg_tmp += secu_mauvaise
                         else:
                             if pref_mauvaise !='':
                                 msg_tmp += pref_mauvaise
                             else:
-                                msg_tmp = re.sub(str(myEnum.Description.EXPLICATION.value)+': ','j\'ai pris ce chemin, car c\'est un des chemins choisi par l\'utilisateur, mais le chemin choisis n\'est pas meilleur en tout point avec le chemin comparer',msg_tmp)
+                                msg_tmp = re.sub(str(myEnum.Description.EXPLICATION.value)+': ',myEnum.Description.TOUT_EST_MOIN_BON_USER.value,msg_tmp)
                
                 #Le cas où on a une explication complète(precision=2)                
                 else:
                     if secu_bonne != '':
                         if rapi_mauvaise != '':
                             if pref_mauvaise != '':
-                                msg_tmp += secu_bonne+', mais '+rapi_mauvaise+' et '+pref_mauvaise
+                                msg_tmp += secu_bonne+', '+myEnum.Description.MAIS.value+' '+rapi_mauvaise+' '+myEnum.Description.ET.value+' '+pref_mauvaise
                             else:
-                                msg_tmp += secu_bonne+' et '+pref_bonne+', mais '+rapi_mauvaise
+                                msg_tmp += secu_bonne+' '+myEnum.Description.ET.value+' '+pref_bonne+', '+myEnum.Description.MAIS.value+' '+rapi_mauvaise
                         else :
                             if pref_mauvaise != '':
-                                msg_tmp += secu_bonne+' et '+rapi_bonne+', mais '+pref_mauvaise
+                                msg_tmp += secu_bonne+' '+myEnum.Description.ET.value+' '+rapi_bonne+', '+myEnum.Description.MAIS.value+' '+pref_mauvaise
                             else :
-                                msg_tmp = re.sub(str(myEnum.Description.EXPLICATION.value)+' ','j\'ai pris ce chemin, car j\'y suis obligé par l\'utilisateur, mais en terme de rapidité, sécurité et point d\'interêt, tout est moins bon ou équivalent que le chemin choisi',msg_tmp)
+                                msg_tmp = re.sub(str(myEnum.Description.EXPLICATION.value)+' ',myEnum.Description.TOUT_EST_MOIN_BON_USER.value,msg_tmp)
                                 
                     elif secu_mauvaise != '':
                         if rapi_bonne != '':
                             if pref_mauvaise != '':
-                                msg_tmp += rapi_bonne+', mais '+secu_mauvaise+' et '+pref_mauvaise
+                                msg_tmp += rapi_bonne+', '+myEnum.Description.MAIS.value+' '+secu_mauvaise+' '+myEnum.Description.ET.value+' '+pref_mauvaise
                             else:
-                                msg_tmp += rapi_bonne+' et '+pref_bonne+', mais '+secu_mauvaise
+                                msg_tmp += rapi_bonne+' '+myEnum.Description.ET.value+' '+pref_bonne+', '+myEnum.Description.MAIS.value+' '+secu_mauvaise
                         else:
                             if pref_mauvaise != '':
-                                msg_tmp = re.sub(str(myEnum.Description.EXPLICATION.value)+' ','j\'ai pris ce chemin, car le niveau de sécurité, rapidité et point d\'interêt, sont tous moins bon ou équivalent que le chemin choisi',msg_tmp) 
+                                msg_tmp = re.sub(str(myEnum.Description.EXPLICATION.value)+' ',myEnum.Description.TOUT_EST_MOIN_BON_USER.value,msg_tmp) 
                             else:
-                                msg_tmp += pref_bonne+', mais '+secu_mauvaise+' et '+rapi_mauvaise
+                                msg_tmp += pref_bonne+', '+myEnum.Description.MAIS.value+' '+secu_mauvaise+' '+myEnum.Description.ET.value+' '+rapi_mauvaise
             
             #Ajout de tout les descriptions sur les objects, pour les traités a la fin en même temps
             else:
@@ -136,7 +136,7 @@ def Description_to_Txt2(list_desc, label):
                     msg = re.sub(' '+myEnum.Description.PASSE.value+' '+myEnum.Description.GAUCHE.value+' '+valeur,'', msg)
                     if myEnum.Description.DROITE.value+' '+valeur in msg:
                         msg = re.sub(' '+myEnum.Description.PASSE.value+' '+myEnum.Description.DROITE.value+' '+valeur,'', msg)
-                        msg += ' '+myEnum.Description.PASSE.value+' '+myEnum.Description.ENTRE.value+' les '+valeur+'(s)'
+                        msg += ' '+myEnum.Description.PASSE.value+' '+myEnum.Description.ENTRE.value+' '+myEnum.Description.LES.value+' '+valeur+'(s)'
                         if myEnum.Description.DERRIERE.value+' '+valeur in msg or myEnum.Description.DEVANT.value+' '+valeur in msg:
                             change=True
                             msg = re.sub(' '+myEnum.Description.PASSE.value+' '+myEnum.Description.DERRIERE.value+' '+valeur,'', msg)
@@ -146,7 +146,7 @@ def Description_to_Txt2(list_desc, label):
                             change=True
                             msg = re.sub(' '+myEnum.Description.PASSE.value+' '+myEnum.Description.DERRIERE.value+' '+valeur,'', msg)
                             msg = re.sub(' '+myEnum.Description.PASSE.value+' '+myEnum.Description.DEVANT.value+' '+valeur,'', msg)
-                            msg += ' '+myEnum.Description.PASSE.value+' '+myEnum.Description.COTE.value+' des '+valeur+'(s)'
+                            msg += ' '+myEnum.Description.PASSE.value+' '+myEnum.Description.COTE.value+' '+myEnum.Description.DES.value+' '+valeur+'(s)'
                         else:
                             msg += ' '+myEnum.Description.PASSE.value+' '+myEnum.Description.GAUCHE.value+' '+de(id, valeur, label)+valeur
                         
@@ -155,7 +155,7 @@ def Description_to_Txt2(list_desc, label):
                     
                     if myEnum.Description.GAUCHE.value+' '+valeur in msg:
                         msg = re.sub(' '+myEnum.Description.PASSE.value+' '+myEnum.Description.GAUCHE.value+' '+valeur,'', msg)
-                        msg += ' '+myEnum.Description.PASSE.value+' '+myEnum.Description.ENTRE.value+' les '+valeur+'(s)'
+                        msg += ' '+myEnum.Description.PASSE.value+' '+myEnum.Description.ENTRE.value+' '+myEnum.Description.LES.value+' '+valeur+'(s)'
                         if myEnum.Description.DERRIERE.value+' '+valeur in msg or myEnum.Description.DEVANT.value+' '+valeur in msg:
                             change=True
                             msg = re.sub(' '+myEnum.Description.PASSE.value+' '+myEnum.Description.DERRIERE.value+' '+valeur,'', msg)
@@ -165,7 +165,7 @@ def Description_to_Txt2(list_desc, label):
                             change=True
                             msg = re.sub(' '+myEnum.Description.PASSE.value+' '+myEnum.Description.DERRIERE.value+' '+valeur,'', msg)
                             msg = re.sub(' '+myEnum.Description.PASSE.value+' '+myEnum.Description.DEVANT.value+' '+valeur,'', msg)
-                            msg += ' '+myEnum.Description.PASSE.value+' '+myEnum.Description.COTE.value+' des '+valeur+'(s)'
+                            msg += ' '+myEnum.Description.PASSE.value+' '+myEnum.Description.COTE.value+' '+myEnum.Description.DES.value+' '+valeur+'(s)'
                         else:
                             msg += ' '+myEnum.Description.PASSE.value+' '+myEnum.Description.DROITE.value+' '+de(id, valeur, label)+valeur
                             
@@ -174,19 +174,19 @@ def Description_to_Txt2(list_desc, label):
                     if myEnum.Description.DERRIERE.value+' '+valeur in msg :
                         msg = re.sub(' '+myEnum.Description.PASSE.value+' '+myEnum.Description.DERRIERE.value+' '+valeur,'', msg)
                         if myEnum.Description.DEVANT.value+' '+valeur in msg:
-                            msg_cote = ' '+myEnum.Description.PASSE.value+' '+myEnum.Description.COTE.value+' des '+valeur+'(s)'
+                            msg_cote = ' '+myEnum.Description.PASSE.value+' '+myEnum.Description.COTE.value+' '+myEnum.Description.DES.value+' '+valeur+'(s)'
                             msg = re.sub(' '+myEnum.Description.PASSE.value+' '+myEnum.Description.DEVANT.value+' '+valeur, msg_cote, msg)
                         else:
-                            msg_derriere = ' '+myEnum.Description.PASSE.value+' '+myEnum.Description.DERRIERE.value+' les '+valeur+'(s)'
+                            msg_derriere = ' '+myEnum.Description.PASSE.value+' '+myEnum.Description.DERRIERE.value+' '+myEnum.Description.LES.value+' '+valeur+'(s)'
                             msg+=msg_derriere
                             
                     elif myEnum.Description.DEVANT.value+' '+valeur in msg:
                         msg = re.sub(' '+myEnum.Description.PASSE.value+' '+myEnum.Description.DEVANT.value+' '+valeur, '', msg)
                         if myEnum.Description.DERRIERE.value+' '+valeur in msg:
-                            msg_cote = ' '+myEnum.Description.PASSE.value+' '+myEnum.Description.COTE.value+' des '+valeur+'(s)'
+                            msg_cote = ' '+myEnum.Description.PASSE.value+' '+myEnum.Description.COTE.value+' '+myEnum.Description.DES.value+' '+valeur+'(s)'
                             msg = re.sub(' '+myEnum.Description.PASSE.value+' '+myEnum.Description.DERRIERE.value+' '+valeur, msg_cote, msg)
                         else:
-                            msg_devant = ' '+myEnum.Description.PASSE.value+' '+myEnum.Description.DEVANT.value+' les '+valeur+'(s)'
+                            msg_devant = ' '+myEnum.Description.PASSE.value+' '+myEnum.Description.DEVANT.value+' '+myEnum.Description.LES.value+' '+valeur+'(s)'
                             msg += msg_devant
 
             msg= re.sub('  ',' ', msg)
