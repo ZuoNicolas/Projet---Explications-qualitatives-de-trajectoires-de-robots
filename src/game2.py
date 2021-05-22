@@ -432,7 +432,7 @@ class Game(object):
                             self._display_surf.blit(s,(x_tmp*16,y_tmp*16))
                     text = font.render("=>", True, color, GREY)
                     text_w, text_h = text.get_size()
-                    if(y>=self.discription_height - 2 * text_click_h):
+                    if(y>=self.discription_height - 4 * text_click_h):
                         x=0
                         y=y+text_click_h
                         discp_surf.blit(text_click, (x, y))
