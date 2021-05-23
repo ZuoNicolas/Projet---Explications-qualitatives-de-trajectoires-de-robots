@@ -219,7 +219,7 @@ class Game(object):
                             s = pygame.Surface((16,16))  # the size of your rect
                             s.fill(BLUE)           # this fills the entire surface
                             self._display_surf.blit(s,(x*16,y*16))
-                        pygame.display.update()
+                        #pygame.display.update()
                 elif event.type == pygame.MOUSEBUTTONUP:
                     push = False
                 elif event.type == pygame.MOUSEMOTION and push:
@@ -237,11 +237,10 @@ class Game(object):
                             s = pygame.Surface((16,16))  # the size of your rect
                             s.fill(BLUE)           # this fills the entire surface
                             self._display_surf.blit(s,(x*16,y*16))
-                        pygame.display.update()
+                        #pygame.display.update()
                 self.drawingpath = find_path(self.map, self.label, path)
             self.button('reset', self.width-(self.tool_width*2/3),0, 90, 40, green,bright_green, self.reset)
-            pygame.display.update()          
-
+            pygame.display.update()
     def list_objets(self):
         """ renvoi la liste des objets de la map selectionné
         Attr: 
