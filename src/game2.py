@@ -100,7 +100,7 @@ class Game(object):
             for s in self.slides:
                 s.draw(self._display_surf)
 
-            self.button('loadimage', self.width-(self.tool_width*2/3),0, 90, 40, green,bright_green, self.func_choix_image)
+            self.button('reset', self.width-(self.tool_width*2/3),0, 90, 40, green,bright_green, self.reset)
             self.button('confirm',self.width-(self.tool_width/4)+10,0,90,40,green,bright_green,self.one_step)
             self.button('my path', self.width-(self.tool_width*1/2)+20,0, 90, 40, green,bright_green, self.func_drawpath)
 
@@ -110,10 +110,13 @@ class Game(object):
                 self.images.draw(self._display_surf)
             if(self.accuracy.draw_menu):
                 self.accuracy.draw(self._display_surf)
-            
+            if(self.filename!='../ressource/'+self.images.option_list[self.images.selected]+'.tmx'):
+                self.func_choix_image()
 
             pygame.display.update()
-
+    def reset(self):
+        self.loadimage()
+        self.choix_image()
     def func_choix_image(self):
         """ permet de charger la map selectionné
         Attr: 
@@ -171,8 +174,6 @@ class Game(object):
         
         self.slides=[self.secu,self.rapid,self.preference]
 
-        
-        self.update_score()
 
     def drawpath(self):
         """ place le bouton lier au dessin de chemins
@@ -290,7 +291,7 @@ class Game(object):
             None
         """
         #scores(list(tuple(int))) : score optenu pour chaque chemin (general, dist, danger, préférence)
-        #score: rapitite,securite,preference
+        #score: total,rapitite,securite,preference
         scores=self.dt.list_score_tout_les_chemins_affichage
         
         names_score = self.dt.list_name_tout_les_chemins_affichage
@@ -302,15 +303,20 @@ class Game(object):
         
         param=[" rapidité "," securité "," intérêt "," total "]
         x,y=105,0
+        #titre
+        textSurf, textRect = self.text_objects("tableau de score de différents cheimins : ", smallText)
+        textRect.left,textRect.top=(0,0)
+        w,h=textRect.size
+        y=h
+        score_surf.blit(textSurf, textRect)
         #affiche la ligne param
         for i in range(len(param)):
             textSurf, textRect = self.text_objects(param[i], smallText)
-            textRect.left,textRect.top=(x,0)
+            textRect.left,textRect.top=(x,y)
             w,h=textRect.size
             x+=w
-            y=h
             score_surf.blit(textSurf, textRect)
-        
+        y=2*h
         #affiche chaque score ligne par ligne
         for i in range(len(scores)):
             
@@ -326,6 +332,11 @@ class Game(object):
                 score_surf.blit(textSurf,textRect) 
 
             y=y+textRect.height
+
+        #note
+        textSurf, textRect = self.text_objects("(Note: on cherche une minimisation des scores)", smallText)
+        textRect.left,textRect.top=(0,y)
+        score_surf.blit(textSurf, textRect)
         self._display_surf.blit(score_surf,((self.width-self.tool_width+10,self.height-self.discription_height)))  
 
     def one_step(self):
