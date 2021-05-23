@@ -146,7 +146,7 @@ class Slider():
         self.txt_rect = self.txt_surf.get_rect(center=(60, 15))
         surf.blit(self.txt_surf, self.txt_rect) 
         # dynamic
-        pos = (10+int((self.val-self.mini)/(self.maxi-self.mini)*80), 33)
+        pos = (10+int((self.val-self.mini)/(self.maxi-self.mini)*100), 33)
         self.button_rect = self.button_surf.get_rect(center=pos)
         surf.blit(self.button_surf, self.button_rect)
         self.button_rect.move_ip(self.xpos, self.ypos)  # move of button box to correct screen position
