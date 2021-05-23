@@ -8,8 +8,6 @@ import Traduction
 import slider 
 from tools import *
 from myEnum import *
-
-#clock = pygame.time.Clock()
 black = (0,0,0)
 white = (255,255,255)
 red = (200,0,0)
@@ -62,6 +60,7 @@ class Game(object):
         list_image=["zone_non_carre2",'zone_a_danger(rocher)']
         font=pygame.font.SysFont("Verdana", 12)
         self.images=slider.OptionBox(self.width-(self.tool_width),0,150,30,(150, 150, 150), (100, 200, 255),font,list_image,0,False)
+        
         self.choix_image()
 
     def choix_image(self):
@@ -196,6 +195,7 @@ class Game(object):
         self.drawingpath = []
         push = False
         while self.drawingpath == []:
+
             event_list = pygame.event.get()
             for event in event_list:
                 if event.type == pygame.QUIT:
@@ -208,7 +208,7 @@ class Game(object):
                         x,y = pos
                         x = x//16
                         y = y//16
-                        #print(self.drawingpath, path)
+
                         if self.label.get(self.map[y][x]).get('canPass'):
                             if (y,x) not in path:
                                 path.append((y,x))
@@ -228,7 +228,7 @@ class Game(object):
                         x,y = pos
                         x = x//16
                         y = y//16
-                        #print(self.drawingpath, path)
+
                         if self.label.get(self.map[y][x]).get('canPass'):
                             if (y,x) not in path:
                                 path.append((y,x))
@@ -239,8 +239,8 @@ class Game(object):
                             self._display_surf.blit(s,(x*16,y*16))
                         pygame.display.update()
                 self.drawingpath = find_path(self.map, self.label, path)
-        
-                        
+            self.button('reset', self.width-(self.tool_width*2/3),0, 90, 40, green,bright_green, self.reset)
+            pygame.display.update()          
 
     def list_objets(self):
         """ renvoi la liste des objets de la map selectionné
@@ -283,7 +283,7 @@ class Game(object):
         discp_surf=pygame.Surface((self.width-self.tool_width,self.discription_height))
         discp_surf.fill(GREY)
         self._display_surf.blit(discp_surf,((0,self.height-self.discription_height)))
-
+        
     def update_score(self):
         """ affiche le tableau de score
         Attr: 
@@ -298,7 +298,6 @@ class Game(object):
         names=self.dt.list_name_tout_les_chemins
         score_surf=pygame.Surface((self.tool_width-10,self.height-300))
         score_surf.fill(GREY)
-        #self._display_surf.blit(score_surf,((self.width-self.tool_width+10,220)))
         smallText = pygame.font.SysFont("comicsansms",12)
         
         param=[" rapidité "," securité "," intérêt "," total "]
@@ -340,6 +339,7 @@ class Game(object):
         self._display_surf.blit(score_surf,((self.width-self.tool_width+10,self.height-self.discription_height)))  
 
     def one_step(self):
+        
         self.restriction=[(self.rapid.value,self.secu.value,self.preference.value)]
         print("lvl secu =>",DICO_ACCURACY[self.accuracy.option_list[self.accuracy.selected]])
         self.discription=self.dt.descriptiontTrajectoirePlusExplication(agent_rayon=self.radius, ltuple_rest=self.restriction,lobjet=self.option.list_sel, path_donners=self.drawingpath, precision = DICO_ACCURACY[self.accuracy.option_list[self.accuracy.selected]])
@@ -363,21 +363,25 @@ class Game(object):
                 s.set_alpha(ALPHA)                # alpha level
                 s.fill(green)           # this fills the entire surface
                 self._display_surf.blit(s,(x*16,y*16))
+        
 
-        #self.on_render()
-        #pygame.display.update()
         self.chemin()
         self.construction()
-
+        
     def chemin(self):
  
         while( not self.done() ):
             self.forward = False
             for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    quit()
                 self.on_event(event)
             if self.forward:
                 self.on_loop()
                 self.on_render()
+            self.button('reset', self.width-(self.tool_width*2/3),0, 90, 40, green,bright_green, self.reset)
+
         self.iteration=0
         
 
@@ -392,12 +396,8 @@ class Game(object):
         self.draw_circle_alpha( self._display_surf, (255,0,0), ((x+0.5)*16,(y+0.5)*16), self.radius*16)
         self.update_score()
         
-        #description_list =dt.descriptiontTrajectoireSimple(2)
-
         msg=self.list_msg[self.iteration]
 
-        #msg = dt.descriptiontTrajectoireActif(self.radius, saw=False, iterator=self.iteration)
-        #print(self.iteration,':',msg)
         self._display_surf.blit(self.robot_dir[self.discription[self.iteration][0]],(x*16,y*16))
         if not inter:
             for path in self.dt.list_tout_les_chemins:
@@ -424,7 +424,7 @@ class Game(object):
         #affiche la discription
         if not inter:
             self.set_discription(self._display_surf,msg)
-
+        
         pygame.display.update()
 
     def draw_circle_alpha(self, surface, color, center, radius):
@@ -450,7 +450,7 @@ class Game(object):
     def button(self,msg,x,y,w,h,ic,ac,action=None):
         mouse = pygame.mouse.get_pos()
         click = pygame.mouse.get_pressed()
-        #print(click)
+
         if x+w > mouse[0] > x and y+h > mouse[1] > y:
             pygame.draw.rect(self._display_surf, ac,(x,y,w,h))
 
