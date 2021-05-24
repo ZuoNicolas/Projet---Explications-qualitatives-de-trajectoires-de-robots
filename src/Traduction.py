@@ -34,7 +34,6 @@ def Description_to_Txt2(list_desc, label):
                 pref_mauvaise = ''
                 
                 for desc in description:
-                    print(desc)
                     if type(desc) == tuple: #Début d'une explication
                         msg_tmp += '[NewLine]['+desc[1]+'] -'+str(myEnum.Description.EXPLICATION.value)+': '
                         explication = True
@@ -198,7 +197,6 @@ def Description_to_Txt2(list_desc, label):
                 msg = re.sub(' '+myEnum.Description.PASSE.value+' '+myEnum.Description.GAUCHE.value+' '+valeur,'', msg)
 
         list_msg.append(msg)
-        print(msg)
     return list_msg
 
 
