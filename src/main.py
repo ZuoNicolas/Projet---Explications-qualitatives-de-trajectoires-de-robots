@@ -11,7 +11,7 @@ def main():
 
     ### les fichiers disponible
     ## plusieur chemin
-    file = '../ressource/monde1.tmx'
+    file = '../ressource/Monde1.tmx'
 
     
     #initialisation des données

@@ -390,7 +390,7 @@ class Game(object):
                 s.fill(green)           # this fills the entire surface
                 self._display_surf.blit(s,(x*16,y*16))
         
-
+        pygame.display.update()
         self.chemin()
         self.construction()
         
