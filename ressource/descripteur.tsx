@@ -13,7 +13,7 @@
   </terrain>
   <terrain name="eau" tile="673">
    <properties>
-    <property name="canPass" type="bool" value="true"/>
+    <property name="canPass" type="bool" value="false"/>
     <property name="danger_area" type="int" value="1"/>
     <property name="vision_area" type="int" value="2"/>
    </properties>
@@ -28,13 +28,15 @@
   </terrain>
   <terrain name="eau" tile="120">
    <properties>
-    <property name="danger_area" type="int" value="6"/>
+    <property name="danger_area" type="int" value="1"/>
     <property name="profond" type="bool" value="true"/>
+    <property name="vision_area" type="int" value="2"/>
    </properties>
   </terrain>
   <terrain name="caillou" tile="603">
    <properties>
     <property name="canPass" type="bool" value="false"/>
+    <property name="danger_area" type="int" value="3"/>
     <property name="genre" value="M"/>
     <property name="vision_area" type="int" value="2"/>
    </properties>
@@ -85,6 +87,13 @@
    <properties>
     <property name="canPass" type="bool" value="true"/>
     <property name="genre" value="F"/>
+   </properties>
+  </terrain>
+  <terrain name="herbe" tile="1081">
+   <properties>
+    <property name="canPass" type="bool" value="false"/>
+    <property name="genre" value="F"/>
+    <property name="vision_area" type="int" value="1"/>
    </properties>
   </terrain>
  </terraintypes>
@@ -600,7 +609,7 @@
  <tile id="881" terrain="0,0,0,0"/>
  <tile id="883" terrain="0,0,0,0"/>
  <tile id="884" terrain="0,0,0,0"/>
- <tile id="885" terrain="9,9,9,9"/>
+ <tile id="885" terrain="14,14,14,14"/>
  <tile id="887" terrain="0,0,0,0"/>
  <tile id="888" terrain="8,8,8,8"/>
  <tile id="889" terrain="0,0,0,0"/>

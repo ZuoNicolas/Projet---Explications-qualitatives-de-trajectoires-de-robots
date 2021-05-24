@@ -57,7 +57,7 @@ class Game(object):
         pygame.init()
 
         self.loadimage()
-        list_image=["zone_non_carre2",'zone_a_danger(rocher)']
+        list_image=["Monde1","Monde2",'Monde3']
         font=pygame.font.SysFont("Verdana", 12)
         self.images=slider.OptionBox(self.width-(self.tool_width),0,150,30,(150, 150, 150), (100, 200, 255),font,list_image,0,False)
         
@@ -115,7 +115,6 @@ class Game(object):
             pygame.display.update()
     def reset(self):
         self.loadimage()
-        self.choix_image()
     def func_choix_image(self):
         """ permet de charger la map selectionné
         Attr: 
@@ -332,9 +331,12 @@ class Game(object):
             y=y+textRect.height
 
         #note
-        textSurf, textRect = self.text_objects("(Note: on cherche une minimisation des scores)", smallText)
-        textRect.left,textRect.top=(0,y)
+        textSurf, textRect = self.text_objects("(Note 1 : on cherche une minimisation des scores)", smallText)
+        textRect.left,textRect.top=(0,y+2)
         score_surf.blit(textSurf, textRect)
+        textSurf2, textRect2 = self.text_objects("(Note 2 : les chemins générés ne sont pas forcément les plus optimaux)", smallText)
+        textRect2.left,textRect2.top=(0,y+17)
+        score_surf.blit(textSurf2, textRect2)
         self._display_surf.blit(score_surf,((self.width-self.tool_width+10,self.height-self.discription_height)))  
 
     def one_step(self):
@@ -368,7 +370,7 @@ class Game(object):
         self.construction()
         
     def chemin(self):
- 
+        self.iteration=0
         while( not self.done() ):
             self.forward = False
             for event in pygame.event.get():
@@ -381,7 +383,7 @@ class Game(object):
                 self.on_render()
             self.button('reset', self.width-(self.tool_width*2/3),0, 90, 40, green,bright_green, self.reset)
 
-        self.iteration=0
+        
         
 
     def on_loop(self):

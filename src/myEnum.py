@@ -154,7 +154,7 @@ class Description(Enum):
 #     #Explication Intersection
 #     EXPLICATION = 'j\'ai pris ce chemin, car les autres chemins sont'
     
-#     BEAUCOUP_MOINS_SECURITE = 'trop dangereux, j\'ai peur :('
+#     BEAUCOUP_MOINS_SECURITE = 'trop dangereux, je n\'ai peur :('
 #     MOINS_SECURITE = 'un peu dangereux, j\'ai un peu peur :('
 #     SECURITE = 'pas spécialement plus dangereux :)'
 #     PLUS_SECURITE = 'un peu plus sécuriser, mais j\'ai pas peur :p'
@@ -163,11 +163,11 @@ class Description(Enum):
 #     BEAUCOUP_MOINS_RAPIDE = 'trop long, je suis fatigué :('
 #     MOINS_RAPIDE = 'un peu trop long, je suis un peu fatigué :('
 #     RAPIDE = 'pas spécialement plus long :)'
-#     PLUS_RAPIDE = 'un peu plus rapide, mais je suis pas fatigué :)'
-#     BEAUCOUP_PLUS_RAPIDE = 'plus rapide, mais je suis pas fatigué :D'
+#     PLUS_RAPIDE = 'un peu plus rapide, mais je ne suis pas fatigué :)'
+#     BEAUCOUP_PLUS_RAPIDE = 'plus rapide, mais je ne suis pas fatigué :D'
     
 #     BEAUCOUP_MOINS_PREFERE = 'trop peu d\'intérêt, j\'aime pas du tout :('
-#     MOINS_PREFERE = 'peu d\'intérêt, j\'aime pas :('
+#     MOINS_PREFERE = 'peu d\'intérêt, je n\'aime pas :('
 #     PREFERE = 'pas spécialement plus intéressant :)'
 #     PLUS_PREFERE = 'un peu plus d\intérêt, mais pas assez pour moi :)'
 #     BEAUCOUP_PLUS_PREFERE = 'beaucoup plus d\intérêt, mais pas assez pour moi :D'
