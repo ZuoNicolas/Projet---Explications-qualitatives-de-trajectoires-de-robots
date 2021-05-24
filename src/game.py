@@ -389,8 +389,8 @@ class Game(object):
                 s.set_alpha(ALPHA)                # alpha level
                 s.fill(green)           # this fills the entire surface
                 self._display_surf.blit(s,(x*16,y*16))
-        
-        pygame.display.update()
+
+        self.on_render()
         self.chemin()
         self.construction()
         
