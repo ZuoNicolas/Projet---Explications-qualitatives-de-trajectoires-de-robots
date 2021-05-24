@@ -101,7 +101,7 @@ class Game(object):
 
             self.button('reset', self.width-(self.tool_width*2/3),0, 90, 40, green,bright_green, self.reset)
             self.button('confirm',self.width-(self.tool_width/4)+10,0,90,40,green,bright_green,self.one_step)
-            self.button('my path', self.width-(self.tool_width*1/2)+20,0, 90, 40, green,bright_green, self.func_drawpath)
+            self.button('Draw Path', self.width-(self.tool_width*1/2)+20,0, 90, 40, green,bright_green, self.func_drawpath)
 
             if(self.option.draw_menu):
                 self.option.draw(self._display_surf)
@@ -136,7 +136,7 @@ class Game(object):
         self.map=readfile.read_map_tmx(self.filename)
         self.dt=DT.DescriptionTrajectoire(self.map,self.path,self.label)
         self.tool_width=30*16 #toolbar a droite de fenetre
-        self.discription_height=10*16 #discription en bas de fenetre
+        self.discription_height=15*16 #discription en bas de fenetre
         self.size = self.width, self.height = (int(root.get("width"))) * 16+self.tool_width, (int(root.get("height"))) * 16+self.discription_height #a changer
         
         #zone d'affichage
@@ -281,6 +281,27 @@ class Game(object):
         discp_surf=pygame.Surface((self.width-self.tool_width,self.discription_height))
         discp_surf.fill(GREY)
         self._display_surf.blit(discp_surf,((0,self.height-self.discription_height)))
+        
+        smallText = pygame.font.SysFont("comicsansms",12)
+        textSurf2, textRect2 = self.text_objects("Guide d'utilisation : ", smallText)
+        textRect2.left,textRect2.top=(self.width-self.tool_width+5,240)
+        self._display_surf.blit(textSurf2, textRect2)
+        
+        textSurf2, textRect2 = self.text_objects("1. Sélectionner les poids", smallText)
+        textRect2.left,textRect2.top=(self.width-self.tool_width+4,265)
+        self._display_surf.blit(textSurf2, textRect2)
+        
+        textSurf2, textRect2 = self.text_objects("2. Sélectionner l'intérêt", smallText)
+        textRect2.left,textRect2.top=(self.width-self.tool_width+4,277)
+        self._display_surf.blit(textSurf2, textRect2)
+        
+        textSurf2, textRect2 = self.text_objects("3. Le degrée de description", smallText)
+        textRect2.left,textRect2.top=(self.width-self.tool_width+4,289)
+        self._display_surf.blit(textSurf2, textRect2)
+        
+        textSurf2, textRect2 = self.text_objects("4. Confirm", smallText)
+        textRect2.left,textRect2.top=(self.width-self.tool_width+4,301)
+        self._display_surf.blit(textSurf2, textRect2)
         
     def update_score(self):
         """ affiche le tableau de score
@@ -576,8 +597,7 @@ class Game(object):
         pass
     def on_rbutton_down(self, event):
         pass
-    
-
+        
     def on_event(self, event):
         if event.type == pygame.QUIT:
             self._running = False
