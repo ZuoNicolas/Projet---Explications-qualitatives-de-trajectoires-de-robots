@@ -284,23 +284,27 @@ class Game(object):
         
         smallText = pygame.font.SysFont("comicsansms",12)
         textSurf2, textRect2 = self.text_objects("Guide d'utilisation : ", smallText)
-        textRect2.left,textRect2.top=(self.width-self.tool_width+5,240)
+        textRect2.left,textRect2.top=(self.width-self.tool_width+5,230)
         self._display_surf.blit(textSurf2, textRect2)
         
         textSurf2, textRect2 = self.text_objects("1. Sélectionner les poids", smallText)
-        textRect2.left,textRect2.top=(self.width-self.tool_width+4,265)
+        textRect2.left,textRect2.top=(self.width-self.tool_width+4,255)
         self._display_surf.blit(textSurf2, textRect2)
         
         textSurf2, textRect2 = self.text_objects("2. Sélectionner l'intérêt", smallText)
-        textRect2.left,textRect2.top=(self.width-self.tool_width+4,277)
+        textRect2.left,textRect2.top=(self.width-self.tool_width+4,267)
         self._display_surf.blit(textSurf2, textRect2)
         
         textSurf2, textRect2 = self.text_objects("3. Le degrée de description", smallText)
-        textRect2.left,textRect2.top=(self.width-self.tool_width+4,289)
+        textRect2.left,textRect2.top=(self.width-self.tool_width+4,279)
         self._display_surf.blit(textSurf2, textRect2)
         
         textSurf2, textRect2 = self.text_objects("4. Confirm", smallText)
-        textRect2.left,textRect2.top=(self.width-self.tool_width+4,301)
+        textRect2.left,textRect2.top=(self.width-self.tool_width+4,291)
+        self._display_surf.blit(textSurf2, textRect2)
+        
+        textSurf2, textRect2 = self.text_objects("5. Cliquer pour avancer", smallText)
+        textRect2.left,textRect2.top=(self.width-self.tool_width+4,303)
         self._display_surf.blit(textSurf2, textRect2)
         
     def update_score(self):
