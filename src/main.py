@@ -24,6 +24,4 @@ def main():
     
 if __name__ == '__main__':
     main()
-    map = readfile.read_map_tmx('../ressource/zone_a_danger(rocher).tmx')
-    label = readfile.read_desc_xml('../ressource/descripteur.tsx')
    
