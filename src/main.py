@@ -17,7 +17,7 @@ def main():
     #initialisation des données
     map = readfile.read_map_tmx(file)
     label = readfile.read_desc_xml('../ressource/descripteur.tsx')
-    g = game2.Game(file, map, label, 2)
+    g = game.Game(file, map, label, 2)
     g.on_execute()
     
     
