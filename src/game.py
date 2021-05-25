@@ -114,7 +114,9 @@ class Game(object):
 
             pygame.display.update()
     def reset(self):
+        self.iteration=0
         self.loadimage()
+        self.choix_image()
     def func_choix_image(self):
         """ permet de charger la map selectionné
         Attr: 
@@ -264,11 +266,13 @@ class Game(object):
         Return:
             None
         """
+        #afficher map
         start,end=get_start_end(self.map,self.label)
         self._display_surf.fill(white)
         for x, y, image in self.layer.tiles():
             self._display_surf.blit(image,(x*16,y*16))
         y, x = start
+        #afficher path qu'utilisateur a dessiné
         for path in self.drawingpath:
             for y_tmp, x_tmp in path:
                 s = pygame.Surface((16,16))  # the size of your rect
@@ -282,6 +286,7 @@ class Game(object):
         discp_surf.fill(GREY)
         self._display_surf.blit(discp_surf,((0,self.height-self.discription_height)))
         
+        #afficher guide d'utilisation
         smallText = pygame.font.SysFont("comicsansms",12)
         textSurf2, textRect2 = self.text_objects("Guide d'utilisation : ", smallText)
         textRect2.left,textRect2.top=(self.width-self.tool_width+5,230)
@@ -365,7 +370,10 @@ class Game(object):
         self._display_surf.blit(score_surf,((self.width-self.tool_width+10,self.height-self.discription_height)))  
 
     def one_step(self):
-        
+        """ function execute quand on click confirm
+        mets a jour les paramettres (restriction,choix de discription,path)
+        laisser utilisateur avancer le robot pour voir les descriptions etape par etape.
+        """
         self.restriction=[(self.rapid.value,self.secu.value,self.preference.value)]
         # print("lvl secu =>",DICO_ACCURACY[self.accuracy.option_list[self.accuracy.selected]])
         self.discription=self.dt.descriptiontTrajectoirePlusExplication(agent_rayon=self.radius, ltuple_rest=self.restriction,lobjet=self.option.list_sel, path_donners=self.drawingpath, precision = DICO_ACCURACY[self.accuracy.option_list[self.accuracy.selected]])
@@ -395,6 +403,10 @@ class Game(object):
         self.construction()
         
     def chemin(self):
+        """
+        laisser utilisateur avancer le robot pour voir les descriptions etape par etape.
+        """
+
         self.iteration=0
         while( not self.done() ):
             self.forward = False
@@ -415,16 +427,23 @@ class Game(object):
         self.iteration +=1
         
     def on_render(self, inter = False):
-
+        """
+        afficher tableau de score 
+        mettre a jour la postion de robot et la description correspondante.
+        """ 
+        #afficher map
         for x, y, image in self.layer.tiles():
             self._display_surf.blit(image,(x*16,y*16))
         y, x = self.dt.path[self.iteration]
+        #afficher robot et rayon
         self.draw_circle_alpha( self._display_surf, (255,0,0), ((x+0.5)*16,(y+0.5)*16), self.radius*16)
         self.update_score()
         
+        #discription correspondante
         msg=self.list_msg[self.iteration]
 
         self._display_surf.blit(self.robot_dir[self.discription[self.iteration][0]],(x*16,y*16))
+        #afficher path
         if not inter:
             for path in self.dt.list_tout_les_chemins:
                 for y, x in path:
