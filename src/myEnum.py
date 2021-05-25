@@ -154,7 +154,7 @@ class Description(Enum):
 #     #Explication Intersection
 #     EXPLICATION = 'j\'ai pris ce chemin, car les autres chemins sont'
     
-#     BEAUCOUP_MOINS_SECURITE = 'trop dangereux, je n\'ai peur :('
+#     BEAUCOUP_MOINS_SECURITE = 'trop dangereux, j\'ai peur :('
 #     MOINS_SECURITE = 'un peu dangereux, j\'ai un peu peur :('
 #     SECURITE = 'pas spécialement plus dangereux :)'
 #     PLUS_SECURITE = 'un peu plus sécuriser, mais j\'ai pas peur :p'
