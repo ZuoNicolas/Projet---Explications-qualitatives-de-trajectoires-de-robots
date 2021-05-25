@@ -1,0 +1,16 @@
+Pour lancer notre application il nécessitera, de faire les install de package nécessaire, nous partons du base que vous avez une version de python récente.
+
+1 - Copier coller ligne par ligne sur votre terminal.
+
+pip install numpy
+pip install pandas
+pip install pygame
+pip install PyTMX
+
+2 - Puis lancer avec votre version de python pour lancer le fichier src/main.pygame
+
+python src/main.py
+
+ou 
+
+python3 src/main.py
