@@ -1,4 +1,4 @@
-<pdf src="https://cdn.mozilla.net/pdfjs/tracemonkey.pdf" ref="myPdfComponent" @error="error">
+<pdf src="https://github.com/ZuoNicolas/Projet---Explications-qualitatives-de-trajectoires-de-robots/blob/main/Rapport-Final.pdf" ref="myPdfComponent" @error="error">
  
 # Projet - Explications-qualitatives-de-trajectoires-de-robots
 http://androide.lip6.fr/?q=node/622
