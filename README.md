@@ -1,3 +1,5 @@
+<pdf src="https://cdn.mozilla.net/pdfjs/tracemonkey.pdf" ref="myPdfComponent" @error="error">
+ 
 # Projet - Explications-qualitatives-de-trajectoires-de-robots
 http://androide.lip6.fr/?q=node/622
 
