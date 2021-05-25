@@ -1,5 +1,7 @@
 # LIRE LE RAPPORT FINAL ! 
- 
+
+![alt text](https://github.com/ZuoNicolas/Projet---Explications-qualitatives-de-trajectoires-de-robots/blob/main/ApplicationImage.PNG)
+
 # Projet - Explications-qualitatives-de-trajectoires-de-robots
 http://androide.lip6.fr/?q=node/622
 
