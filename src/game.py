@@ -374,6 +374,7 @@ class Game(object):
         mets a jour les paramettres (restriction,choix de discription,path)
         laisser utilisateur avancer le robot pour voir les descriptions etape par etape.
         """
+        self.iteration=0
         self.restriction=[(self.rapid.value,self.secu.value,self.preference.value)]
         # print("lvl secu =>",DICO_ACCURACY[self.accuracy.option_list[self.accuracy.selected]])
         self.discription=self.dt.descriptiontTrajectoirePlusExplication(agent_rayon=self.radius, ltuple_rest=self.restriction,lobjet=self.option.list_sel, path_donners=self.drawingpath, precision = DICO_ACCURACY[self.accuracy.option_list[self.accuracy.selected]])
