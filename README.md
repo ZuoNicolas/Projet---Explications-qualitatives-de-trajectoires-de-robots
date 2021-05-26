@@ -7,7 +7,7 @@ http://androide.lip6.fr/?q=node/622
 
 [![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/tIc7CJzddow/0.jpg)](https://www.youtube.com/watch?v=tIc7CJzddow)
 
-## Lien de la vidéo de présentation:
+## Lien de la vidéo de Démo:
 
 [![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/l-9oi3aJJVA/0.jpg)](https://www.youtube.com/watch?v=l-9oi3aJJVA)
 
