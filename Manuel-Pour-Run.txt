@@ -7,7 +7,7 @@ pip install pandas
 pip install pygame
 pip install PyTMX
 
-2 - Puis lancer avec votre version de python pour lancer le fichier src/main.pygame
+2 - Puis lancer avec votre version de python pour lancer le fichier src/main.py
 
 python src/main.py
 
